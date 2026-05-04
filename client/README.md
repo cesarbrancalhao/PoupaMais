@@ -1,123 +1,123 @@
 # Client-side PoupaMais
 
-Frontend para PoupaMais - Interface moderna, responsiva e intuitiva para gerenciamento completo de finanças pessoais.
+Frontend for PoupaMais - Modern, responsive, and intuitive interface for complete personal finance management.
 
 ## Stacks
 
-- **Next.js 15** - Framework React com App Router e Server Actions
-- **React 19** - Biblioteca para construção de interfaces
-- **Tailwind CSS 4** - Framework de estilização utility-first
-- **Chart.js & React-Chartjs-2** - Visualização de dados e gráficos interativos
-- **Framer Motion** - Biblioteca de animações fluidas
-- **Lucide React** - Ícones modernos e consistentes
-- **Next Themes** - Gerenciamento de temas (Dark/Light mode)
-- **Jest & React Testing Library** - Testes unitários e de integração
+- **Next.js 15** - React framework with App Router and Server Actions
+- **React 19** - Library for building user interfaces
+- **Tailwind CSS 4** - Utility-first styling framework
+- **Chart.js & React-Chartjs-2** - Data visualization and interactive charts
+- **Framer Motion** - Smooth animation library
+- **Lucide React** - Modern and consistent icons
+- **Next Themes** - Theme management (Dark/Light mode)
+- **Jest & React Testing Library** - Unit and integration testing
 
-### Funcionalidades da Interface
+### Interface Features
 
-- **Dashboard Interativo** - Visão geral com gráficos de saldo, tendências e distribuição.
-- **Gestão de Transações** - Interfaces para adicionar, editar e excluir despesas e receitas.
-- **Controle de Metas** - Visualização de progresso de metas financeiras.
-- **Análises Detalhadas** - Gráficos de alocação de ativos e despesas por categoria.
-- **Multi-idioma e Moeda** - Suporte a configurações regionais do usuário.
-- **Autenticação Segura** - Login, registro e recuperação de senha.
-- **Responsividade** - Layout adaptável para desktop, tablets e mobile.
+- **Interactive Dashboard** - Overview with balance charts, trends, and distribution.
+- **Transaction Management** - Interfaces to add, edit, and delete expenses and income.
+- **Goal Tracking** - Visualization of financial goal progress.
+- **Detailed Analytics** - Asset allocation and expense-by-category charts.
+- **Multi-language & Currency** - Support for regional user settings.
+- **Secure Authentication** - Login, registration, and password recovery.
+- **Responsiveness** - Adaptive layout for desktop, tablets, and mobile.
 
-## Requisitos
+## Requirements
 
 - Node.js 20+
-- npm ou yarn
-- API Backend (Server-side PoupaMais) rodando localmente
+- npm or yarn
+- Backend API (Server-side PoupaMais) running locally
 
-## Início Rápido (3 Passos)
+## Quick Start (3 Steps)
 
 ```bash
-# Instalar Dependências
+# Install Dependencies
 cd client
 npm i 
 
-# Copie as variáveis de ambiente e atualize com seus dados se necessário
+# Copy environment variables and update with your data if needed
 cp .env.local.example .env.local
 
-# Iniciar aplicação
+# Start application
 npm run dev
 ```
 
-Pronto! Sua aplicação está rodando em `http://localhost:3000`
+Done! Your application is running at `http://localhost:3000`
 
-### Charts Interativos
-Implementação robusta de gráficos para visualização financeira:
-- **BalanceChart**: Evolução do saldo ao longo do tempo.
-- **ExpenseDistribution**: Gráfico de rosca para categorias.
-- **MonthlyTrend**: Comparativo mensal de receitas x despesas.
-- **GoalAllocation**: Progresso visual das metas.
+### Interactive Charts
+Robust chart implementation for financial visualization:
+- **BalanceChart**: Balance evolution over time.
+- **ExpenseDistribution**: Donut chart for categories.
+- **MonthlyTrend**: Monthly income vs. expenses comparison.
+- **GoalAllocation**: Visual progress of goals.
 
-## Estrutura do Projeto
+## Project Structure
 
 ```
 client/
 ├── src/
-│   ├── app/                   # App Router (Páginas e Layouts)
-│   │   ├── analise/           # Página de análises gráficas
+│   ├── app/                   # App Router (Pages and Layouts)
+│   │   ├── analise/           # Analytics page
 │   │   ├── auth/              # Login
-│   │   ├── cadastro/          # Registro de usuário
-│   │   ├── configuracoes/     # Configurações de usuário/app
-│   │   ├── dashboard/         # Painel principal
-│   │   ├── metas/             # Gerenciamento de metas
-│   │   ├── terminology/       # Contextos de idioma/moeda
-│   │   ├── layout.tsx         # Layout raiz
+│   │   ├── cadastro/          # User registration
+│   │   ├── configuracoes/     # User/app settings
+│   │   ├── dashboard/         # Main dashboard
+│   │   ├── metas/             # Goal management
+│   │   ├── terminology/       # Language/currency contexts
+│   │   ├── layout.tsx         # Root layout
 │   │   └── page.tsx           # Landing page
-│   ├── components/            # Componentes Reutilizáveis
-│   │   ├── ...Chart.tsx       # Componentes de Gráficos (Chart.js)
-│   │   ├── ...Modal.tsx       # Modais de formulário (Adicionar/Editar)
-│   │   ├── sidebar.tsx        # Navegação lateral
-│   │   └── ProtectedRoute.tsx # Guard de rotas protegidas
-│   ├── contexts/              # Contextos React (Auth, Theme)
-│   ├── services/              # Integração com API Backend
-│   │   ├── api.ts             # Instância do Axios
-│   │   ├── auth.service.ts    # Serviços de autenticação
-│   │   └── ...service.ts      # Serviços de domínio (Despesas, Metas, etc.)
-│   └── types/                 # Definições de Tipos TypeScript
-├── public/                    # Assets estáticos (imagens, ícones)
-├── .env.local.example         # Exemplo de variáveis de ambiente
-├── tailwind.config.ts         # Configuração de estilos
-└── next.config.ts             # Configuração do Next.js
+│   ├── components/            # Reusable Components
+│   │   ├── ...Chart.tsx       # Chart Components (Chart.js)
+│   │   ├── ...Modal.tsx       # Form Modals (Add/Edit)
+│   │   ├── sidebar.tsx        # Side navigation
+│   │   └── ProtectedRoute.tsx # Protected route guard
+│   ├── contexts/              # React Contexts (Auth, Theme)
+│   ├── services/              # Backend API Integration
+│   │   ├── api.ts             # Axios instance
+│   │   ├── auth.service.ts    # Authentication services
+│   │   └── ...service.ts      # Domain services (Expenses, Goals, etc.)
+│   └── types/                 # TypeScript Type Definitions
+├── public/                    # Static assets (images, icons)
+├── .env.local.example         # Environment variables example
+├── tailwind.config.ts         # Styling configuration
+└── next.config.ts             # Next.js configuration
 ```
 
-## Scripts Disponíveis
+## Available Scripts
 
 ```bash
-# Servidor de Desenvolvimento
+# Development Server
 npm run dev
 
-# Build de Produção
+# Production Build
 npm run build
 
-# Iniciar Produção
+# Start Production
 npm run start
 
 # Linting
 npm run lint
 
-# Testes
+# Tests
 npm run test
 npm run test:watch
 ```
 
-## Conexão com Backend
+## Backend Connection
 
-O frontend se comunica com a API através da pasta `src/services`.
-O arquivo `src/services/api.ts` configura o interceptor do Axios para incluir automaticamente o token JWT (armazenado em cookies) em todas as requisições autenticadas.
+The frontend communicates with the API through the `src/services` folder.
+The `src/services/api.ts` file configures the Axios interceptor to automatically include the JWT token (stored in cookies) in all authenticated requests.
 
-## Componentes Principais
+## Key Components
 
-### Gráficos (Chart.js)
-Localizados em `src/components`, utilizam `react-chartjs-2` para renderizar visualizações financeiras responsivas.
+### Charts (Chart.js)
+Located in `src/components`, they use `react-chartjs-2` to render responsive financial visualizations.
 
-### Modais
-Utilizados para formulários de criação e edição (ex: `addDespesaModal.tsx`, `editMetaModal.tsx`), garantindo uma experiência de usuário fluida sem navegação excessiva.
+### Modals
+Used for create and edit forms (e.g., `addDespesaModal.tsx`, `editMetaModal.tsx`), ensuring a smooth user experience without excessive navigation.
 
-### Contextos
-- **AuthContext**: Gerencia o estado de autenticação do usuário e persistência de sessão.
-- **ThemeContext**: Gerencia a alternância entre temas Claro/Escuro.
-- **LanguageContext**: Gerencia a localização (i18n) e formatação de moeda.
+### Contexts
+- **AuthContext**: Manages user authentication state and session persistence.
+- **ThemeContext**: Manages Light/Dark theme toggling.
+- **LanguageContext**: Manages localization (i18n) and currency formatting.
