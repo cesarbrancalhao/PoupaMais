@@ -13,7 +13,6 @@ import {
   ChartOptions,
   Filler
 } from 'chart.js'
-import { useTheme } from '@/contexts/ThemeContext'
 import { formatCurrency } from "@/app/terminology/currency"
 import { Moeda } from "@/types/auth"
 
@@ -33,8 +32,6 @@ interface YearlyBalanceChartProps {
 
 export default function YearlyBalanceChart({ data, moeda }: YearlyBalanceChartProps) {
   const [containerKey, setContainerKey] = useState(0)
-  const { theme } = useTheme()
-  const isDark = theme === 'escuro'
 
   useEffect(() => {
     let timeoutId: NodeJS.Timeout
@@ -50,10 +47,10 @@ export default function YearlyBalanceChart({ data, moeda }: YearlyBalanceChartPr
     }
   }, [])
 
-  const textColor = isDark ? '#f5f5f5' : '#1f2937'
-  const gridColor = isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)'
-  const tooltipBg = isDark ? '#2b2b2b' : '#ffffff'
-  const tooltipText = isDark ? '#f5f5f5' : '#111111'
+  const textColor = '#1f2937'
+  const gridColor = 'rgba(0,0,0,0.05)'
+  const tooltipBg = '#ffffff'
+  const tooltipText = '#111111'
 
   const chartData = {
     labels: data.map(item => item.month),
@@ -61,15 +58,15 @@ export default function YearlyBalanceChart({ data, moeda }: YearlyBalanceChartPr
       {
         label: 'Balanço',
         data: data.map(item => item.balance),
-        borderColor: isDark ? 'rgba(96, 165, 250, 1)' : 'rgba(59, 130, 246, 1)',
-        backgroundColor: isDark ? 'rgba(96, 165, 250, 0.1)' : 'rgba(59, 130, 246, 0.1)',
+        borderColor: 'rgba(59, 130, 246, 1)',
+        backgroundColor: 'rgba(59, 130, 246, 0.1)',
         borderWidth: 2,
         fill: true,
         tension: 0.4,
         pointRadius: 4,
         pointHoverRadius: 6,
-        pointBackgroundColor: isDark ? 'rgba(96, 165, 250, 1)' : 'rgba(59, 130, 246, 1)',
-        pointBorderColor: isDark ? '#2b2b2b' : '#ffffff',
+        pointBackgroundColor: 'rgba(59, 130, 246, 1)',
+        pointBorderColor: '#ffffff',
         pointBorderWidth: 2
       }
     ]
@@ -84,7 +81,7 @@ export default function YearlyBalanceChart({ data, moeda }: YearlyBalanceChartPr
         backgroundColor: tooltipBg,
         titleColor: tooltipText,
         bodyColor: tooltipText,
-        borderColor: isDark ? '#444' : '#ddd',
+        borderColor: '#ddd',
         borderWidth: 1,
         padding: 12,
         callbacks: {

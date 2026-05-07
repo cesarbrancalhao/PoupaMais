@@ -9,7 +9,6 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { CategoriaDespesa, FonteReceita } from '@/types'
 import { categoriasDespesaService } from '@/services/categorias.service'
 import { fontesReceitaService } from '@/services/fontes.service'
-import { useTheme } from '@/contexts/ThemeContext'
 import { useLanguage } from '@/app/terminology/LanguageContext'
 import { editCategoriaModal } from '@/app/terminology/language/modals/editCategoria'
 import { addCategoriaModal } from '@/app/terminology/language/modals/addCategoria'
@@ -48,8 +47,6 @@ export default function EditCategoriaModal({
   const [confirmDeleteMode, setConfirmDeleteMode] = useState(false)
   const formRef = useRef<HTMLFormElement>(null)
 
-  const { theme } = useTheme()
-  const isDark = theme === 'escuro'
   const { t } = useLanguage()
 
   useEffect(() => {
@@ -77,15 +74,15 @@ export default function EditCategoriaModal({
     }
   }
 
-  const bgModal = isDark ? 'bg-[#2B2B2B]' : 'bg-white'
-  const textMain = isDark ? 'text-gray-100' : 'text-gray-800'
-  const textSecondary = isDark ? 'text-gray-300' : 'text-gray-700'
-  const inputBg = isDark ? 'bg-[#3C3C3C]' : 'bg-gray-50'
-  const inputText = isDark ? 'text-gray-100' : 'text-gray-700'
-  const borderDefault = isDark ? 'border-gray-600' : 'border-gray-200'
+  const bgModal = 'bg-white'
+  const textMain = 'text-gray-800'
+  const textSecondary = 'text-gray-700'
+  const inputBg = 'bg-gray-50'
+  const inputText = 'text-gray-700'
+  const borderDefault = 'border-gray-200'
   const selectedBorder = 'border-blue-600'
-  const selectedBg = isDark ? 'bg-blue-900/40' : 'bg-blue-50'
-  const iconInactive = isDark ? 'text-gray-300' : 'text-gray-600'
+  const selectedBg = 'bg-blue-50'
+  const iconInactive = 'text-gray-600'
 
   return (
     <AnimatePresence>
@@ -101,7 +98,7 @@ export default function EditCategoriaModal({
 
           <motion.div
             className={`fixed right-0 top-0 h-full w-full max-w-md ${bgModal} shadow-xl z-50 flex flex-col p-6 overflow-y-auto border-l ${
-              isDark ? 'border-gray-700' : 'border-gray-200'
+              'border-gray-200'
             }`}
             initial={{ x: '100%' }}
             animate={{ x: 0 }}
@@ -182,9 +179,7 @@ export default function EditCategoriaModal({
                 <button
                   type="submit"
                   className={`w-full mt-4 py-2 rounded-lg font-medium transition flex items-center justify-center gap-2 ${
-                    isDark
-                      ? 'bg-transparent border-2 border-blue-500 text-blue-400 hover:border-blue-400 hover:text-blue-300 hover:bg-blue-500/10'
-                      : 'bg-blue-600 text-white hover:bg-blue-700'
+                    'bg-blue-600 text-white hover:bg-blue-700'
                   }`}
                 >
                   <Save className="w-4 h-4" />
@@ -200,7 +195,7 @@ export default function EditCategoriaModal({
                         type="button"
                         onClick={() => setConfirmDeleteMode(false)}
                         className={`flex-1 py-2 rounded-lg font-medium transition flex items-center justify-center gap-2 ${
-                          isDark ? 'bg-transparent border-2 border-gray-500 text-gray-400 hover:border-gray-400 hover:text-gray-300 hover:bg-gray-500/10' : 'bg-gray-500 text-white hover:bg-gray-600'
+                          'bg-gray-500 text-white hover:bg-gray-600'
                         }`}
                       >
                         <X className="w-4 h-4" />
@@ -213,7 +208,7 @@ export default function EditCategoriaModal({
                           onClose()
                         }}
                         className={`flex-1 py-2 rounded-lg font-medium transition flex items-center justify-center gap-2 ${
-                          isDark ? 'bg-transparent border-2 border-red-500 text-red-400 hover:border-red-400 hover:text-red-300 hover:bg-red-500/10' : 'bg-yellow-500 text-white hover:bg-yellow-600'
+                          'bg-yellow-500 text-white hover:bg-yellow-600'
                         }`}
                       >
                         <Trash className="w-4 h-4" />
@@ -225,7 +220,7 @@ export default function EditCategoriaModal({
                       type="button"
                       onClick={() => setConfirmDeleteMode(true)}
                       className={`w-full mt-2 py-2 rounded-lg font-medium transition flex items-center justify-center gap-2 ${
-                        isDark ? 'bg-transparent border-2 border-red-500 text-red-400 hover:border-red-400 hover:text-red-300 hover:bg-red-500/10' : 'bg-red-600 text-white hover:bg-red-700'
+                        'bg-red-600 text-white hover:bg-red-700'
                       }`}
                     >
                       <Trash className="w-4 h-4" />

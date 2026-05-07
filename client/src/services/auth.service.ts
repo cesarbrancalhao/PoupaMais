@@ -120,7 +120,6 @@ class AuthService {
       nome: this.sanitizeString(user.nome),
       email: this.sanitizeString(user.email),
       ...(user.created_at && { created_at: user.created_at }),
-      tema: user.tema,
       idioma: user.idioma,
       moeda: user.moeda,
     };

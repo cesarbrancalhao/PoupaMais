@@ -10,7 +10,6 @@ import { despesasService } from '@/services/despesas.service'
 import { receitasService } from '@/services/receitas.service'
 import { despesasExclusaoService } from '@/services/despesas-exclusao.service'
 import { receitasExclusaoService } from '@/services/receitas-exclusao.service'
-import { useTheme } from '@/contexts/ThemeContext'
 import { getCurrencySymbol } from "@/app/terminology/currency";
 import { Moeda } from "@/types/auth";
 import { useLanguage } from '@/app/terminology/LanguageContext';
@@ -44,9 +43,7 @@ interface CalendarProps {
 
 function Calendar({ selectedDate, onDateSelect }: CalendarProps) {
   const [currentMonth, setCurrentMonth] = useState(new Date())
-  const { theme } = useTheme()
   const { language, t } = useLanguage()
-  const isDark = theme === 'escuro'
 
   useEffect(() => {
     if (selectedDate) {
@@ -122,14 +119,14 @@ function Calendar({ selectedDate, onDateSelect }: CalendarProps) {
 
   const monthNames = editDashboardModal.calendarMonths[language]
   const currentMonthLabel = `${monthNames[currentMonth.getMonth()]} ${currentMonth.getFullYear()}`
-  const infoTextColor = isDark ? 'text-gray-400' : 'text-gray-500'
-  const highlightTextColor = isDark ? 'text-gray-100' : 'text-gray-800'
+  const infoTextColor = 'text-gray-500'
+  const highlightTextColor = 'text-gray-800'
   const selectedDateLabel = selectedDate
     ? formatSelectedDate(selectedDate)
     : t(editDashboardModal.calendarNoDateSelected)
 
   return (
-    <div className={`${isDark ? 'bg-[#2B2B2B] border-gray-700 text-gray-100' : 'bg-white border-gray-200 text-gray-800'} rounded-lg shadow-lg p-4 border`}>
+    <div className={`${'bg-white border-gray-200 text-gray-800'} rounded-lg shadow-lg p-4 border`}>
       <div className="flex items-center justify-between mb-4 gap-4">
         <div>
           <p className={`text-lg font-semibold ${highlightTextColor}`}>
@@ -143,14 +140,14 @@ function Calendar({ selectedDate, onDateSelect }: CalendarProps) {
           <button
             type="button"
             onClick={() => navigateMonth('prev')}
-            className={`${isDark ? 'text-gray-400 hover:text-gray-200' : 'text-gray-400 hover:text-gray-600'} p-1 rounded`}
+            className={`${'text-gray-400 hover:text-gray-600'} p-1 rounded`}
           >
             <ChevronLeft className="w-4 h-4" />
           </button>
           <button
             type="button"
             onClick={() => navigateMonth('next')}
-            className={`${isDark ? 'text-gray-400 hover:text-gray-200' : 'text-gray-400 hover:text-gray-600'} p-1 rounded`}
+            className={`${'text-gray-400 hover:text-gray-600'} p-1 rounded`}
           >
             <ChevronRight className="w-4 h-4" />
           </button>
@@ -159,7 +156,7 @@ function Calendar({ selectedDate, onDateSelect }: CalendarProps) {
 
       <div className="grid grid-cols-7 gap-1 mb-2">
         {dayNames.map((day, index) => (
-          <div key={index} className={`${isDark ? 'text-gray-400' : 'text-gray-600'} text-center text-sm font-medium py-2`}>
+          <div key={index} className={`${'text-gray-600'} text-center text-sm font-medium py-2`}>
             {day}
           </div>
         ))}
@@ -182,7 +179,7 @@ function Calendar({ selectedDate, onDateSelect }: CalendarProps) {
               className={`h-8 w-8 flex items-center justify-center text-sm rounded-full transition-colors ${
                 isSelected
                   ? 'bg-blue-600 text-white'
-                  : `${isDark ? 'text-gray-200 hover:bg-white/5' : 'text-gray-700 hover:bg-gray-100'}`
+                  : `${'text-gray-700 hover:bg-gray-100'}`
               }`}
             >
               {day}
@@ -195,8 +192,6 @@ function Calendar({ selectedDate, onDateSelect }: CalendarProps) {
 }
 
 export default function EditDashboardModal({ isOpen, onClose, type, editItem, onDelete, moeda }: EditDashboardModalProps) {
-  const { theme } = useTheme()
-  const isDark = theme === 'escuro'
   const { t } = useLanguage();
 
   const formatValueWithoutSymbol = useCallback((valueString: string) => {
@@ -457,7 +452,7 @@ export default function EditDashboardModal({ isOpen, onClose, type, editItem, on
           />
 
           <motion.div
-            className={`fixed right-0 top-0 h-full w-full max-w-md ${isDark ? 'bg-[#2B2B2B] text-gray-100' : 'bg-white text-gray-800'} shadow-xl z-50 flex flex-col p-6 overflow-y-auto`}
+            className={`fixed right-0 top-0 h-full w-full max-w-md ${'bg-white text-gray-800'} shadow-xl z-50 flex flex-col p-6 overflow-y-auto`}
             initial={{ x: '100%' }}
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
@@ -481,10 +476,10 @@ export default function EditDashboardModal({ isOpen, onClose, type, editItem, on
             </AnimatePresence>
 
             <div className="flex items-center justify-between mb-6">
-              <h2 className={`text-lg font-semibold ${isDark ? 'text-gray-100' : 'text-gray-800'}`}>
+              <h2 className={`text-lg font-semibold ${'text-gray-800'}`}>
                 {t(type === 'despesas' ? editDashboardModal.editExpenseTitle : editDashboardModal.editIncomeTitle)}
               </h2>
-              <button onClick={onClose} className={`${isDark ? 'text-gray-300 hover:text-white' : 'text-gray-500 hover:text-gray-700'} p-1 rounded`}>
+              <button onClick={onClose} className={`${'text-gray-500 hover:text-gray-700'} p-1 rounded`}>
                 <X className="w-5 h-5" />
               </button>
             </div>
@@ -493,25 +488,25 @@ export default function EditDashboardModal({ isOpen, onClose, type, editItem, on
             {/* RF05 - O sistema deve permitir ao usuário manter suas Receitas, com os campos: valor, Fonte (opcional), data e recorrência (opcional). */}
             <form ref={formRef} onSubmit={(e) => e.preventDefault()} className="flex flex-col gap-5">
               <div>
-                <label className={`block text-sm font-medium mb-1 ${isDark ? 'text-gray-100' : 'text-gray-800'}`}>{t(common.name)}</label>
+                <label className={`block text-sm font-medium mb-1 ${'text-gray-800'}`}>{t(common.name)}</label>
                 <input
                   type="text"
                   placeholder={t(common.name)}
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className={`w-full ${isDark ? 'bg-[#3C3C3C] text-gray-100 placeholder-gray-400' : 'bg-gray-50 text-gray-700 placeholder-gray-500'} rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none`}
+                  className={`w-full ${'bg-gray-50 text-gray-700 placeholder-gray-500'} rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none`}
                   required
                 />
               </div>
 
               <div>
-                <label className={`block text-sm font-medium mb-1 ${isDark ? 'text-gray-100' : 'text-gray-800'}`}>
+                <label className={`block text-sm font-medium mb-1 ${'text-gray-800'}`}>
                   {t(type === 'despesas' ? common.category : common.source)}
                 </label>
                 <select
                   value={selectedCategoryId}
                   onChange={(e) => setSelectedCategoryId(e.target.value)}
-                  className={`w-full ${isDark ? 'bg-[#3C3C3C] text-gray-100' : 'bg-gray-50 text-gray-700'} rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none`}
+                  className={`w-full ${'bg-gray-50 text-gray-700'} rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none`}
                 >
                   <option value="">{t(type === 'despesas' ? common.noCategory : common.noSource)}</option>
                   {type === 'despesas'
@@ -529,15 +524,15 @@ export default function EditDashboardModal({ isOpen, onClose, type, editItem, on
               </div>
 
               <div>
-                <label className={`block text-sm font-medium mb-1 ${isDark ? 'text-gray-100' : 'text-gray-800'}`}>{t(common.value)}</label>
+                <label className={`block text-sm font-medium mb-1 ${'text-gray-800'}`}>{t(common.value)}</label>
                 <div className="flex items-center gap-4">
                   <div className={`
                     w-1/2 flex items-center rounded-lg overflow-hidden
-                    ${isDark ? 'bg-[#3C3C3C]' : 'bg-gray-50'}
+                    ${'bg-gray-50'}
                   `}>
                     <span className={`
                       px-3 py-2 font-medium
-                      ${isDark ? 'text-gray-400' : 'text-gray-600'}
+                      ${'text-gray-600'}
                     `}>
                       {getCurrencySymbol(moeda)}
                     </span>
@@ -548,15 +543,13 @@ export default function EditDashboardModal({ isOpen, onClose, type, editItem, on
                       onChange={handleValueChange}
                       className={`
                         flex-1 px-3 py-2 outline-none transition bg-transparent
-                        ${isDark
-                          ? 'text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-400'
-                          : 'text-gray-700 placeholder-gray-500 focus:ring-2 focus:ring-blue-500'}
+                        ${'text-gray-700 placeholder-gray-500 focus:ring-2 focus:ring-blue-500'}
                       `}
                       required
                     />
                   </div>
                   <label className="flex items-center gap-2">
-                    <span className={`text-sm font-medium ${isDark ? 'text-gray-200' : 'text-gray-700'}`}>{t(addDashboardModal.isRecurring)}</span>
+                    <span className={`text-sm font-medium ${'text-gray-700'}`}>{t(addDashboardModal.isRecurring)}</span>
                     <input
                       type="checkbox"
                       className="w-4 h-4 accent-blue-600"
@@ -568,7 +561,7 @@ export default function EditDashboardModal({ isOpen, onClose, type, editItem, on
               </div>
 
               <div>
-                <label className={`block text-sm font-medium mb-1 ${isDark ? 'text-gray-100' : 'text-gray-800'}`}>{t(common.date)}</label>
+                <label className={`block text-sm font-medium mb-1 ${'text-gray-800'}`}>{t(common.date)}</label>
                 <Calendar
                   selectedDate={date}
                   onDateSelect={setDate}
@@ -578,7 +571,7 @@ export default function EditDashboardModal({ isOpen, onClose, type, editItem, on
 
               {recurring && (
                 <div>
-                  <label className={`block text-sm font-medium mb-1 ${isDark ? 'text-gray-100' : 'text-gray-800'}`}>{t(addDashboardModal.endDate)}</label>
+                  <label className={`block text-sm font-medium mb-1 ${'text-gray-800'}`}>{t(addDashboardModal.endDate)}</label>
                   <Calendar
                     selectedDate={date_vencimento}
                     onDateSelect={setDateVencimento}
@@ -596,7 +589,7 @@ export default function EditDashboardModal({ isOpen, onClose, type, editItem, on
                           e.preventDefault()
                           handleEditThisOccurrence(e)
                         }}
-                        className={`w-full py-2 rounded-lg font-medium transition flex items-center justify-center gap-2 ${isDark ? 'bg-transparent border-2 border-blue-500 text-blue-400 hover:border-blue-400 hover:text-blue-300 hover:bg-blue-500/10' : 'bg-blue-600 hover:bg-blue-700 text-white'}`}
+                        className={`w-full py-2 rounded-lg font-medium transition flex items-center justify-center gap-2 ${'bg-blue-600 hover:bg-blue-700 text-white'}`}
                       >
                         <Pencil className="w-4 h-4" />
                         {t(editDashboardModal.editSingle)}
@@ -604,7 +597,7 @@ export default function EditDashboardModal({ isOpen, onClose, type, editItem, on
                       <button
                         type="button"
                         onClick={() => setConfirmEditAllMode(true)}
-                        className={`w-full py-2 rounded-lg font-medium transition flex items-center justify-center gap-2 ${isDark ? 'bg-transparent border-2 border-purple-500 text-purple-400 hover:border-purple-400 hover:text-purple-300 hover:bg-purple-500/10' : 'bg-purple-600 hover:bg-purple-700 text-white'}`}
+                        className={`w-full py-2 rounded-lg font-medium transition flex items-center justify-center gap-2 ${'bg-purple-600 hover:bg-purple-700 text-white'}`}
                       >
                         <Save className="w-4 h-4" />
                         {t(editDashboardModal.editAll)}
@@ -617,7 +610,7 @@ export default function EditDashboardModal({ isOpen, onClose, type, editItem, on
                         e.preventDefault()
                         handleEditAllOccurrences()
                       }}
-                      className={`w-full py-2 rounded-lg font-medium transition flex items-center justify-center gap-2 ${isDark ? 'bg-transparent border-2 border-blue-500 text-blue-400 hover:border-blue-400 hover:text-blue-300 hover:bg-blue-500/10' : 'bg-blue-600 hover:bg-blue-700 text-white'}`}
+                      className={`w-full py-2 rounded-lg font-medium transition flex items-center justify-center gap-2 ${'bg-blue-600 hover:bg-blue-700 text-white'}`}
                     >
                       <Save className="w-4 h-4" />
                       {t(common.save)} {type === 'despesas' ? t(common.expenses).toLowerCase() : t(common.income).toLowerCase()}
@@ -631,7 +624,7 @@ export default function EditDashboardModal({ isOpen, onClose, type, editItem, on
                   <button
                     type="button"
                     onClick={() => setConfirmEditAllMode(false)}
-                    className={`flex-1 py-2 rounded-lg font-medium transition flex items-center justify-center gap-2 ${isDark ? 'bg-transparent border-2 border-gray-500 text-gray-400 hover:border-gray-400 hover:text-gray-300 hover:bg-gray-500/10' : 'bg-gray-500 text-white hover:bg-gray-600'}`}
+                    className={`flex-1 py-2 rounded-lg font-medium transition flex items-center justify-center gap-2 ${'bg-gray-500 text-white hover:bg-gray-600'}`}
                   >
                     <X className="w-4 h-4" />
                     {t(common.cancel)}
@@ -639,7 +632,7 @@ export default function EditDashboardModal({ isOpen, onClose, type, editItem, on
                   <button
                     type="button"
                     onClick={handleEditAllOccurrences}
-                    className={`flex-1 py-2 rounded-lg font-medium transition flex items-center justify-center gap-2 ${isDark ? 'bg-transparent border-2 border-blue-500 text-blue-400 hover:border-blue-400 hover:text-blue-300 hover:bg-blue-500/10' : 'bg-blue-600 text-white hover:bg-blue-700'}`}
+                    className={`flex-1 py-2 rounded-lg font-medium transition flex items-center justify-center gap-2 ${'bg-blue-600 text-white hover:bg-blue-700'}`}
                   >
                     <Save className="w-4 h-4" />
                     {t(common.confirm)}
@@ -655,7 +648,7 @@ export default function EditDashboardModal({ isOpen, onClose, type, editItem, on
                         <button
                           type="button"
                           onClick={() => setConfirmDeleteMode(false)}
-                          className={`w-full py-2 rounded-lg font-medium transition flex items-center justify-center gap-2 ${isDark ? 'bg-transparent border-2 border-gray-500 text-gray-400 hover:border-gray-400 hover:text-gray-300 hover:bg-gray-500/10' : 'bg-gray-500 text-white hover:bg-gray-600'}`}
+                          className={`w-full py-2 rounded-lg font-medium transition flex items-center justify-center gap-2 ${'bg-gray-500 text-white hover:bg-gray-600'}`}
                         >
                           <X className="w-4 h-4" />
                           {t(common.cancel)}
@@ -663,7 +656,7 @@ export default function EditDashboardModal({ isOpen, onClose, type, editItem, on
                         <button
                           type="button"
                           onClick={handleDeleteThisMonth}
-                          className={`w-full py-2 rounded-lg font-medium transition flex items-center justify-center gap-2 ${isDark ? 'bg-transparent border-2 border-orange-500 text-orange-400 hover:border-orange-400 hover:text-orange-300 hover:bg-orange-500/10' : 'bg-orange-500 text-white hover:bg-orange-600'}`}
+                          className={`w-full py-2 rounded-lg font-medium transition flex items-center justify-center gap-2 ${'bg-orange-500 text-white hover:bg-orange-600'}`}
                         >
                           <Trash className="w-4 h-4" />
                           {t(editDashboardModal.excludeSingle)}
@@ -671,7 +664,7 @@ export default function EditDashboardModal({ isOpen, onClose, type, editItem, on
                         <button
                           type="button"
                           onClick={handleDeleteAll}
-                          className={`w-full py-2 rounded-lg font-medium transition flex items-center justify-center gap-2 ${isDark ? 'bg-transparent border-2 border-red-500 text-red-400 hover:border-red-400 hover:text-red-300 hover:bg-red-500/10' : 'bg-red-600 text-white hover:bg-red-700'}`}
+                          className={`w-full py-2 rounded-lg font-medium transition flex items-center justify-center gap-2 ${'bg-red-600 text-white hover:bg-red-700'}`}
                         >
                           <Trash className="w-4 h-4" />
                           {t(editDashboardModal.excludeAll)}
@@ -682,7 +675,7 @@ export default function EditDashboardModal({ isOpen, onClose, type, editItem, on
                         <button
                           type="button"
                           onClick={() => setConfirmDeleteMode(false)}
-                          className={`flex-1 py-2 rounded-lg font-medium transition flex items-center justify-center gap-2 ${isDark ? 'bg-transparent border-2 border-gray-500 text-gray-400 hover:border-gray-400 hover:text-gray-300 hover:bg-gray-500/10' : 'bg-gray-500 text-white hover:bg-gray-600'}`}
+                          className={`flex-1 py-2 rounded-lg font-medium transition flex items-center justify-center gap-2 ${'bg-gray-500 text-white hover:bg-gray-600'}`}
                         >
                           <X className="w-4 h-4" />
                           {t(common.cancel)}
@@ -690,7 +683,7 @@ export default function EditDashboardModal({ isOpen, onClose, type, editItem, on
                         <button
                           type="button"
                           onClick={handleDeleteAll}
-                          className={`flex-1 py-2 rounded-lg font-medium transition flex items-center justify-center gap-2 ${isDark ? 'bg-transparent border-2 border-red-500 text-red-400 hover:border-red-400 hover:text-red-300 hover:bg-red-500/10' : 'bg-yellow-500 text-white hover:bg-yellow-600'}`}
+                          className={`flex-1 py-2 rounded-lg font-medium transition flex items-center justify-center gap-2 ${'bg-yellow-500 text-white hover:bg-yellow-600'}`}
                         >
                           <Trash className="w-4 h-4" />
                           {t(common.confirm)}
@@ -701,7 +694,7 @@ export default function EditDashboardModal({ isOpen, onClose, type, editItem, on
                     <button
                       type="button"
                       onClick={() => setConfirmDeleteMode(true)}
-                      className={`w-full mt-2 py-2 rounded-lg transition flex items-center justify-center gap-2 ${isDark ? 'bg-transparent border-2 border-red-500 text-red-400 hover:border-red-400 hover:text-red-300 hover:bg-red-500/10' : 'bg-red-600 text-white hover:bg-red-700'}`}
+                      className={`w-full mt-2 py-2 rounded-lg transition flex items-center justify-center gap-2 ${'bg-red-600 text-white hover:bg-red-700'}`}
                     >
                       <Trash className="w-4 h-4" />
                       {t(common.delete)} {type === 'despesas' ? t(common.expenses).toLowerCase() : t(common.income).toLowerCase()}

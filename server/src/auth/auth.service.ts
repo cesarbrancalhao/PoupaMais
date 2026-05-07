@@ -90,7 +90,6 @@ export class AuthService {
         id: user.id,
         nome: user.nome,
         email: user.email,
-        tema: user.tema,
         idioma: user.idioma,
         moeda: user.moeda,
       },
@@ -114,7 +113,7 @@ export class AuthService {
       await client.query('BEGIN');
 
       const result = await client.query(
-        'INSERT INTO usuario (nome, email, senha, idioma) VALUES ($1, $2, $3, $4) RETURNING id, nome, email, tema, idioma, moeda, created_at',
+        'INSERT INTO usuario (nome, email, senha, idioma) VALUES ($1, $2, $3, $4) RETURNING id, nome, email, idioma, moeda, created_at',
         [nome, email, hashedPassword, idioma],
       );
 

@@ -10,8 +10,8 @@ export const usersService = {
     return apiService.put('/users/profile', { nome, email });
   },
 
-  async updateSettings(tema: boolean, idioma: Idioma, moeda: Moeda): Promise<User> {
-    return apiService.put('/users/settings', { tema, idioma, moeda });
+  async updateSettings(idioma: Idioma, moeda: Moeda): Promise<User> {
+    return apiService.put('/users/settings', { idioma, moeda });
   },
 
   async changePassword(currentPassword: string, newPassword: string): Promise<void> {

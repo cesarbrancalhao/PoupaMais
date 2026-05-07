@@ -3,7 +3,6 @@ export interface Usuario {
   nome: string;
   email: string;
   senha: string;
-  tema: boolean;
   idioma: 'portugues' | 'ingles' | 'espanhol';
   moeda: 'real' | 'dolar' | 'euro';
   created_at: Date;

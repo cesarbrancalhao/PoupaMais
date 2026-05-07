@@ -6,7 +6,6 @@ import ProtectedRoute from '@/components/ProtectedRoute'
 import { TrendingUp, TrendingDown, Target, DollarSign, PieChart, BarChart3, Calendar, Activity } from 'lucide-react'
 import { Despesa, Receita, Meta, DespesaExclusao, ReceitaExclusao } from '@/types'
 import { despesasService, receitasService, metasService, despesasExclusaoService, receitasExclusaoService, ApiError } from '@/services'
-import { useTheme } from '@/contexts/ThemeContext'
 import { formatCurrency as formatMoney } from "@/app/terminology/currency"
 import { useAuth } from "@/contexts/AuthContext"
 import YearlyBalanceChart from '@/components/YearlyBalanceChart'
@@ -17,8 +16,6 @@ import { analise } from '@/app/terminology/language/analise'
 import { common } from '@/app/terminology/language/common'
 
 export default function AnalisePage() {
-  const { theme } = useTheme()
-  const isDark = theme === "escuro"
   const { user } = useAuth()
   const { t } = useLanguage()
 
@@ -231,10 +228,10 @@ export default function AnalisePage() {
   if (carregando) {
     return (
       <ProtectedRoute>
-        <div className={`flex min-h-screen ${isDark ? 'bg-[var(--bg-main)]' : 'bg-gray-50'}`}>
+        <div className={`flex min-h-screen ${'bg-gray-50'}`}>
           <Sidebar />
-          <main className={`flex-1 p-4 md:p-8 md:ml-64 flex items-center justify-center ${isDark ? 'text-[var(--text-main)]' : ''}`}>
-            <div className={`${isDark ? 'text-[var(--text-main)]' : 'text-gray-500'}`}>{t(analise.loadingAnalysis)}</div>
+          <main className={`flex-1 p-4 md:p-8 md:ml-64 flex items-center justify-center ${''}`}>
+            <div className={`${'text-gray-500'}`}>{t(analise.loadingAnalysis)}</div>
           </main>
         </div>
       </ProtectedRoute>
@@ -244,9 +241,9 @@ export default function AnalisePage() {
   if (erro) {
     return (
       <ProtectedRoute>
-        <div className={`flex min-h-screen ${isDark ? 'bg-[var(--bg-main)]' : 'bg-gray-50'}`}>
+        <div className={`flex min-h-screen ${'bg-gray-50'}`}>
           <Sidebar />
-          <main className={`flex-1 p-4 md:p-8 md:ml-64 flex items-center justify-center ${isDark ? 'text-[var(--text-main)]' : ''}`}>
+          <main className={`flex-1 p-4 md:p-8 md:ml-64 flex items-center justify-center ${''}`}>
             <div className="text-red-500">{erro}</div>
           </main>
         </div>
@@ -256,20 +253,20 @@ export default function AnalisePage() {
 
   return (
     <ProtectedRoute>
-      <div className={`flex min-h-screen ${isDark ? 'bg-[var(--bg-main)]' : 'bg-gray-50'}`}>
+      <div className={`flex min-h-screen ${'bg-gray-50'}`}>
         <Sidebar />
-        <main className={`flex-1 p-4 md:p-8 md:ml-64 ${isDark ? 'text-[var(--text-main)]' : ''}`}>
+        <main className={`flex-1 p-4 md:p-8 md:ml-64 ${''}`}>
           <header className="flex flex-col md:flex-row md:items-center md:justify-between mb-6 md:mb-8 gap-4">
-            <h1 className={`${isDark ? 'text-[var(--text-main)] text-xl md:text-2xl font-semibold text-center md:text-left' : 'text-xl md:text-2xl font-semibold text-gray-800 text-center md:text-left'}`}>
+            <h1 className={`${'text-xl md:text-2xl font-semibold text-gray-800 text-center md:text-left'}`}>
               {t(analise.title)}
             </h1>
           </header>
 
           <section className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-4 md:gap-6 mb-6">
             {/* RF14 - A tela de Análise deverá exibir dados dos últimos 12 meses de: Saldo médio mensal, taxa de economia, alocação de metas, porcentagem de conclusão de metas, total de receitas, total de despesas, receita média mensal, evolução do saldo, receitas e despesas (comparação), alocação de metas (gráfico de pizza) e resumo das metas (lista). */}
-            <div className={`${isDark ? 'bg-[var(--bg-card)] text-[var(--text-main)]' : 'bg-white text-gray-800'} p-4 md:p-6 rounded-xl shadow-sm`}>
+            <div className={`${'bg-white text-gray-800'} p-4 md:p-6 rounded-xl shadow-sm`}>
               <div className="flex items-center gap-2 md:gap-3 mb-2">
-                <div className={`${isDark ? 'w-8 h-8 md:w-10 md:h-10 bg-blue-900/10 rounded-full flex items-center justify-center' : 'w-8 h-8 md:w-10 md:h-10 bg-blue-100 rounded-full flex items-center justify-center'} flex-shrink-0`}>
+                <div className={`${'w-8 h-8 md:w-10 md:h-10 bg-blue-100 rounded-full flex items-center justify-center'} flex-shrink-0`}>
                   {tendenciaBalanco === 'up' ? (
                     <TrendingUp className="w-4 h-4 md:w-5 md:h-5 text-green-600" />
                   ) : tendenciaBalanco === 'down' ? (
@@ -279,50 +276,50 @@ export default function AnalisePage() {
                   )}
                 </div>
                 <div>
-                  <p className={`${isDark ? 'text-gray-400 text-xs md:text-sm' : 'text-gray-500 text-xs md:text-sm'}`}>{t(analise.averageMonthlyBalance)}</p>
-                  <p className={`${isDark ? 'text-[var(--text-main)] text-lg md:text-2xl font-semibold' : 'text-lg md:text-2xl font-semibold'} ${balancoMedio >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                  <p className={`${'text-gray-500 text-xs md:text-sm'}`}>{t(analise.averageMonthlyBalance)}</p>
+                  <p className={`${'text-lg md:text-2xl font-semibold'} ${balancoMedio >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                     {formatCurrency(balancoMedio)}
                   </p>
                 </div>
               </div>
             </div>
 
-            <div className={`${isDark ? 'bg-[var(--bg-card)] text-[var(--text-main)]' : 'bg-white text-gray-800'} p-4 md:p-6 rounded-xl shadow-sm`}>
+            <div className={`${'bg-white text-gray-800'} p-4 md:p-6 rounded-xl shadow-sm`}>
               <div className="flex items-center gap-2 md:gap-3 mb-2">
-                <div className={`${isDark ? 'w-8 h-8 md:w-10 md:h-10 bg-purple-900/10 rounded-full flex items-center justify-center' : 'w-8 h-8 md:w-10 md:h-10 bg-purple-100 rounded-full flex items-center justify-center'} flex-shrink-0`}>
+                <div className={`${'w-8 h-8 md:w-10 md:h-10 bg-purple-100 rounded-full flex items-center justify-center'} flex-shrink-0`}>
                   <PieChart className="w-4 h-4 md:w-5 md:h-5 text-purple-600" />
                 </div>
                 <div>
-                  <p className={`${isDark ? 'text-gray-400 text-xs md:text-sm' : 'text-gray-500 text-xs md:text-sm'}`}>{t(analise.savingsRate)}</p>
-                  <p className={`${isDark ? 'text-[var(--text-main)] text-lg md:text-2xl font-semibold' : 'text-lg md:text-2xl font-semibold'}`}>
+                  <p className={`${'text-gray-500 text-xs md:text-sm'}`}>{t(analise.savingsRate)}</p>
+                  <p className={`${'text-lg md:text-2xl font-semibold'}`}>
                     {taxaPoupanca.toFixed(1)}%
                   </p>
                 </div>
               </div>
             </div>
 
-            <div className={`${isDark ? 'bg-[var(--bg-card)] text-[var(--text-main)]' : 'bg-white text-gray-800'} p-4 md:p-6 rounded-xl shadow-sm`}>
+            <div className={`${'bg-white text-gray-800'} p-4 md:p-6 rounded-xl shadow-sm`}>
               <div className="flex items-center gap-2 md:gap-3 mb-2">
-                <div className={`${isDark ? 'w-8 h-8 md:w-10 md:h-10 bg-yellow-900/10 rounded-full flex items-center justify-center' : 'w-8 h-8 md:w-10 md:h-10 bg-yellow-100 rounded-full flex items-center justify-center'} flex-shrink-0`}>
+                <div className={`${'w-8 h-8 md:w-10 md:h-10 bg-yellow-100 rounded-full flex items-center justify-center'} flex-shrink-0`}>
                   <Target className="w-4 h-4 md:w-5 md:h-5 text-yellow-600" />
                 </div>
                 <div>
-                  <p className={`${isDark ? 'text-gray-400 text-xs md:text-sm' : 'text-gray-500 text-xs md:text-sm'}`}>{t(analise.goalAllocation)}</p>
-                  <p className={`${isDark ? 'text-[var(--text-main)] text-lg md:text-2xl font-semibold' : 'text-lg md:text-2xl font-semibold'}`}>
+                  <p className={`${'text-gray-500 text-xs md:text-sm'}`}>{t(analise.goalAllocation)}</p>
+                  <p className={`${'text-lg md:text-2xl font-semibold'}`}>
                     {alocacaoReceitaMetas.toFixed(1)}%
                   </p>
                 </div>
               </div>
             </div>
 
-            <div className={`${isDark ? 'bg-[var(--bg-card)] text-[var(--text-main)]' : 'bg-white text-gray-800'} p-4 md:p-6 rounded-xl shadow-sm`}>
+            <div className={`${'bg-white text-gray-800'} p-4 md:p-6 rounded-xl shadow-sm`}>
               <div className="flex items-center gap-2 md:gap-3 mb-2">
-                <div className={`${isDark ? 'w-8 h-8 md:w-10 md:h-10 bg-green-900/10 rounded-full flex items-center justify-center' : 'w-8 h-8 md:w-10 md:h-10 bg-green-100 rounded-full flex items-center justify-center'} flex-shrink-0`}>
+                <div className={`${'w-8 h-8 md:w-10 md:h-10 bg-green-100 rounded-full flex items-center justify-center'} flex-shrink-0`}>
                   <BarChart3 className="w-4 h-4 md:w-5 md:h-5 text-green-600" />
                 </div>
                 <div>
-                  <p className={`${isDark ? 'text-gray-400 text-xs md:text-sm' : 'text-gray-500 text-xs md:text-sm'}`}>{t(analise.goalAchievementRate)}</p>
-                  <p className={`${isDark ? 'text-[var(--text-main)] text-lg md:text-2xl font-semibold' : 'text-lg md:text-2xl font-semibold'}`}>
+                  <p className={`${'text-gray-500 text-xs md:text-sm'}`}>{t(analise.goalAchievementRate)}</p>
+                  <p className={`${'text-lg md:text-2xl font-semibold'}`}>
                     {taxaAlcanceMetas.toFixed(1)}%
                   </p>
                 </div>
@@ -331,42 +328,42 @@ export default function AnalisePage() {
           </section>
 
           <section className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6 mb-6">
-            <div className={`${isDark ? 'bg-[var(--bg-card)] text-[var(--text-main)]' : 'bg-white text-gray-800'} p-4 md:p-6 rounded-xl shadow-sm`}>
+            <div className={`${'bg-white text-gray-800'} p-4 md:p-6 rounded-xl shadow-sm`}>
               <div className="flex items-center gap-2 md:gap-3 mb-2">
-                <div className={`${isDark ? 'w-8 h-8 md:w-10 md:h-10 bg-blue-900/10 rounded-full flex items-center justify-center' : 'w-8 h-8 md:w-10 md:h-10 bg-blue-100 rounded-full flex items-center justify-center'} flex-shrink-0`}>
+                <div className={`${'w-8 h-8 md:w-10 md:h-10 bg-blue-100 rounded-full flex items-center justify-center'} flex-shrink-0`}>
                   <DollarSign className="w-4 h-4 md:w-5 md:h-5 text-blue-600" />
                 </div>
                 <div>
-                  <p className={`${isDark ? 'text-gray-400 text-xs md:text-sm' : 'text-gray-500 text-xs md:text-sm'}`}>{t(common.total)} {t(analise.income)}</p>
-                  <p className={`${isDark ? 'text-[var(--text-main)] text-lg md:text-xl font-semibold' : 'text-lg md:text-xl font-semibold'}`}>
+                  <p className={`${'text-gray-500 text-xs md:text-sm'}`}>{t(common.total)} {t(analise.income)}</p>
+                  <p className={`${'text-lg md:text-xl font-semibold'}`}>
                     {formatCurrency(totaisAnuais.totalReceitas)}
                   </p>
                 </div>
               </div>
             </div>
 
-            <div className={`${isDark ? 'bg-[var(--bg-card)] text-[var(--text-main)]' : 'bg-white text-gray-800'} p-4 md:p-6 rounded-xl shadow-sm`}>
+            <div className={`${'bg-white text-gray-800'} p-4 md:p-6 rounded-xl shadow-sm`}>
               <div className="flex items-center gap-2 md:gap-3 mb-2">
-                <div className={`${isDark ? 'w-8 h-8 md:w-10 md:h-10 bg-orange-900/10 rounded-full flex items-center justify-center' : 'w-8 h-8 md:w-10 md:h-10 bg-orange-100 rounded-full flex items-center justify-center'} flex-shrink-0`}>
+                <div className={`${'w-8 h-8 md:w-10 md:h-10 bg-orange-100 rounded-full flex items-center justify-center'} flex-shrink-0`}>
                   <DollarSign className="w-4 h-4 md:w-5 md:h-5 text-orange-600" />
                 </div>
                 <div>
-                  <p className={`${isDark ? 'text-gray-400 text-xs md:text-sm' : 'text-gray-500 text-xs md:text-sm'}`}>{t(common.total)} {t(analise.expenses)}</p>
-                  <p className={`${isDark ? 'text-[var(--text-main)] text-lg md:text-xl font-semibold' : 'text-lg md:text-xl font-semibold'}`}>
+                  <p className={`${'text-gray-500 text-xs md:text-sm'}`}>{t(common.total)} {t(analise.expenses)}</p>
+                  <p className={`${'text-lg md:text-xl font-semibold'}`}>
                     {formatCurrency(totaisAnuais.totalDespesas)}
                   </p>
                 </div>
               </div>
             </div>
 
-            <div className={`${isDark ? 'bg-[var(--bg-card)] text-[var(--text-main)]' : 'bg-white text-gray-800'} p-4 md:p-6 rounded-xl shadow-sm`}>
+            <div className={`${'bg-white text-gray-800'} p-4 md:p-6 rounded-xl shadow-sm`}>
               <div className="flex items-center gap-2 md:gap-3 mb-2">
-                <div className={`${isDark ? 'w-8 h-8 md:w-10 md:h-10 bg-green-900/10 rounded-full flex items-center justify-center' : 'w-8 h-8 md:w-10 md:h-10 bg-green-100 rounded-full flex items-center justify-center'} flex-shrink-0`}>
+                <div className={`${'w-8 h-8 md:w-10 md:h-10 bg-green-100 rounded-full flex items-center justify-center'} flex-shrink-0`}>
                   <Calendar className="w-4 h-4 md:w-5 md:h-5 text-green-600" />
                 </div>
                 <div>
-                  <p className={`${isDark ? 'text-gray-400 text-xs md:text-sm' : 'text-gray-500 text-xs md:text-sm'}`}>{t(analise.incomeMonthlyAverage)}</p>
-                  <p className={`${isDark ? 'text-[var(--text-main)] text-lg md:text-xl font-semibold' : 'text-lg md:text-xl font-semibold'}`}>
+                  <p className={`${'text-gray-500 text-xs md:text-sm'}`}>{t(analise.incomeMonthlyAverage)}</p>
+                  <p className={`${'text-lg md:text-xl font-semibold'}`}>
                     {formatCurrency(receitaMediaMensal)}
                   </p>
                 </div>
@@ -376,8 +373,8 @@ export default function AnalisePage() {
 
           <div className="flex flex-col xl:flex-row gap-4 md:gap-6">
             <div className="w-full xl:w-2/3 flex flex-col gap-4 md:gap-6">
-              <div className={`${isDark ? 'bg-[var(--bg-card)] text-[var(--text-main)]' : 'bg-white text-gray-800'} p-4 md:p-6 rounded-xl shadow-sm`}>
-                <h2 className={`${isDark ? 'text-[var(--text-main)] text-base md:text-lg font-semibold mb-4' : 'text-base md:text-lg font-semibold text-gray-800 mb-4'}`}>
+              <div className={`${'bg-white text-gray-800'} p-4 md:p-6 rounded-xl shadow-sm`}>
+                <h2 className={`${'text-base md:text-lg font-semibold text-gray-800 mb-4'}`}>
                   {t(analise.yearlyBalance)} {t(analise.monthsLabel)}
                 </h2>
                 <div className="w-full h-[300px]">
@@ -392,8 +389,8 @@ export default function AnalisePage() {
                 </div>
               </div>
 
-              <div className={`${isDark ? 'bg-[var(--bg-card)] text-[var(--text-main)]' : 'bg-white text-gray-800'} p-4 md:p-6 rounded-xl shadow-sm`}>
-                <h2 className={`${isDark ? 'text-[var(--text-main)] text-base md:text-lg font-semibold mb-4' : 'text-base md:text-lg font-semibold text-gray-800 mb-4'}`}>
+              <div className={`${'bg-white text-gray-800'} p-4 md:p-6 rounded-xl shadow-sm`}>
+                <h2 className={`${'text-base md:text-lg font-semibold text-gray-800 mb-4'}`}>
                   {t(analise.income)} vs {t(analise.expenses)} {t(analise.monthsLabel)}
                 </h2>
                 <div className="w-full h-[300px]">
@@ -410,8 +407,8 @@ export default function AnalisePage() {
             </div>
 
             <div className="w-full xl:w-1/3 flex flex-col gap-4 md:gap-6">
-              <div className={`${isDark ? 'bg-[var(--bg-card)] text-[var(--text-main)]' : 'bg-white text-gray-800'} p-4 md:p-6 rounded-xl shadow-sm min-h-[300px]`}>
-                <h2 className={`${isDark ? 'text-[var(--text-main)] text-base md:text-lg font-semibold mb-4' : 'text-base md:text-lg font-semibold text-gray-800 mb-4'}`}>
+              <div className={`${'bg-white text-gray-800'} p-4 md:p-6 rounded-xl shadow-sm min-h-[300px]`}>
+                <h2 className={`${'text-base md:text-lg font-semibold text-gray-800 mb-4'}`}>
                   {t(analise.goalAllocation)}
                 </h2>
                 {metas.length === 0 ? (
@@ -424,8 +421,8 @@ export default function AnalisePage() {
                 )}
               </div>
 
-              <div className={`${isDark ? 'bg-[var(--bg-card)] text-[var(--text-main)]' : 'bg-white text-gray-800'} p-4 md:p-6 rounded-xl shadow-sm`}>
-                <h2 className={`${isDark ? 'text-[var(--text-main)] text-base md:text-lg font-semibold mb-4' : 'text-base md:text-lg font-semibold text-gray-800 mb-4'}`}>
+              <div className={`${'bg-white text-gray-800'} p-4 md:p-6 rounded-xl shadow-sm`}>
+                <h2 className={`${'text-base md:text-lg font-semibold text-gray-800 mb-4'}`}>
                   {t(analise.goalSummary)}
                 </h2>
                 {metas.length === 0 ? (
@@ -438,22 +435,22 @@ export default function AnalisePage() {
                     {metas.map((meta) => {
                       const progresso = Number(meta.valor) > 0 ? (Number(meta.valor_atual) / Number(meta.valor)) * 100 : 0
                       return (
-                        <div key={meta.id} className={`p-3 rounded-lg ${isDark ? 'bg-[var(--bg-main)]' : 'bg-gray-50'}`}>
+                        <div key={meta.id} className={`p-3 rounded-lg ${'bg-gray-50'}`}>
                           <div className="flex justify-between items-center mb-2">
-                            <span className={`text-sm font-medium ${isDark ? 'text-[var(--text-main)]' : 'text-gray-800'}`}>{meta.nome}</span>
-                            <span className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>{progresso.toFixed(0)}%</span>
+                            <span className={`text-sm font-medium ${'text-gray-800'}`}>{meta.nome}</span>
+                            <span className={`text-xs ${'text-gray-500'}`}>{progresso.toFixed(0)}%</span>
                           </div>
-                          <div className={`w-full rounded-full h-2 ${isDark ? 'bg-white/10' : 'bg-gray-200'}`}>
+                          <div className={`w-full rounded-full h-2 ${'bg-gray-200'}`}>
                             <div
                               className="bg-blue-600 h-2 rounded-full transition-all"
                               style={{ width: `${Math.min(progresso, 100)}%` }}
                             ></div>
                           </div>
                           <div className="flex justify-between mt-1">
-                            <span className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+                            <span className={`text-xs ${'text-gray-500'}`}>
                               {formatCurrency(Number(meta.valor_atual) || 0)}
                             </span>
-                            <span className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+                            <span className={`text-xs ${'text-gray-500'}`}>
                               {formatCurrency(Number(meta.valor) || 0)}
                             </span>
                           </div>

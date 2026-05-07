@@ -15,7 +15,6 @@ import { Despesa, Receita, CategoriaDespesa, FonteReceita, DespesaExclusao, Rece
 import { despesasService, receitasService, despesasExclusaoService, receitasExclusaoService, ApiError } from '@/services'
 import { categoriasDespesaService } from '@/services/categorias.service'
 import { fontesReceitaService } from '@/services/fontes.service'
-import { useTheme } from '@/contexts/ThemeContext'
 import { formatCurrency as formatMoney } from "@/app/terminology/currency";
 import { useAuth } from "@/contexts/AuthContext";
 import { useLanguage } from '@/app/terminology/LanguageContext';
@@ -37,8 +36,6 @@ interface TableRow {
 }
 
 export default function DashboardPage() {
-  const { theme } = useTheme()
-  const isDark = theme === "escuro"
   const { t, language } = useLanguage();
   const [activeTab, setActiveTab] = useState<'despesas' | 'receitas'>('despesas')
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -546,10 +543,10 @@ export default function DashboardPage() {
   if (loading) {
     return (
       <ProtectedRoute>
-        <div className={`flex min-h-screen ${isDark ? 'bg-[var(--bg-main)]' : 'bg-gray-50'}`}>
+        <div className={`flex min-h-screen ${'bg-gray-50'}`}>
           <Sidebar />
-          <main className={`flex-1 p-4 md:p-8 flex items-center justify-center ${isDark ? 'text-[var(--text-main)]' : ''}`}>
-            <div className={`${isDark ? 'text-[var(--text-main)]' : 'text-gray-500'}`}>{t(common.loading)}</div>
+          <main className={`flex-1 p-4 md:p-8 flex items-center justify-center ${''}`}>
+            <div className={`${'text-gray-500'}`}>{t(common.loading)}</div>
           </main>
         </div>
       </ProtectedRoute>
@@ -559,9 +556,9 @@ export default function DashboardPage() {
   if (error) {
     return (
       <ProtectedRoute>
-        <div className={`flex min-h-screen ${isDark ? 'bg-[var(--bg-main)]' : 'bg-gray-50'}`}>
+        <div className={`flex min-h-screen ${'bg-gray-50'}`}>
           <Sidebar />
-          <main className={`flex-1 p-4 md:p-8 flex items-center justify-center ${isDark ? 'text-[var(--text-main)]' : ''}`}>
+          <main className={`flex-1 p-4 md:p-8 flex items-center justify-center ${''}`}>
             <div className="text-red-500">{error}</div>
           </main>
         </div>
@@ -571,24 +568,24 @@ export default function DashboardPage() {
 
   return (
     <ProtectedRoute>
-      <div className={`flex min-h-screen ${isDark ? 'bg-[var(--bg-main)]' : 'bg-gray-50'}`}>
+      <div className={`flex min-h-screen ${'bg-gray-50'}`}>
       <Sidebar />
-      <main className={`flex-1 p-4 md:p-8 md:ml-64 ${isDark ? 'text-[var(--text-main)]' : ''}`}>
+      <main className={`flex-1 p-4 md:p-8 md:ml-64 ${''}`}>
         {showConfigView ? (
           <>
-            <header className={`flex items-center gap-4 mb-6 md:mb-8 ${isDark ? 'text-[var(--text-main)]' : ''}`}>
+            <header className={`flex items-center gap-4 mb-6 md:mb-8 ${''}`}>
               <button
                 onClick={() => setShowConfigView(false)}
-                className={`${isDark ? 'p-2 hover:bg-white/10 rounded-lg transition-colors' : 'p-2 hover:bg-gray-100 rounded-lg transition-colors'}`}
+                className={`${'p-2 hover:bg-gray-100 rounded-lg transition-colors'}`}
               >
-                <ArrowLeft className={`w-5 h-5 ${isDark ? 'text-[var(--text-main)]' : 'text-gray-600'}`} />
+                <ArrowLeft className={`w-5 h-5 ${'text-gray-600'}`} />
               </button>
-              <h1 className={`${isDark ? 'text-[var(--text-main)] text-xl md:text-2xl font-semibold' : 'text-xl md:text-2xl font-semibold text-gray-800'}`}>
+              <h1 className={`${'text-xl md:text-2xl font-semibold text-gray-800'}`}>
                 {configTab === 'categorias' ? t(dashboard.configureCategories) : t(dashboard.configureSources)}
               </h1>
             </header>
 
-            <div className={`relative flex ${isDark ? 'bg-[var(--bg-card)]' : 'bg-white'} rounded-lg w-fit mb-6 md:mb-8`}>
+            <div className={`relative flex ${'bg-white'} rounded-lg w-fit mb-6 md:mb-8`}>
               <div className={`absolute top-0 h-full bg-blue-600 rounded-lg transition-all duration-200 ease-in-out ${
                 configTab === 'categorias' 
                   ? language === 'pt' ? 'left-0 w-4/8' 
@@ -600,13 +597,13 @@ export default function DashboardPage() {
               }`}></div>
               <button
                 onClick={() => setConfigTab('categorias')}
-                className={`relative z-10 pl-2 py-2 text-sm font-medium rounded-md transition-colors duration-200 ${configTab === 'categorias' ? (isDark ? 'text-[var(--text-main)]' : 'text-white') : (isDark ? 'text-gray-300' : 'text-gray-600')}`}
+                className={`relative z-10 pl-2 py-2 text-sm font-medium rounded-md transition-colors duration-200 ${configTab === 'categorias' ? ('text-white') : ('text-gray-600')}`}
               >
                 {t(dashboard.expensesTab)}
               </button>
               <button
                 onClick={() => setConfigTab('fontes')}
-                className={`relative z-10 pl-5 pr-2 py-2 text-sm font-medium rounded-md transition-colors duration-200 ${configTab === 'fontes' ? (isDark ? 'text-[var(--text-main)]' : 'text-white') : (isDark ? 'text-gray-300' : 'text-gray-600')}`}
+                className={`relative z-10 pl-5 pr-2 py-2 text-sm font-medium rounded-md transition-colors duration-200 ${configTab === 'fontes' ? ('text-white') : ('text-gray-600')}`}
               >
                 {t(dashboard.incomeTab)}
               </button>
@@ -614,36 +611,36 @@ export default function DashboardPage() {
 
             <div className="flex flex-col xl:flex-row gap-4 md:gap-6">
               <div className="w-full xl:w-4/6">
-              <section className={`${isDark ? 'bg-[var(--bg-card)] text-[var(--text-main)]' : 'bg-white text-gray-800'} p-4 md:p-6 rounded-xl shadow-sm`}>
-                  <h2 className={`${isDark ? 'text-[var(--text-main)] text-base md:text-lg font-semibold mb-4' : 'text-base md:text-lg font-semibold text-gray-800 mb-4'}`}>
+              <section className={`${'bg-white text-gray-800'} p-4 md:p-6 rounded-xl shadow-sm`}>
+                  <h2 className={`${'text-base md:text-lg font-semibold text-gray-800 mb-4'}`}>
                     {configTab === 'categorias' ? t(dashboard.expensesTab) : t(dashboard.incomeTab)}
                   </h2>
 
                   <div className="overflow-x-auto">
                     <table className="w-full text-sm">
-                    <thead className={`${isDark ? 'text-gray-400 border-b border-white/10' : 'text-gray-500 border-b border-gray-200'}`}>
+                    <thead className={`${'text-gray-500 border-b border-gray-200'}`}>
                         <tr>
                           <th className="py-3 font-medium text-left w-20">Ícone</th>
                           <th className="py-3 font-medium text-left">Nome</th>
                         </tr>
                       </thead>
-                      <tbody className={`${isDark ? 'text-[var(--text-main)]' : 'text-gray-700'}`}>
+                      <tbody className={`${'text-gray-700'}`}>
                         {(configTab === 'categorias' ? categorias : fontes).map((item) => {
                           const IconComponent = getIconComponent(item.icone || 'Home')
 
                           return (
                             <tr
                               key={item.id}
-                              className={`${isDark ? 'border-b border-white/10 hover:bg-white/10 cursor-pointer transition-colors' : 'border-b border-gray-100 hover:bg-gray-50 cursor-pointer transition-colors'}`}
+                              className={`${'border-b border-gray-100 hover:bg-gray-50 cursor-pointer transition-colors'}`}
                               onClick={() => openConfigModal(item)}
                             >
                               <td className="py-4">
-                              <div className={`${isDark ? 'w-12 h-12 rounded-full bg-blue-900/10 flex items-center justify-center' : 'w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center'}`}>
+                              <div className={`${'w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center'}`}>
                                   <IconComponent className="w-6 h-6 text-blue-600" />
                                 </div>
                               </td>
                               <td className="py-4">
-                              <span className={`text-blue-600 hover:underline ${isDark ? 'text-blue-300' : ''}`}>{item.nome}</span>
+                              <span className={`text-blue-600 hover:underline ${''}`}>{item.nome}</span>
                               </td>
                             </tr>
                           );
@@ -654,7 +651,7 @@ export default function DashboardPage() {
 
                   <button
                     onClick={() => openConfigModal()}
-                    className={`mt-6 ${isDark ? 'bg-blue-600 text-white' : 'bg-blue-600 text-white'} px-6 py-3 rounded-lg text-sm font-bold hover:bg-blue-700 transition flex items-center gap-2`}
+                    className={`mt-6 ${'bg-blue-600 text-white'} px-6 py-3 rounded-lg text-sm font-bold hover:bg-blue-700 transition flex items-center gap-2`}
                   >
                     {t(common.add)} {configTab === 'categorias' ? t(common.category).toLowerCase() : t(common.source).toLowerCase()}
                   </button>
@@ -662,20 +659,20 @@ export default function DashboardPage() {
               </div>
 
               <div className="w-full xl:w-2/6 flex flex-col gap-4 md:gap-6">
-              <div className={`${isDark ? 'bg-[var(--bg-card)] text-[var(--text-main)]' : 'bg-white text-gray-800'} p-4 md:p-6 rounded-xl shadow-sm`}>
+              <div className={`${'bg-white text-gray-800'} p-4 md:p-6 rounded-xl shadow-sm`}>
                   <div className="flex items-center gap-2 md:gap-3 mb-2 md:mb-3">
-                  <div className={`${isDark ? 'w-8 h-8 md:w-10 md:h-10 bg-blue-900/10 rounded-full flex items-center justify-center' : 'w-8 h-8 md:w-10 md:h-10 bg-blue-100 rounded-full flex items-center justify-center'}`}>
+                  <div className={`${'w-8 h-8 md:w-10 md:h-10 bg-blue-100 rounded-full flex items-center justify-center'}`}>
                       <CreditCard className="w-4 h-4 md:w-5 md:h-5 text-blue-600" />
                     </div>
                     <div>
-                      <p className={`${isDark ? 'text-gray-400 text-xs md:text-sm' : 'text-gray-500 text-xs md:text-sm'}`}>{configTab === 'categorias' ? t(common.expenses) : t(common.income)}</p>
-                      <p className={`${isDark ? 'text-[var(--text-main)] text-lg md:text-2xl font-semibold' : 'text-lg md:text-2xl font-semibold'}`}>{formatCurrency(configTab === 'categorias' ? totalDespesas : totalReceitas)}</p>
+                      <p className={`${'text-gray-500 text-xs md:text-sm'}`}>{configTab === 'categorias' ? t(common.expenses) : t(common.income)}</p>
+                      <p className={`${'text-lg md:text-2xl font-semibold'}`}>{formatCurrency(configTab === 'categorias' ? totalDespesas : totalReceitas)}</p>
                     </div>
                   </div>
                 </div>
 
-                <div className={`${isDark ? 'bg-[var(--bg-card)] text-[var(--text-main)]' : 'bg-white text-gray-800'} p-4 md:p-6 rounded-xl shadow-sm`}>
-                <h2 className={`${isDark ? 'text-[var(--text-main)] text-base md:text-lg font-semibold mb-3' : 'text-base md:text-lg font-semibold text-gray-800 mb-3'}`}>{t(dashboard.monthlyBalance)}</h2>
+                <div className={`${'bg-white text-gray-800'} p-4 md:p-6 rounded-xl shadow-sm`}>
+                <h2 className={`${'text-base md:text-lg font-semibold text-gray-800 mb-3'}`}>{t(dashboard.monthlyBalance)}</h2>
                   <div className="w-full h-[180px] sm:h-[220px] md:h-[260px]">
                     {monthlyBalanceData.every(item => item.balance === 0) ? (
                       <div className="flex flex-col items-center justify-center h-full text-gray-500">
@@ -689,7 +686,7 @@ export default function DashboardPage() {
                   </div>
                 </div>
 
-            <div className={`${isDark ? 'bg-[var(--bg-card)] text-[var(--text-main)]' : 'bg-white text-gray-800'} p-4 md:p-6 rounded-xl shadow-sm min-h-[200px] md:min-h-[300px]`}>
+            <div className={`${'bg-white text-gray-800'} p-4 md:p-6 rounded-xl shadow-sm min-h-[200px] md:min-h-[300px]`}>
                   {configTab === 'categorias' ? (
                     despesasChartData.length === 0 ? (
                       <div className="flex flex-col items-center justify-center h-full text-gray-500 py-12">
@@ -719,13 +716,13 @@ export default function DashboardPage() {
           </>
         ) : (
           <>
-        <header className={`flex flex-col md:flex-row md:items-center md:justify-between mb-6 md:mb-8 gap-4 ${isDark ? 'text-[var(--text-main)]' : ''}`}>
-        <h1 className={`${isDark ? 'text-[var(--text-main)] text-xl md:text-2xl font-semibold text-center md:text-left' : 'text-xl md:text-2xl font-semibold text-gray-800 text-center md:text-left'}`}>{t(dashboard.title)}</h1>
+        <header className={`flex flex-col md:flex-row md:items-center md:justify-between mb-6 md:mb-8 gap-4 ${''}`}>
+        <h1 className={`${'text-xl md:text-2xl font-semibold text-gray-800 text-center md:text-left'}`}>{t(dashboard.title)}</h1>
           <div className="flex flex-col gap-2 w-full md:w-auto">
             <select
               value={selectedMonth}
               onChange={(e) => setSelectedMonth(e.target.value)}
-              className={`${isDark ? 'px-3 py-2 border border-white/10 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent w-full md:w-48 bg-[var(--bg-card)] text-[var(--text-main)]' : 'px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent w-full md:w-48'}`}
+              className={`${'px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent w-full md:w-48'}`}
             >
               {monthOptions.map(month => (
                 <option key={month} value={month}>{month}</option>
@@ -741,19 +738,19 @@ export default function DashboardPage() {
           </div>
         </header>
 
-    <div className={`relative flex ${isDark ? 'bg-[var(--bg-card)]' : 'bg-white'} rounded-lg w-fit mb-6 md:mb-8`}>
+    <div className={`relative flex ${'bg-white'} rounded-lg w-fit mb-6 md:mb-8`}>
           <div className={`absolute top-0 h-full bg-blue-600 rounded-lg transition-all duration-200 ease-in-out ${
             activeTab === 'despesas' ? 'left-0 w-1/2' : 'left-1/2 w-1/2'
           }`}></div>
           <button 
             onClick={() => setActiveTab('despesas')}
-            className={`relative z-10 px-6 py-2 text-sm font-medium rounded-md transition-colors duration-200 ${activeTab === 'despesas' ? (isDark ? 'text-[var(--text-main)]' : 'text-white') : (isDark ? 'text-gray-300' : 'text-gray-600')}`}
+            className={`relative z-10 px-6 py-2 text-sm font-medium rounded-md transition-colors duration-200 ${activeTab === 'despesas' ? ('text-white') : ('text-gray-600')}`}
           >
             {t(dashboard.expensesTab)}
           </button>
           <button
             onClick={() => setActiveTab('receitas')}
-            className={`relative z-10 px-6 py-2 text-sm font-medium rounded-md transition-colors duration-200 ${activeTab === 'receitas' ? (isDark ? 'text-[var(--text-main)]' : 'text-white') : (isDark ? 'text-gray-300' : 'text-gray-600')}`}
+            className={`relative z-10 px-6 py-2 text-sm font-medium rounded-md transition-colors duration-200 ${activeTab === 'receitas' ? ('text-white') : ('text-gray-600')}`}
           >
             {t(dashboard.incomeTab)}
           </button>
@@ -762,28 +759,28 @@ export default function DashboardPage() {
         <div className="flex flex-col xl:flex-row gap-4 md:gap-6">
           <div className="w-full xl:w-4/6 flex flex-col gap-4 md:gap-6">
             <section className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-          <div className={`${isDark ? 'bg-[var(--bg-card)] text-[var(--text-main)]' : 'bg-white text-gray-800'} p-4 md:p-6 rounded-xl shadow-sm`}>
+          <div className={`${'bg-white text-gray-800'} p-4 md:p-6 rounded-xl shadow-sm`}>
                 <div className="flex items-center justify-between mb-2 md:mb-3">
                   <div className="flex items-center gap-2 md:gap-3">
-                <div className={`${isDark ? 'w-8 h-8 md:w-10 md:h-10 bg-yellow-900/10 rounded-full flex items-center justify-center' : 'w-8 h-8 md:w-10 md:h-10 bg-yellow-100 rounded-full flex items-center justify-center'}`}>
+                <div className={`${'w-8 h-8 md:w-10 md:h-10 bg-yellow-100 rounded-full flex items-center justify-center'}`}>
                       <ShoppingCart className="w-4 h-4 md:w-5 md:h-5 text-yellow-600" />
                     </div>
                     <div>
-                      <p className={`${isDark ? 'text-gray-400 text-xs md:text-sm' : 'text-gray-500 text-xs md:text-sm'}`}>{t(common.expenses)}</p>
-                      <p className={`${isDark ? 'text-[var(--text-main)] text-lg md:text-2xl font-semibold' : 'text-lg md:text-2xl font-semibold'}`}>{formatCurrency(totalDespesas)}</p>
+                      <p className={`${'text-gray-500 text-xs md:text-sm'}`}>{t(common.expenses)}</p>
+                      <p className={`${'text-lg md:text-2xl font-semibold'}`}>{formatCurrency(totalDespesas)}</p>
                     </div>
                   </div>
                 </div>
               </div>
 
-          <div className={`${isDark ? 'bg-[var(--bg-card)] text-[var(--text-main)]' : 'bg-white text-gray-800'} p-4 md:p-6 rounded-xl shadow-sm`}>
+          <div className={`${'bg-white text-gray-800'} p-4 md:p-6 rounded-xl shadow-sm`}>
                 <div className="flex items-center gap-2 md:gap-3 mb-2 md:mb-3">
-              <div className={`${isDark ? 'w-8 h-8 md:w-10 md:h-10 bg-blue-900/10 rounded-full flex items-center justify-center' : 'w-8 h-8 md:w-10 md:h-10 bg-blue-100 rounded-full flex items-center justify-center'}`}>
+              <div className={`${'w-8 h-8 md:w-10 md:h-10 bg-blue-100 rounded-full flex items-center justify-center'}`}>
                     <CreditCard className="w-4 h-4 md:w-5 md:h-5 text-blue-600" />
                   </div>
                   <div>
-                <p className={`${isDark ? 'text-gray-400 text-xs md:text-sm' : 'text-gray-500 text-xs md:text-sm'}`}>{t(common.income)}</p>
-                <p className={`${isDark ? 'text-[var(--text-main)] text-lg md:text-2xl font-semibold' : 'text-lg md:text-2xl font-semibold'}`}>{formatCurrency(totalReceitas)}</p>
+                <p className={`${'text-gray-500 text-xs md:text-sm'}`}>{t(common.income)}</p>
+                <p className={`${'text-lg md:text-2xl font-semibold'}`}>{formatCurrency(totalReceitas)}</p>
                   </div>
                 </div>
               </div>
@@ -796,7 +793,7 @@ export default function DashboardPage() {
                   setConfigTab(activeTab === 'despesas' ? 'categorias' : 'fontes')
                   setShowConfigView(true)
                 }}
-            className={`flex items-center gap-2 ${isDark ? 'text-gray-300 hover:text-[var(--text-main)]' : 'text-gray-600 hover:text-gray-800'} transition-colors`}
+            className={`flex items-center gap-2 ${'text-gray-600 hover:text-gray-800'} transition-colors`}
               >
                 <Settings className="w-4 h-4 md:w-5 md:h-5" />
                 <span className="text-xs md:text-sm">{activeTab === 'despesas' ? t(dashboard.configureCategories) : t(dashboard.configureSources)}</span>
@@ -804,24 +801,22 @@ export default function DashboardPage() {
             </div>
 
             {/* RF15 - O sistema deverá ter na tela de Painel, filtros de: ordem de listagem, busca por nome, busca por valor mínimo e máximo, seleção de categoria ou fonte. */}
-            <section className={`${isDark ? 'bg-[var(--bg-card)] text-[var(--text-main)]' : 'bg-white text-gray-800'} p-4 md:p-6 rounded-xl shadow-sm`}>
+            <section className={`${'bg-white text-gray-800'} p-4 md:p-6 rounded-xl shadow-sm`}>
               <div className="flex justify-between items-center mb-3 md:mb-4">
-                <h2 className={`${isDark ? 'text-[var(--text-main)] text-base md:text-lg font-semibold' : 'text-base md:text-lg font-semibold text-gray-800'}`}>{activeTab === 'despesas' ? `${t(dashboard.lastExpenses)}` : `${t(dashboard.lastIncome)}`}</h2>
+                <h2 className={`${'text-base md:text-lg font-semibold text-gray-800'}`}>{activeTab === 'despesas' ? `${t(dashboard.lastExpenses)}` : `${t(dashboard.lastIncome)}`}</h2>
               </div>
               
-              <div className={`mb-4 p-4 rounded-lg ${isDark ? 'bg-[var(--bg-main)] border border-white/10' : 'bg-gray-50 border border-gray-200'}`}>
+              <div className={`mb-4 p-4 rounded-lg ${'bg-gray-50 border border-gray-200'}`}>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
                   <div className="relative">
-                    <Search className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 ${isDark ? 'text-gray-400' : 'text-gray-500'}`} />
+                    <Search className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 ${'text-gray-500'}`} />
                     <input
                       type="text"
                       placeholder={t(common.search)}
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
                       className={`w-full pl-10 pr-3 py-2 text-sm rounded-md border ${
-                        isDark 
-                          ? 'bg-[var(--bg-card)] border-white/10 text-[var(--text-main)] placeholder-gray-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500' 
-                          : 'bg-white border-gray-300 text-gray-800 placeholder-gray-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500'
+                        'bg-white border-gray-300 text-gray-800 placeholder-gray-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500'
                       } focus:outline-none`}
                     />
                   </div>
@@ -836,9 +831,7 @@ export default function DashboardPage() {
                         setMinValue(value)
                       }}
                       className={`w-full px-3 py-2 text-sm rounded-md border ${
-                        isDark 
-                          ? 'bg-[var(--bg-card)] border-white/10 text-[var(--text-main)] placeholder-gray-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500' 
-                          : 'bg-white border-gray-300 text-gray-800 placeholder-gray-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500'
+                        'bg-white border-gray-300 text-gray-800 placeholder-gray-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500'
                       } focus:outline-none`}
                     />
                   </div>
@@ -853,9 +846,7 @@ export default function DashboardPage() {
                         setMaxValue(value)
                       }}
                       className={`w-full px-3 py-2 text-sm rounded-md border ${
-                        isDark 
-                          ? 'bg-[var(--bg-card)] border-white/10 text-[var(--text-main)] placeholder-gray-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500' 
-                          : 'bg-white border-gray-300 text-gray-800 placeholder-gray-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500'
+                        'bg-white border-gray-300 text-gray-800 placeholder-gray-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500'
                       } focus:outline-none`}
                     />
                   </div>
@@ -865,9 +856,7 @@ export default function DashboardPage() {
                       value={filterCategory}
                       onChange={(e) => setFilterCategory(e.target.value)}
                       className={`w-full px-3 py-2 text-sm rounded-md border ${
-                        isDark 
-                          ? 'bg-[var(--bg-card)] border-white/10 text-[var(--text-main)] focus:border-blue-500 focus:ring-1 focus:ring-blue-500' 
-                          : 'bg-white border-gray-300 text-gray-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500'
+                        'bg-white border-gray-300 text-gray-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500'
                       } focus:outline-none`}
                     >
                       <option value="all">{activeTab === 'despesas' ? t(common.allCategories) : t(common.allSources)}</option>
@@ -883,18 +872,18 @@ export default function DashboardPage() {
               
               <div className="md:hidden">
                 {filteredRows.length === 0 ? (
-                  <div className={`text-center py-12 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+                  <div className={`text-center py-12 ${'text-gray-500'}`}>
                     {activeTab === 'despesas' ? (
-                      <ShoppingCart className={`w-12 h-12 mx-auto mb-4 ${isDark ? 'text-gray-600' : 'text-gray-300'}`} />
+                      <ShoppingCart className={`w-12 h-12 mx-auto mb-4 ${'text-gray-300'}`} />
                     ) : (
-                      <CreditCard className={`w-12 h-12 mx-auto mb-4 ${isDark ? 'text-gray-600' : 'text-gray-300'}`} />
+                      <CreditCard className={`w-12 h-12 mx-auto mb-4 ${'text-gray-300'}`} />
                     )}
                     <p>{activeTab === 'despesas' ? t(dashboard.noExpenses) : t(dashboard.noIncome)}</p>
                     <p className="text-sm mt-2">{activeTab === 'despesas' ? t(dashboard.addExpense) : t(dashboard.addIncome)}</p>
                   </div>
                 ) : (
                   <>
-                    <div className={`grid grid-cols-4 gap-2 pb-2 mb-2 border-b ${isDark ? 'border-white/10' : 'border-gray-200'} text-xs ${isDark ? 'text-gray-400' : 'text-gray-500'} font-medium`}>
+                    <div className={`grid grid-cols-4 gap-2 pb-2 mb-2 border-b ${'border-gray-200'} text-xs ${'text-gray-500'} font-medium`}>
                       <div 
                         className="cursor-pointer hover:opacity-80 transition-opacity select-none flex items-center gap-1"
                         onClick={(e) => { e.stopPropagation(); handleSort('date'); }}
@@ -928,7 +917,7 @@ export default function DashboardPage() {
                       {paginatedRows.map((row) => (
                         <div
                           key={row.id}
-                          className={`${isDark ? 'bg-[var(--bg-main)] rounded-lg p-3 border border-white/10 hover:bg-white/10' : 'bg-gray-50 rounded-lg p-3 border border-gray-200 hover:bg-gray-100'} transition-colors cursor-pointer grid grid-cols-4 gap-2 items-center`}
+                          className={`${'bg-gray-50 rounded-lg p-3 border border-gray-200 hover:bg-gray-100'} transition-colors cursor-pointer grid grid-cols-4 gap-2 items-center`}
                           onClick={() => openEditModal(row)}
                         >
                           <div className="text-xs font-medium">{row.date}</div>
@@ -936,7 +925,7 @@ export default function DashboardPage() {
                             <span className="flex-shrink-0">{row.icon}</span>
                             <div className="min-w-0 flex-1">
                               <div className="font-medium text-sm truncate">{row.name}</div>
-                              <div className={`${isDark ? 'text-gray-400 text-xs truncate' : 'text-xs text-gray-500 truncate'}`}>{row.category}</div>
+                              <div className={`${'text-xs text-gray-500 truncate'}`}>{row.category}</div>
                             </div>
                           </div>
                           <div className="text-right">
@@ -951,23 +940,19 @@ export default function DashboardPage() {
                             onClick={(e) => { e.stopPropagation(); goToPage(currentPage - 1); }}
                             disabled={currentPage === 1}
                             className={`px-3 py-1 rounded-md text-xs font-medium transition-colors ${
-                              isDark
-                                ? 'bg-white/10 text-gray-200 hover:bg-white/20 disabled:opacity-50 disabled:cursor-not-allowed'
-                                : 'bg-gray-100 text-gray-700 hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed'
+                              'bg-gray-100 text-gray-700 hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed'
                             }`}
                           >
                             {t(common.previous)}
                           </button>
-                          <span className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                          <span className={`text-xs ${'text-gray-600'}`}>
                             {currentPage} {t(common.of)} {totalPages}
                           </span>
                           <button
                             onClick={(e) => { e.stopPropagation(); goToPage(currentPage + 1); }}
                             disabled={currentPage === totalPages}
                             className={`px-3 py-1 rounded-md text-xs font-medium transition-colors ${
-                              isDark
-                                ? 'bg-white/10 text-gray-200 hover:bg-white/20 disabled:opacity-50 disabled:cursor-not-allowed'
-                                : 'bg-gray-100 text-gray-700 hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed'
+                              'bg-gray-100 text-gray-700 hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed'
                             }`}
                           >
                             {t(common.next)}
@@ -981,11 +966,11 @@ export default function DashboardPage() {
 
               <div className="hidden md:block overflow-x-auto">
                 {filteredRows.length === 0 ? (
-                  <div className={`text-center py-12 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+                  <div className={`text-center py-12 ${'text-gray-500'}`}>
                     {activeTab === 'despesas' ? (
-                      <ShoppingCart className={`w-12 h-12 mx-auto mb-4 ${isDark ? 'text-gray-600' : 'text-gray-300'}`} />
+                      <ShoppingCart className={`w-12 h-12 mx-auto mb-4 ${'text-gray-300'}`} />
                     ) : (
-                      <CreditCard className={`w-12 h-12 mx-auto mb-4 ${isDark ? 'text-gray-600' : 'text-gray-300'}`} />
+                      <CreditCard className={`w-12 h-12 mx-auto mb-4 ${'text-gray-300'}`} />
                     )}
                     <p>{activeTab === 'despesas' ? t(dashboard.noExpenses) : t(dashboard.noIncome)}</p>
                     <p className="text-sm mt-2">{activeTab === 'despesas' ? t(dashboard.clickToAddExpense) : t(dashboard.clickToAddIncome)}</p>
@@ -993,7 +978,7 @@ export default function DashboardPage() {
                 ) : (
                   <>
                   <table className="w-full text-xs md:text-sm table-fixed min-w-[500px]">
-                    <thead className={`${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+                    <thead className={`${'text-gray-500'}`}>
                       <tr>
                         <th 
                           className="py-1 md:py-2 font-medium text-left w-16 pl-3 md:pl-4 cursor-pointer hover:opacity-80 transition-opacity select-none"
@@ -1042,11 +1027,11 @@ export default function DashboardPage() {
                         <th className="py-1 md:py-2 font-medium text-left w-24">{t(common.total)}</th>
                       </tr>
                     </thead>
-                    <tbody className={`${isDark ? 'text-[var(--text-main)]' : 'text-gray-700'}`}>
+                    <tbody className={`${'text-gray-700'}`}>
                       {paginatedRows.map((row) => (
                         <tr
                           key={row.id}
-                          className={`${isDark ? 'odd:bg-[var(--bg-main)] hover:bg-white/10 cursor-pointer transition-colors' : 'odd:bg-gray-50 hover:bg-gray-100 cursor-pointer transition-colors'}`}
+                          className={`${'odd:bg-gray-50 hover:bg-gray-100 cursor-pointer transition-colors'}`}
                           onClick={() => openEditModal(row)}
                         >
                           <td className="py-2 md:py-3 pl-3 md:pl-4 align-middle">{row.date}</td>
@@ -1069,23 +1054,19 @@ export default function DashboardPage() {
                         onClick={(e) => { e.stopPropagation(); goToPage(currentPage - 1); }}
                         disabled={currentPage === 1}
                         className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${
-                          isDark
-                            ? 'bg-white/10 text-gray-200 hover:bg-white/20 disabled:opacity-50 disabled:cursor-not-allowed'
-                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed'
+                          'bg-gray-100 text-gray-700 hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed'
                         }`}
                       >
                         {t(common.previous)}
                       </button>
-                      <span className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                      <span className={`text-sm ${'text-gray-600'}`}>
                         {currentPage} {t(common.of)} {totalPages}
                       </span>
                       <button
                         onClick={(e) => { e.stopPropagation(); goToPage(currentPage + 1); }}
                         disabled={currentPage === totalPages}
                         className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${
-                          isDark
-                            ? 'bg-white/10 text-gray-200 hover:bg-white/20 disabled:opacity-50 disabled:cursor-not-allowed'
-                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed'
+                          'bg-gray-100 text-gray-700 hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed'
                         }`}
                       >
                         {t(common.next)}
@@ -1099,8 +1080,8 @@ export default function DashboardPage() {
           </div>
           
           <div className="w-full xl:w-2/6 flex flex-col gap-4 md:gap-6">
-            <div className={`${isDark ? 'bg-[var(--bg-card)] text-[var(--text-main)]' : 'bg-white text-gray-800'} p-4 md:p-6 rounded-xl shadow-sm`}>
-              <h2 className={`${isDark ? 'text-[var(--text-main)] text-base md:text-lg font-semibold mb-3' : 'text-base md:text-lg font-semibold text-gray-800 mb-3'}`}>{t(dashboard.monthlyBalance)}</h2>
+            <div className={`${'bg-white text-gray-800'} p-4 md:p-6 rounded-xl shadow-sm`}>
+              <h2 className={`${'text-base md:text-lg font-semibold text-gray-800 mb-3'}`}>{t(dashboard.monthlyBalance)}</h2>
               <div className="w-full h-[180px] sm:h-[220px] md:h-[260px]">
                 {monthlyBalanceData.every(item => item.balance === 0) ? (
                   <div className="flex flex-col items-center justify-center h-full text-gray-500">
@@ -1112,7 +1093,7 @@ export default function DashboardPage() {
                 )}
               </div>
             </div>
-            <div className={`${isDark ? 'bg-[var(--bg-card)] text-[var(--text-main)]' : 'bg-white text-gray-800'} p-4 md:p-6 rounded-xl shadow-sm min-h-[200px] md:min-h-[300px]`}>
+            <div className={`${'bg-white text-gray-800'} p-4 md:p-6 rounded-xl shadow-sm min-h-[200px] md:min-h-[300px]`}>
               {activeTab === 'despesas' ? (
                 despesasChartData.length === 0 ? (
                   <div className="flex flex-col items-center justify-center h-full text-gray-500 py-12">

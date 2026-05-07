@@ -131,7 +131,6 @@ export default function CadastroPage() {
             <LanguageSelector
               currentLanguage={language}
               onLanguageChange={setLanguage}
-              isDarkMode={false}
             />
           </div>
         <div className="w-full max-w-sm space-y-6">

@@ -4,7 +4,6 @@ import { useState, useRef, useEffect } from 'react'
 import { X, ChevronLeft, ChevronRight, Save } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { contribuicaoMetaService } from '@/services/contribuicao-meta.service'
-import { useTheme } from '@/contexts/ThemeContext'
 import { useAuth } from '@/contexts/AuthContext'
 import { getCurrencySymbol } from '@/app/terminology/currency'
 import { useLanguage } from '@/app/terminology/LanguageContext'
@@ -20,10 +19,9 @@ interface AddContribuicaoModalProps {
 interface CalendarProps {
   selectedDate: string
   onDateSelect: (date: string) => void
-  isDark?: boolean
 }
 
-function Calendar({ selectedDate, onDateSelect, isDark }: CalendarProps) {
+function Calendar({ selectedDate, onDateSelect}: CalendarProps) {
   const [currentMonth, setCurrentMonth] = useState(new Date())
   const { language, t } = useLanguage()
 
@@ -101,17 +99,15 @@ function Calendar({ selectedDate, onDateSelect, isDark }: CalendarProps) {
 
   const monthNames = addContribuicaoModal.calendarMonths[language]
   const currentMonthLabel = `${monthNames[currentMonth.getMonth()]} ${currentMonth.getFullYear()}`
-  const infoTextColor = isDark ? 'text-gray-400' : 'text-gray-500'
-  const highlightTextColor = isDark ? 'text-[var(--text-main)]' : 'text-gray-800'
+  const infoTextColor = 'text-gray-500'
+  const highlightTextColor = 'text-gray-800'
   const selectedDateLabel = selectedDate
     ? formatSelectedDate(selectedDate)
     : t(addContribuicaoModal.calendarNoDateSelected)
 
   return (
     <div className={`rounded-lg shadow-lg p-4 border ${
-      isDark 
-        ? 'bg-[var(--bg-card)] border-gray-700' 
-        : 'bg-white border-gray-200'
+      'bg-white border-gray-200'
     }`}>
       <div className="flex items-center justify-between mb-4 gap-4">
         <div>
@@ -127,7 +123,7 @@ function Calendar({ selectedDate, onDateSelect, isDark }: CalendarProps) {
             type="button"
             onClick={() => navigateMonth('prev')}
             className={`p-1 ${
-              isDark ? 'text-gray-400 hover:text-gray-200' : 'text-gray-400 hover:text-gray-600'
+              'text-gray-400 hover:text-gray-600'
             }`}
           >
             <ChevronLeft className="w-4 h-4" />
@@ -136,7 +132,7 @@ function Calendar({ selectedDate, onDateSelect, isDark }: CalendarProps) {
             type="button"
             onClick={() => navigateMonth('next')}
             className={`p-1 ${
-              isDark ? 'text-gray-400 hover:text-gray-200' : 'text-gray-400 hover:text-gray-600'
+              'text-gray-400 hover:text-gray-600'
             }`}
           >
             <ChevronRight className="w-4 h-4" />
@@ -147,7 +143,7 @@ function Calendar({ selectedDate, onDateSelect, isDark }: CalendarProps) {
       <div className="grid grid-cols-7 gap-1 mb-2">
         {dayNames.map((day, index) => (
           <div key={index} className={`text-center text-sm font-medium py-2 ${
-            isDark ? 'text-gray-400' : 'text-gray-600'
+            'text-gray-600'
           }`}>
             {day}
           </div>
@@ -171,8 +167,6 @@ function Calendar({ selectedDate, onDateSelect, isDark }: CalendarProps) {
               className={`h-8 w-8 flex items-center justify-center text-sm rounded-full transition-colors ${
                 isSelected
                   ? 'bg-blue-600 text-white'
-                  : isDark
-                  ? 'text-gray-200 hover:bg-white/10'
                   : 'text-gray-700 hover:bg-gray-100'
               }`}
             >
@@ -187,8 +181,6 @@ function Calendar({ selectedDate, onDateSelect, isDark }: CalendarProps) {
 
 export default function AddContribuicaoModal({ isOpen, onClose, metaId }: AddContribuicaoModalProps) {
   const { t } = useLanguage()
-  const { theme } = useTheme()
-  const isDark = theme === 'escuro'
   const { user } = useAuth()
   const userCurrency = user?.moeda || 'real'
 
@@ -266,7 +258,7 @@ export default function AddContribuicaoModal({ isOpen, onClose, metaId }: AddCon
 
           <motion.div
             className={`fixed right-0 top-0 h-full w-full max-w-md shadow-xl z-50 flex flex-col p-6 overflow-y-auto ${
-              isDark ? 'bg-[var(--bg-card)] text-[var(--text-main)]' : 'bg-white text-gray-800'
+              'bg-white text-gray-800'
             }`}
             initial={{ x: '100%' }}
             animate={{ x: 0 }}
@@ -277,7 +269,7 @@ export default function AddContribuicaoModal({ isOpen, onClose, metaId }: AddCon
               {showError && (
                 <motion.div
                   className={`fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white px-6 py-4 rounded-lg shadow-2xl z-[60] flex items-center gap-3 ${
-                    isDark ? 'bg-red-600' : 'bg-red-500'
+                    'bg-red-500'
                   }`}
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
@@ -294,9 +286,9 @@ export default function AddContribuicaoModal({ isOpen, onClose, metaId }: AddCon
 
             <div className="flex items-center justify-between mb-6">
               <h2 className={`text-lg font-semibold ${
-                isDark ? 'text-[var(--text-main)]' : 'text-gray-800'
+                'text-gray-800'
               }`}>{t(addContribuicaoModal.title)}</h2>
-              <button onClick={onClose} className={isDark ? 'text-gray-400 hover:text-gray-200' : 'text-gray-500 hover:text-gray-700'}>
+              <button onClick={onClose} className={'text-gray-500 hover:text-gray-700'}>
                 <X className="w-5 h-5" />
               </button>
             </div>
@@ -305,15 +297,15 @@ export default function AddContribuicaoModal({ isOpen, onClose, metaId }: AddCon
             <form ref={formRef} onSubmit={handleSubmit} className="flex flex-col gap-5">
               <div>
                 <label className={`block text-sm font-medium mb-1 ${
-                  isDark ? 'text-[var(--text-main)]' : 'text-gray-800'
+                  'text-gray-800'
                 }`}>{t(addContribuicaoModal.value)}</label>
                 <div className={`
                   flex items-center rounded-lg overflow-hidden
-                  ${isDark ? 'bg-[#3C3C3C]' : 'bg-gray-50'}
+                  ${'bg-gray-50'}
                 `}>
                   <span className={`
                     px-3 py-2 font-medium
-                    ${isDark ? 'text-gray-400' : 'text-gray-600'}
+                    ${'text-gray-600'}
                   `}>
                     {getCurrencySymbol(userCurrency)}
                   </span>
@@ -324,9 +316,7 @@ export default function AddContribuicaoModal({ isOpen, onClose, metaId }: AddCon
                     onChange={handleValueChange}
                     className={`
                       flex-1 px-3 py-2 outline-none transition bg-transparent
-                      ${isDark 
-                        ? 'text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-400' 
-                        : 'text-gray-700 placeholder-gray-500 focus:ring-2 focus:ring-blue-500'}
+                      ${'text-gray-700 placeholder-gray-500 focus:ring-2 focus:ring-blue-500'}
                     `}
                     required
                   />
@@ -335,27 +325,24 @@ export default function AddContribuicaoModal({ isOpen, onClose, metaId }: AddCon
 
               <div>
                 <label className={`block text-sm font-medium mb-1 ${
-                  isDark ? 'text-[var(--text-main)]' : 'text-gray-800'
+                  'text-gray-800'
                 }`}>{t(addContribuicaoModal.date)}</label>
                 <Calendar
                   selectedDate={data}
                   onDateSelect={setData}
-                  isDark={isDark}
                 />
               </div>
 
               <div>
                 <label className={`block text-sm font-medium mb-1 ${
-                  isDark ? 'text-[var(--text-main)]' : 'text-gray-800'
+                  'text-gray-800'
                 }`}>{t(addContribuicaoModal.description)}</label>
                 <textarea
                   placeholder={t(addContribuicaoModal.descriptionPlaceholder)}
                   value={observacao}
                   onChange={(e) => setObservacao(e.target.value)}
                   className={`w-full rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none resize-none ${
-                    isDark 
-                      ? 'bg-[#3C3C3C] text-white placeholder-gray-400' 
-                      : 'bg-gray-50 text-gray-700 placeholder-gray-500'
+                    'bg-gray-50 text-gray-700 placeholder-gray-500'
                   }`}
                   rows={3}
                 />
@@ -364,9 +351,7 @@ export default function AddContribuicaoModal({ isOpen, onClose, metaId }: AddCon
               <button
                 type="submit"
                 className={`w-full mt-4 py-2 rounded-lg font-medium transition flex items-center justify-center gap-2 ${
-                  isDark
-                    ? 'bg-transparent border-2 border-blue-500 text-blue-400 hover:border-blue-400 hover:text-blue-300 hover:bg-blue-500/10'
-                    : 'bg-blue-600 hover:bg-blue-700 text-white'
+                  'bg-blue-600 hover:bg-blue-700 text-white'
                 }`}
               >
                 <Save className="w-4 h-4" />

@@ -39,7 +39,6 @@ export class UsersController {
   async updateSettings(@Request() req, @Body() updateSettingsDto: UpdateSettingsDto) {
     return this.usersService.updateSettings(
       req.user.userId,
-      updateSettingsDto.tema,
       updateSettingsDto.idioma,
       updateSettingsDto.moeda,
     );

@@ -87,7 +87,7 @@ export class VerificationService {
       await client.query('BEGIN');
 
       const userResult = await client.query(
-        'INSERT INTO usuario (nome, email, senha, idioma) VALUES ($1, $2, $3, $4) RETURNING id, nome, email, tema, idioma, moeda, created_at',
+        'INSERT INTO usuario (nome, email, senha, idioma) VALUES ($1, $2, $3, $4) RETURNING id, nome, email, idioma, moeda, created_at',
         [verification.nome, verification.email, verification.senha, verification.idioma],
       );
 

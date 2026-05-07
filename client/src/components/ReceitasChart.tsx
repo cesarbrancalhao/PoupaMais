@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react'
 import { Doughnut } from 'react-chartjs-2'
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, ChartOptions } from 'chart.js'
-import { useTheme } from '@/contexts/ThemeContext'
 import { formatCurrency } from "@/app/terminology/currency"
 import { Moeda } from "@/types/auth"
 import { dashboard } from '@/app/terminology/language/dashboard'
@@ -23,9 +22,7 @@ interface ReceitasChartProps {
 
 export default function ReceitasChart({ data, moeda }: ReceitasChartProps) {
   const [containerKey, setContainerKey] = useState(0)
-  const { theme } = useTheme()
   const { t } = useLanguage()
-  const dark = theme === 'escuro'
 
   const colors = [
     '#5B8FF9',
@@ -94,7 +91,7 @@ export default function ReceitasChart({ data, moeda }: ReceitasChartProps) {
     <div className="flex flex-col h-full">
       <h2
         className={`text-base md:text-lg font-semibold mb-4 ${
-          dark ? 'text-gray-100' : 'text-gray-800'
+          'text-gray-800'
         }`}
       >
         {t(dashboard.incomeBySource)}
@@ -113,7 +110,7 @@ export default function ReceitasChart({ data, moeda }: ReceitasChartProps) {
               className="w-3 h-3 rounded-full"
               style={{ backgroundColor: colors[index % colors.length] }}
             />
-            <span className={`text-xs ${dark ? 'text-gray-300' : 'text-gray-600'}`}>
+            <span className={`text-xs ${'text-gray-600'}`}>
               {item.source}
             </span>
           </div>

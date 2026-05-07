@@ -10,7 +10,6 @@ import ProtectedRoute from '@/components/ProtectedRoute'
 import { Plus, Target, Calendar, DollarSign, Search, ArrowUp, ArrowDown } from 'lucide-react'
 import { Meta, ContribuicaoMeta, DespesaExclusao, ReceitaExclusao, Despesa, Receita } from '@/types'
 import { metasService, contribuicaoMetaService, receitasService, despesasService, despesasExclusaoService, receitasExclusaoService, ApiError } from '@/services'
-import { useTheme } from '@/contexts/ThemeContext'
 import { useAuth } from '@/contexts/AuthContext'
 import { formatCurrency as formatMoney } from '@/app/terminology/currency'
 import { useLanguage } from '@/app/terminology/LanguageContext'
@@ -18,8 +17,6 @@ import { metas as metasTerms } from '@/app/terminology/language/metas'
 import { common } from '@/app/terminology/language/common'
 
 export default function MetasPage() {
-  const { theme } = useTheme()
-  const isDark = theme === 'escuro'
   const { user } = useAuth()
   const { t } = useLanguage()
   const [metas, setMetas] = useState<Meta[]>([])
@@ -406,10 +403,10 @@ export default function MetasPage() {
   if (loading) {
     return (
       <ProtectedRoute>
-        <div className={`flex min-h-screen ${isDark ? 'bg-[var(--bg-main)]' : 'bg-gray-50'}`}>
+        <div className={`flex min-h-screen ${'bg-gray-50'}`}>
           <Sidebar />
-          <main className={`flex-1 p-4 md:p-8 md:ml-64 flex items-center justify-center ${isDark ? 'text-[var(--text-main)]' : ''}`}>
-            <div className={isDark ? 'text-[var(--text-main)]' : 'text-gray-500'}>{t(metasTerms.loadingGoals)}</div>
+          <main className={`flex-1 p-4 md:p-8 md:ml-64 flex items-center justify-center ${''}`}>
+            <div className={'text-gray-500'}>{t(metasTerms.loadingGoals)}</div>
           </main>
         </div>
       </ProtectedRoute>
@@ -419,9 +416,9 @@ export default function MetasPage() {
   if (error) {
     return (
       <ProtectedRoute>
-        <div className={`flex min-h-screen ${isDark ? 'bg-[var(--bg-main)]' : 'bg-gray-50'}`}>
+        <div className={`flex min-h-screen ${'bg-gray-50'}`}>
           <Sidebar />
-          <main className={`flex-1 p-4 md:p-8 md:ml-64 flex items-center justify-center ${isDark ? 'text-[var(--text-main)]' : ''}`}>
+          <main className={`flex-1 p-4 md:p-8 md:ml-64 flex items-center justify-center ${''}`}>
             <div className="text-red-500">{error}</div>
           </main>
         </div>
@@ -431,11 +428,11 @@ export default function MetasPage() {
 
   return (
     <ProtectedRoute>
-      <div className={`flex min-h-screen ${isDark ? 'bg-[var(--bg-main)]' : 'bg-gray-50'}`}>
+      <div className={`flex min-h-screen ${'bg-gray-50'}`}>
         <Sidebar />
-        <main className={`flex-1 p-4 md:p-8 md:ml-64 ${isDark ? 'text-[var(--text-main)]' : ''}`}>
+        <main className={`flex-1 p-4 md:p-8 md:ml-64 ${''}`}>
           <header className="flex flex-col md:flex-row md:items-center md:justify-between mb-6 md:mb-8 gap-4">
-            <h1 className={`${isDark ? 'text-[var(--text-main)] text-xl md:text-2xl font-semibold text-center md:text-left' : 'text-xl md:text-2xl font-semibold text-gray-800 text-center md:text-left'}`}>{t(metasTerms.title)}</h1>
+            <h1 className={`${'text-xl md:text-2xl font-semibold text-gray-800 text-center md:text-left'}`}>{t(metasTerms.title)}</h1>
             <button
               onClick={openAddMetaModal}
               className="bg-blue-600 text-white px-4 py-2 font-bold rounded-md text-sm hover:bg-blue-700 transition w-full md:w-auto whitespace-nowrap flex items-center justify-center gap-2"
@@ -448,48 +445,46 @@ export default function MetasPage() {
           <div className="flex flex-col xl:flex-row gap-4 md:gap-6">
             <div className="w-full xl:w-4/6 flex flex-col gap-4 md:gap-6">
               <section className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
-                <div className={`${isDark ? 'bg-[var(--bg-card)] text-[var(--text-main)]' : 'bg-white text-gray-800'} p-4 md:p-6 rounded-xl shadow-sm`}>
+                <div className={`${'bg-white text-gray-800'} p-4 md:p-6 rounded-xl shadow-sm`}>
                   <div className="flex items-center gap-2 md:gap-3 mb-2">
-                    <div className={`${isDark ? 'w-8 h-8 md:w-10 md:h-10 bg-yellow-900/10 rounded-full flex items-center justify-center' : 'w-8 h-8 md:w-10 md:h-10 bg-yellow-100 rounded-full flex items-center justify-center'} flex-shrink-0`}>
+                    <div className={`${'w-8 h-8 md:w-10 md:h-10 bg-yellow-100 rounded-full flex items-center justify-center'} flex-shrink-0`}>
                       <Target className="w-4 h-4 md:w-5 md:h-5 text-yellow-600" />
                     </div>
                     <div>
-                      <p className={`${isDark ? 'text-gray-400 text-xs md:text-sm' : 'text-gray-500 text-xs md:text-sm'}`}>{t(metasTerms.allocatedPercentage)}</p>
-                      <p className={`${isDark ? 'text-[var(--text-main)] text-lg md:text-2xl font-semibold' : 'text-lg md:text-2xl font-semibold'}`}>{percentualAlocado.toFixed(0)}%</p>
+                      <p className={`${'text-gray-500 text-xs md:text-sm'}`}>{t(metasTerms.allocatedPercentage)}</p>
+                      <p className={`${'text-lg md:text-2xl font-semibold'}`}>{percentualAlocado.toFixed(0)}%</p>
                     </div>
                   </div>
                 </div>
 
-                <div className={`${isDark ? 'bg-[var(--bg-card)] text-[var(--text-main)]' : 'bg-white text-gray-800'} p-4 md:p-6 rounded-xl shadow-sm`}>
+                <div className={`${'bg-white text-gray-800'} p-4 md:p-6 rounded-xl shadow-sm`}>
                   <div className="flex items-center gap-2 md:gap-3 mb-2">
-                    <div className={`${isDark ? 'w-8 h-8 md:w-10 md:h-10 bg-blue-900/10 rounded-full flex items-center justify-center' : 'w-8 h-8 md:w-10 md:h-10 bg-blue-100 rounded-full flex items-center justify-center'} flex-shrink-0`}>
+                    <div className={`${'w-8 h-8 md:w-10 md:h-10 bg-blue-100 rounded-full flex items-center justify-center'} flex-shrink-0`}>
                       <DollarSign className="w-4 h-4 md:w-5 md:h-5 text-blue-600" />
                     </div>
                     <div>
-                      <p className={`${isDark ? 'text-gray-400 text-xs md:text-sm' : 'text-gray-500 text-xs md:text-sm'}`}>{t(metasTerms.totalRequired)}</p>
-                      <p className={`${isDark ? 'text-[var(--text-main)] text-lg md:text-2xl font-semibold' : 'text-lg md:text-2xl font-semibold'}`}>{formatCurrency(valorTotalNecessario)}</p>
+                      <p className={`${'text-gray-500 text-xs md:text-sm'}`}>{t(metasTerms.totalRequired)}</p>
+                      <p className={`${'text-lg md:text-2xl font-semibold'}`}>{formatCurrency(valorTotalNecessario)}</p>
                     </div>
                   </div>
                 </div>
               </section>
 
-              <section className={`${isDark ? 'bg-[var(--bg-card)] text-[var(--text-main)]' : 'bg-white text-gray-800'} p-4 md:p-6 rounded-xl shadow-sm`}>
-                <h2 className={`${isDark ? 'text-[var(--text-main)] text-base md:text-lg font-semibold mb-4' : 'text-base md:text-lg font-semibold text-gray-800 mb-4'}`}>{t(metasTerms.title)}</h2>
+              <section className={`${'bg-white text-gray-800'} p-4 md:p-6 rounded-xl shadow-sm`}>
+                <h2 className={`${'text-base md:text-lg font-semibold text-gray-800 mb-4'}`}>{t(metasTerms.title)}</h2>
 
                 {/* RF16 - O sistema deverá ter na tela de Metas, filtros de: ordem de listagem, busca por nome e busca por valor mínimo e máximo. */}
-                <div className={`mb-4 p-4 rounded-lg ${isDark ? 'bg-[var(--bg-main)] border border-white/10' : 'bg-gray-50 border border-gray-200'}`}>
+                <div className={`mb-4 p-4 rounded-lg ${'bg-gray-50 border border-gray-200'}`}>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
                     <div className="relative">
-                      <Search className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 ${isDark ? 'text-gray-400' : 'text-gray-500'}`} />
+                      <Search className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 ${'text-gray-500'}`} />
                       <input
                         type="text"
                         placeholder={t(common.search)}
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                         className={`w-full pl-10 pr-3 py-2 text-sm rounded-md border ${
-                          isDark 
-                            ? 'bg-[var(--bg-card)] border-white/10 text-[var(--text-main)] placeholder-gray-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500' 
-                            : 'bg-white border-gray-300 text-gray-800 placeholder-gray-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500'
+                          'bg-white border-gray-300 text-gray-800 placeholder-gray-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500'
                         } focus:outline-none`}
                       />
                     </div>
@@ -505,9 +500,7 @@ export default function MetasPage() {
                         min="0"
                         step="0.01"
                         className={`w-full px-3 py-2 text-sm rounded-md border ${
-                          isDark 
-                            ? 'bg-[var(--bg-card)] border-white/10 text-[var(--text-main)] placeholder-gray-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500' 
-                            : 'bg-white border-gray-300 text-gray-800 placeholder-gray-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500'
+                          'bg-white border-gray-300 text-gray-800 placeholder-gray-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500'
                         } focus:outline-none`}
                       />
                     </div>
@@ -523,9 +516,7 @@ export default function MetasPage() {
                         min="0"
                         step="0.01"
                         className={`w-full px-3 py-2 text-sm rounded-md border ${
-                          isDark 
-                            ? 'bg-[var(--bg-card)] border-white/10 text-[var(--text-main)] placeholder-gray-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500' 
-                            : 'bg-white border-gray-300 text-gray-800 placeholder-gray-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500'
+                          'bg-white border-gray-300 text-gray-800 placeholder-gray-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500'
                         } focus:outline-none`}
                       />
                     </div>
@@ -533,16 +524,16 @@ export default function MetasPage() {
                 </div>
 
                 {sortedMetas.length === 0 ? (
-                  <div className={`text-center py-12 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
-                    <Target className={`w-12 h-12 mx-auto mb-4 ${isDark ? 'text-gray-600' : 'text-gray-300'}`} />
+                  <div className={`text-center py-12 ${'text-gray-500'}`}>
+                    <Target className={`w-12 h-12 mx-auto mb-4 ${'text-gray-300'}`} />
                     <p>{t(metasTerms.noGoalsYet)}</p>
                     <p className="text-sm mt-2">{t(metasTerms.clickToAddGoal)}</p>
                   </div>
                 ) : (
                   <>
-                    <div className={`grid grid-cols-3 gap-4 text-sm mb-3 pb-2 border-b ${isDark ? 'border-white/10' : 'border-gray-200'}`}>
+                    <div className={`grid grid-cols-3 gap-4 text-sm mb-3 pb-2 border-b ${'border-gray-200'}`}>
                       <div 
-                        className={`cursor-pointer hover:opacity-80 transition-opacity select-none flex items-center gap-1 ${isDark ? 'text-gray-400' : 'text-gray-500'} font-medium`}
+                        className={`cursor-pointer hover:opacity-80 transition-opacity select-none flex items-center gap-1 ${'text-gray-500'} font-medium`}
                         onClick={(e) => { e.stopPropagation(); handleSort('target'); }}
                       >
                         {t(metasTerms.targetValue)}
@@ -551,7 +542,7 @@ export default function MetasPage() {
                         )}
                       </div>
                       <div 
-                        className={`cursor-pointer hover:opacity-80 transition-opacity select-none flex items-center gap-1 ${isDark ? 'text-gray-400' : 'text-gray-500'} font-medium`}
+                        className={`cursor-pointer hover:opacity-80 transition-opacity select-none flex items-center gap-1 ${'text-gray-500'} font-medium`}
                         onClick={(e) => { e.stopPropagation(); handleSort('progress'); }}
                       >
                         {t(metasTerms.progress)}
@@ -560,7 +551,7 @@ export default function MetasPage() {
                         )}
                       </div>
                       <div 
-                        className={`cursor-pointer hover:opacity-80 transition-opacity select-none flex items-center gap-1 ${isDark ? 'text-gray-400' : 'text-gray-500'} font-medium`}
+                        className={`cursor-pointer hover:opacity-80 transition-opacity select-none flex items-center gap-1 ${'text-gray-500'} font-medium`}
                         onClick={(e) => { e.stopPropagation(); handleSort('remaining'); }}
                       >
                         {t(metasTerms.remaining)}
@@ -579,8 +570,8 @@ export default function MetasPage() {
                           key={meta.id}
                           className={`p-4 rounded-lg border-2 transition-all cursor-pointer ${
                             selectedMeta?.id === meta.id
-                              ? isDark ? 'border-blue-600 bg-blue-900/20' : 'border-blue-600 bg-blue-50'
-                              : isDark ? 'border-white/10 hover:border-blue-300 bg-[var(--bg-main)]' : 'border-gray-200 hover:border-blue-300 bg-white'
+                              ? 'border-blue-600 bg-blue-50'
+                              : 'border-gray-200 hover:border-blue-300 bg-white'
                           }`}
                           onClick={() => openEditMetaModal(meta)}
                         >
@@ -596,13 +587,13 @@ export default function MetasPage() {
                             </div>
                             <div className="flex justify-between items-start flex-1">
                               <div className="flex-1">
-                                <h3 className={`font-semibold ${isDark ? 'text-[var(--text-main)]' : 'text-gray-800'}`}>{meta.nome}</h3>
+                                <h3 className={`font-semibold ${'text-gray-800'}`}>{meta.nome}</h3>
                                 {meta.descricao && (
-                                  <p className={`text-sm mt-1 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>{meta.descricao}</p>
+                                  <p className={`text-sm mt-1 ${'text-gray-600'}`}>{meta.descricao}</p>
                                 )}
                               </div>
                               <div className="text-right ml-4">
-                                <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+                                <p className={`text-sm ${'text-gray-500'}`}>
                                   {formatCurrency(Number(meta.economia_mensal) || 0)}/{t(metasTerms.months)}
                                 </p>
                               </div>
@@ -612,27 +603,27 @@ export default function MetasPage() {
                           <div className="ml-7">
                             <div className="grid grid-cols-3 gap-4 text-sm mb-3">
                               <div>
-                                <p className={isDark ? 'text-gray-400' : 'text-gray-500'}>{t(metasTerms.targetValue)}</p>
-                                <p className={`font-medium ${isDark ? 'text-[var(--text-main)]' : 'text-gray-800'}`}>{formatCurrency(Number(meta.valor) || 0)}</p>
+                                <p className={'text-gray-500'}>{t(metasTerms.targetValue)}</p>
+                                <p className={`font-medium ${'text-gray-800'}`}>{formatCurrency(Number(meta.valor) || 0)}</p>
                               </div>
                               <div>
-                                <p className={isDark ? 'text-gray-400' : 'text-gray-500'}>{t(metasTerms.progress)}</p>
+                                <p className={'text-gray-500'}>{t(metasTerms.progress)}</p>
                                 <p className="font-medium text-green-600">{formatCurrency(Number(meta.valor_atual) || 0)}</p>
                               </div>
                               {/* RF19 - O sistema deve calcular e exibir automaticamente o percentual de conclusão de uma meta baseado no valor atual vs valor alvo da meta. Esse percentual será usado para calcular o tempo restante necessário para a conclusão da meta. */}
                               <div>
-                                <p className={isDark ? 'text-gray-400' : 'text-gray-500'}>{t(metasTerms.remaining)}</p>
-                                <p className={`font-medium ${isDark ? 'text-[var(--text-main)]' : 'text-gray-800'}`}>{timeRemaining}</p>
+                                <p className={'text-gray-500'}>{t(metasTerms.remaining)}</p>
+                                <p className={`font-medium ${'text-gray-800'}`}>{timeRemaining}</p>
                               </div>
                             </div>
 
-                            <div className={`w-full rounded-full h-2.5 ${isDark ? 'bg-white/10' : 'bg-gray-200'}`}>
+                            <div className={`w-full rounded-full h-2.5 ${'bg-gray-200'}`}>
                               <div
                                 className="bg-blue-600 h-2.5 rounded-full transition-all"
                                 style={{ width: `${Math.min(progress, 100)}%` }}
                               ></div>
                             </div>
-                            <p className={`text-xs mt-1 text-right ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>{progress.toFixed(1)}%</p>
+                            <p className={`text-xs mt-1 text-right ${'text-gray-500'}`}>{progress.toFixed(1)}%</p>
                           </div>
                         </div>
                       )
@@ -644,23 +635,19 @@ export default function MetasPage() {
                           onClick={(e) => { e.stopPropagation(); goToPage(currentPage - 1); }}
                           disabled={currentPage === 1}
                           className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${
-                            isDark
-                              ? 'bg-white/10 text-gray-200 hover:bg-white/20 disabled:opacity-50 disabled:cursor-not-allowed'
-                              : 'bg-gray-100 text-gray-700 hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed'
+                            'bg-gray-100 text-gray-700 hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed'
                           }`}
                         >
                           {t(common.previous)}
                         </button>
-                        <span className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                        <span className={`text-sm ${'text-gray-600'}`}>
                           {currentPage} {t(common.of)} {totalPages}
                         </span>
                         <button
                           onClick={(e) => { e.stopPropagation(); goToPage(currentPage + 1); }}
                           disabled={currentPage === totalPages}
                           className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${
-                            isDark
-                              ? 'bg-white/10 text-gray-200 hover:bg-white/20 disabled:opacity-50 disabled:cursor-not-allowed'
-                              : 'bg-gray-100 text-gray-700 hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed'
+                            'bg-gray-100 text-gray-700 hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed'
                           }`}
                         >
                           {t(common.next)}
@@ -675,9 +662,9 @@ export default function MetasPage() {
 
             <div className="w-full xl:w-2/6 flex flex-col gap-4 md:gap-6">
               {selectedMeta ? (
-                <section className={`${isDark ? 'bg-[var(--bg-card)] text-[var(--text-main)]' : 'bg-white text-gray-800'} p-4 md:p-6 rounded-xl shadow-sm`}>
+                <section className={`${'bg-white text-gray-800'} p-4 md:p-6 rounded-xl shadow-sm`}>
                   <div className="flex justify-between items-center mb-4">
-                    <h2 className={`${isDark ? 'text-[var(--text-main)] text-base md:text-lg font-semibold' : 'text-base md:text-lg font-semibold text-gray-800'}`}>{t(metasTerms.contributions)}</h2>
+                    <h2 className={`${'text-base md:text-lg font-semibold text-gray-800'}`}>{t(metasTerms.contributions)}</h2>
                     <button
                       onClick={openAddContribuicaoModal}
                       className="bg-blue-600 text-white px-3 py-1.5 rounded-md text-xs font-medium hover:bg-blue-700 transition flex items-center gap-1"
@@ -688,8 +675,8 @@ export default function MetasPage() {
                   </div>
 
                   {contribuicoes.length === 0 ? (
-                    <div className={`text-center py-8 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
-                      <Calendar className={`w-10 h-10 mx-auto mb-3 ${isDark ? 'text-gray-600' : 'text-gray-300'}`} />
+                    <div className={`text-center py-8 ${'text-gray-500'}`}>
+                      <Calendar className={`w-10 h-10 mx-auto mb-3 ${'text-gray-300'}`} />
                       <p className="text-sm">{t(metasTerms.noContributions)}</p>
                     </div>
                   ) : (
@@ -699,17 +686,15 @@ export default function MetasPage() {
                           key={contribuicao.id}
                           onClick={() => openEditContribuicaoModal(contribuicao)}
                           className={`p-3 rounded-lg border cursor-pointer transition-all ${
-                            isDark 
-                              ? 'bg-[var(--bg-main)] border-white/10 hover:bg-white/5 hover:border-blue-300' 
-                              : 'bg-gray-50 border-gray-200 hover:bg-gray-100 hover:border-blue-300'
+                            'bg-gray-50 border-gray-200 hover:bg-gray-100 hover:border-blue-300'
                           }`}
                         >
                           <div className="flex justify-between items-start mb-1">
-                            <p className={`font-medium ${isDark ? 'text-[var(--text-main)]' : 'text-gray-800'}`}>{formatCurrency(contribuicao.valor)}</p>
-                            <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>{formatDate(contribuicao.data)}</p>
+                            <p className={`font-medium ${'text-gray-800'}`}>{formatCurrency(contribuicao.valor)}</p>
+                            <p className={`text-xs ${'text-gray-500'}`}>{formatDate(contribuicao.data)}</p>
                           </div>
                           {contribuicao.observacao && (
-                            <p className={`text-sm mt-1 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>{contribuicao.observacao}</p>
+                            <p className={`text-sm mt-1 ${'text-gray-600'}`}>{contribuicao.observacao}</p>
                           )}
                         </div>
                       ))}
@@ -717,24 +702,24 @@ export default function MetasPage() {
                   )}
                 </section>
               ) : (
-                <section className={`${isDark ? 'bg-[var(--bg-card)] text-[var(--text-main)]' : 'bg-white text-gray-800'} p-4 md:p-6 rounded-xl shadow-sm`}>
-                  <div className={`text-center py-12 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
-                    <Target className={`w-12 h-12 mx-auto mb-4 ${isDark ? 'text-gray-600' : 'text-gray-300'}`} />
+                <section className={`${'bg-white text-gray-800'} p-4 md:p-6 rounded-xl shadow-sm`}>
+                  <div className={`text-center py-12 ${'text-gray-500'}`}>
+                    <Target className={`w-12 h-12 mx-auto mb-4 ${'text-gray-300'}`} />
                     <p>{t(metasTerms.selectGoalToSeeContributions)}</p>
                   </div>
                 </section>
               )}
 
-              <section className={`${isDark ? 'bg-[var(--bg-card)] text-[var(--text-main)]' : 'bg-white text-gray-800'} p-4 md:p-6 rounded-xl shadow-sm`}>
-                <h3 className={`text-sm font-semibold mb-3 ${isDark ? 'text-[var(--text-main)]' : 'text-gray-800'}`}>{t(metasTerms.statistics)}</h3>
+              <section className={`${'bg-white text-gray-800'} p-4 md:p-6 rounded-xl shadow-sm`}>
+                <h3 className={`text-sm font-semibold mb-3 ${'text-gray-800'}`}>{t(metasTerms.statistics)}</h3>
                 <div className="space-y-3">
                   <div>
-                    <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>{t(metasTerms.averageIncome)}</p>
-                    <p className={`text-lg font-semibold ${isDark ? 'text-[var(--text-main)]' : 'text-gray-800'}`}>{formatCurrency(receitaMedia)}</p>
+                    <p className={`text-xs ${'text-gray-500'}`}>{t(metasTerms.averageIncome)}</p>
+                    <p className={`text-lg font-semibold ${'text-gray-800'}`}>{formatCurrency(receitaMedia)}</p>
                   </div>
                   <div>
-                    <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>{t(metasTerms.averageExpenses)}</p>
-                    <p className={`text-lg font-semibold ${isDark ? 'text-[var(--text-main)]' : 'text-gray-800'}`}>{formatCurrency(despesaMedia)}</p>
+                    <p className={`text-xs ${'text-gray-500'}`}>{t(metasTerms.averageExpenses)}</p>
+                    <p className={`text-lg font-semibold ${'text-gray-800'}`}>{formatCurrency(despesaMedia)}</p>
                   </div>
                 </div>
               </section>

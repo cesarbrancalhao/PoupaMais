@@ -11,7 +11,6 @@ import {
   Legend,
   ChartOptions
 } from 'chart.js'
-import { useTheme } from '@/contexts/ThemeContext'
 import { formatCurrency } from "@/app/terminology/currency";
 import { Moeda } from "@/types/auth";
 
@@ -29,8 +28,6 @@ interface BalanceChartProps {
 
 export default function BalanceChart({ data, moeda }: BalanceChartProps) {
   const [containerKey, setContainerKey] = useState(0)
-  const { theme } = useTheme()
-  const isDark = theme === 'escuro'
 
   useEffect(() => {
     let timeoutId: NodeJS.Timeout
@@ -46,26 +43,18 @@ export default function BalanceChart({ data, moeda }: BalanceChartProps) {
     }
   }, [])
 
-  const textColor = isDark ? '#f5f5f5' : '#1f2937'
-  const gridColor = isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)'
-  const tooltipBg = isDark ? '#2b2b2b' : '#ffffff'
-  const tooltipText = isDark ? '#f5f5f5' : '#111111'
+  const textColor = '#1f2937'
+  const gridColor = 'rgba(0,0,0,0.05)'
+  const tooltipBg = '#ffffff'
+  const tooltipText = '#111111'
 
-  const positiveBar = isDark
-    ? 'rgba(96, 165, 250, 0.8)'
-    : 'rgba(59, 130, 246, 0.8)'
+  const positiveBar = 'rgba(59, 130, 246, 0.8)'
 
-  const positiveBorder = isDark
-    ? 'rgba(147, 197, 253, 1)'
-    : 'rgba(59, 130, 246, 1)'
+  const positiveBorder = 'rgba(59, 130, 246, 1)'
 
-  const negativeBar = isDark
-    ? 'rgba(248, 113, 113, 0.8)'
-    : 'rgba(251, 146, 120, 0.8)'
+  const negativeBar = 'rgba(251, 146, 120, 0.8)'
 
-  const negativeBorder = isDark
-    ? 'rgba(239, 68, 68, 1)'
-    : 'rgba(251, 146, 120, 1)'
+  const negativeBorder = 'rgba(251, 146, 120, 1)'
 
   const chartData = {
     labels: data.map(item => item.month),
@@ -97,7 +86,7 @@ export default function BalanceChart({ data, moeda }: BalanceChartProps) {
         backgroundColor: tooltipBg,
         titleColor: tooltipText,
         bodyColor: tooltipText,
-        borderColor: isDark ? '#444' : '#ddd',
+        borderColor: '#ddd',
         borderWidth: 1,
         padding: 12,
         callbacks: {
@@ -156,7 +145,7 @@ export default function BalanceChart({ data, moeda }: BalanceChartProps) {
       key={containerKey}
       className={`
         relative w-full h-full rounded-xl p-4 transition
-        ${isDark ? 'bg-[var(--bg-card)]' : 'bg-white'}
+        ${'bg-white'}
       `}
     >
       <Bar data={chartData} options={options} />

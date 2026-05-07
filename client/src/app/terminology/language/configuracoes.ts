@@ -7,11 +7,6 @@ export const configuracoes = {
   },
 
   // Seções
-  appearance: {
-    pt: 'Aparência',
-    en: 'Appearance',
-    es: 'Apariencia',
-  },
   language: {
     pt: 'Idioma',
     en: 'Language',
@@ -26,23 +21,6 @@ export const configuracoes = {
     pt: 'Segurança',
     en: 'Security',
     es: 'Seguridad',
-  },
-
-  // Opções de tema
-  theme: {
-    pt: 'Tema',
-    en: 'Theme',
-    es: 'Tema',
-  },
-  lightTheme: {
-    pt: 'Claro',
-    en: 'Light',
-    es: 'Claro',
-  },
-  darkTheme: {
-    pt: 'Escuro',
-    en: 'Dark',
-    es: 'Oscuro',
   },
 
   // Opções de idioma
@@ -131,11 +109,6 @@ export const configuracoes = {
     pt: 'Configurações salvas com sucesso',
     en: 'Settings saved successfully',
     es: 'Configuraciones guardadas exitosamente',
-  },
-  themeChanged: {
-    pt: 'Tema alterado',
-    en: 'Theme changed',
-    es: 'Tema cambiado',
   },
   languageChanged: {
     pt: 'Idioma alterado',

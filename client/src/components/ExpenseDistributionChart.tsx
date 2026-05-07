@@ -9,7 +9,6 @@ import {
   Legend,
   ChartOptions
 } from 'chart.js'
-import { useTheme } from '@/contexts/ThemeContext'
 import { formatCurrency } from "@/app/terminology/currency"
 import { Moeda } from "@/types/auth"
 
@@ -27,8 +26,6 @@ interface ExpenseDistributionChartProps {
 
 export default function ExpenseDistributionChart({ data, moeda }: ExpenseDistributionChartProps) {
   const [containerKey, setContainerKey] = useState(0)
-  const { theme } = useTheme()
-  const isDark = theme === 'escuro'
 
   useEffect(() => {
     let timeoutId: NodeJS.Timeout
@@ -48,8 +45,8 @@ export default function ExpenseDistributionChart({ data, moeda }: ExpenseDistrib
     }
   }, [])
 
-  const tooltipBg = isDark ? '#2b2b2b' : '#ffffff'
-  const tooltipText = isDark ? '#f5f5f5' : '#111111'
+  const tooltipBg = '#ffffff'
+  const tooltipText = '#111111'
 
   const colors = [
     '#5B8FF9',
@@ -88,7 +85,7 @@ export default function ExpenseDistributionChart({ data, moeda }: ExpenseDistrib
         display: true,
         position: 'bottom',
         labels: {
-          color: isDark ? '#f5f5f5' : '#1f2937',
+          color: '#1f2937',
           padding: 10,
           font: {
             size: 11
@@ -100,7 +97,7 @@ export default function ExpenseDistributionChart({ data, moeda }: ExpenseDistrib
         backgroundColor: tooltipBg,
         titleColor: tooltipText,
         bodyColor: tooltipText,
-        borderColor: isDark ? '#444' : '#ddd',
+        borderColor: '#ddd',
         borderWidth: 1,
         padding: 12,
         callbacks: {

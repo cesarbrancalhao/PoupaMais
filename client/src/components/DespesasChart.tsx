@@ -9,7 +9,6 @@ import {
   Legend,
   ChartOptions
 } from 'chart.js'
-import { useTheme } from '@/contexts/ThemeContext'
 import { formatCurrency } from "@/app/terminology/currency"
 import { Moeda } from "@/types/auth"
 import { dashboard } from '@/app/terminology/language/dashboard'
@@ -29,9 +28,7 @@ interface DespesasChartProps {
 
 export default function DespesasChart({ data, moeda }: DespesasChartProps) {
   const [containerKey, setContainerKey] = useState(0)
-  const { theme } = useTheme()
   const { t } = useLanguage()
-  const isDark = theme === 'escuro'
 
   useEffect(() => {
     let timeoutId: NodeJS.Timeout
@@ -51,8 +48,8 @@ export default function DespesasChart({ data, moeda }: DespesasChartProps) {
     }
   }, [])
 
-  const tooltipBg = isDark ? '#2b2b2b' : '#ffffff'
-  const tooltipText = isDark ? '#f5f5f5' : '#111111'
+  const tooltipBg = '#ffffff'
+  const tooltipText = '#111111'
 
   const colors = [
     '#5B8FF9',
@@ -94,7 +91,7 @@ export default function DespesasChart({ data, moeda }: DespesasChartProps) {
         backgroundColor: tooltipBg,
         titleColor: tooltipText,
         bodyColor: tooltipText,
-        borderColor: isDark ? '#444' : '#ddd',
+        borderColor: '#ddd',
         borderWidth: 1,
         padding: 12,
         callbacks: {
@@ -111,7 +108,7 @@ export default function DespesasChart({ data, moeda }: DespesasChartProps) {
     <div className="flex flex-col h-full">
       <h2
         className={`text-base md:text-lg font-semibold mb-4 transition-colors ${
-          isDark ? 'text-gray-100' : 'text-gray-800'
+          'text-gray-800'
         }`}
       >
         {t(dashboard.expensesByCategory)}
@@ -135,7 +132,7 @@ export default function DespesasChart({ data, moeda }: DespesasChartProps) {
             />
             <span
               className={`text-xs transition-colors ${
-                isDark ? 'text-gray-300' : 'text-gray-600'
+                'text-gray-600'
               }`}
             >
               {item.category}

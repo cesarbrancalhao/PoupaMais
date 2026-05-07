@@ -1,11 +1,7 @@
-import { IsBoolean, IsEnum } from 'class-validator';
+import { IsEnum } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class UpdateSettingsDto {
-  @ApiProperty({ example: false })
-  @IsBoolean()
-  tema: boolean;
-
   @ApiProperty({ example: 'portugues', enum: ['portugues', 'ingles', 'espanhol'] })
   @IsEnum(['portugues', 'ingles', 'espanhol'])
   idioma: string;

@@ -8,7 +8,6 @@ import { categoriasDespesaService } from '@/services/categorias.service'
 import { fontesReceitaService } from '@/services/fontes.service'
 import { despesasService } from '@/services/despesas.service'
 import { receitasService } from '@/services/receitas.service'
-import { useTheme } from '@/contexts/ThemeContext'
 import { getCurrencySymbol } from "@/app/terminology/currency";
 import { useAuth } from "@/contexts/AuthContext";
 import { useLanguage } from '@/app/terminology/LanguageContext';
@@ -28,9 +27,7 @@ interface CalendarProps {
 
 function Calendar({ selectedDate, onDateSelect }: CalendarProps) {
   const [currentMonth, setCurrentMonth] = useState(new Date())
-  const { theme } = useTheme()
   const { language, t } = useLanguage()
-  const isDark = theme === 'escuro'
   
   useEffect(() => {
     if (selectedDate) {
@@ -91,8 +88,8 @@ function Calendar({ selectedDate, onDateSelect }: CalendarProps) {
   
   const monthNames = addDashboardModal.calendarMonths[language]
   const currentMonthLabel = `${monthNames[currentMonth.getMonth()]} ${currentMonth.getFullYear()}`
-  const infoTextColor = isDark ? 'text-gray-400' : 'text-gray-500'
-  const highlightTextColor = isDark ? 'text-gray-100' : 'text-gray-800'
+  const infoTextColor = 'text-gray-500'
+  const highlightTextColor = 'text-gray-800'
 
   const formatSelectedDate = (value: string) => {
     const parts = value.split('-')
@@ -109,9 +106,7 @@ function Calendar({ selectedDate, onDateSelect }: CalendarProps) {
     <div
       className={`
         rounded-lg p-4 border shadow-lg transition-colors
-        ${isDark
-          ? 'bg-[var(--bg-card)] border-gray-700 text-gray-200'
-          : 'bg-white border-gray-200 text-gray-800'
+        ${'bg-white border-gray-200 text-gray-800'
         }
       `}
     >
@@ -131,7 +126,7 @@ function Calendar({ selectedDate, onDateSelect }: CalendarProps) {
             onClick={() => navigateMonth('prev')}
             className={`
               p-1 rounded transition
-              ${isDark ? 'text-gray-300 hover:bg-white/10' : 'text-gray-600 hover:bg-gray-100'}
+              ${'text-gray-600 hover:bg-gray-100'}
             `}
           >
             <ChevronLeft className="w-4 h-4" />
@@ -142,7 +137,7 @@ function Calendar({ selectedDate, onDateSelect }: CalendarProps) {
             onClick={() => navigateMonth('next')}
             className={`
               p-1 rounded transition
-              ${isDark ? 'text-gray-300 hover:bg-white/10' : 'text-gray-600 hover:bg-gray-100'}
+              ${'text-gray-600 hover:bg-gray-100'}
             `}
           >
             <ChevronRight className="w-4 h-4" />
@@ -153,7 +148,7 @@ function Calendar({ selectedDate, onDateSelect }: CalendarProps) {
       <div className="grid grid-cols-7 gap-1 mb-2">
         {dayNames.map((day, index) => (
           <div key={index} className={`text-center text-sm font-medium ${
-            isDark ? 'text-gray-400' : 'text-gray-600'
+            'text-gray-600'
           }`}
           >
             {day}
@@ -178,9 +173,7 @@ function Calendar({ selectedDate, onDateSelect }: CalendarProps) {
               className={`h-8 w-8 flex items-center justify-center text-sm rounded-full transition-colors ${
                 isSelected
                     ? 'bg-blue-600 text-white'
-                    : isDark
-                      ? 'text-gray-200 hover:bg-white/10'
-                      : 'text-gray-700 hover:bg-gray-100'
+                    : 'text-gray-700 hover:bg-gray-100'
               }`}
             >
               {day}
@@ -194,8 +187,6 @@ function Calendar({ selectedDate, onDateSelect }: CalendarProps) {
 
 export default function AddDashboardModal({ isOpen, onClose, type }: AddDashboardModalProps) {
   const { t } = useLanguage();
-  const { theme } = useTheme()
-  const isDark = theme === 'escuro'
   const [name, setName] = useState('')
   const [category, setCategory] = useState('')
   const [value, setValue] = useState('')
@@ -323,7 +314,7 @@ export default function AddDashboardModal({ isOpen, onClose, type }: AddDashboar
             className={`
               fixed right-0 top-0 h-full w-full max-w-md z-50 flex flex-col p-6
               overflow-y-auto shadow-xl transition-colors
-              ${isDark ? 'bg-[var(--bg-card)] text-[var(--text-main)]' : 'bg-white text-gray-800'}
+              ${'bg-white text-gray-800'}
             `}
             initial={{ x: '100%' }}
             animate={{ x: 0 }}
@@ -336,7 +327,7 @@ export default function AddDashboardModal({ isOpen, onClose, type }: AddDashboar
                   className={`
                     fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 
                     px-6 py-4 rounded-lg shadow-2xl z-[60] flex items-center gap-3
-                    ${isDark ? 'bg-red-600 text-white' : 'bg-red-500 text-white'}
+                    ${'bg-red-500 text-white'}
                   `}
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
@@ -356,7 +347,7 @@ export default function AddDashboardModal({ isOpen, onClose, type }: AddDashboar
                 {type === 'despesas' ? t(addDashboardModal.addExpenseTitle) : t(addDashboardModal.addIncomeTitle)}
               </h2>
               <button
-                className={isDark ? 'text-gray-300 hover:text-white' : 'text-gray-500 hover:text-gray-700'}
+                className={'text-gray-500 hover:text-gray-700'}
                 onClick={onClose}
               >
                 <X className="w-5 h-5" />
@@ -375,9 +366,7 @@ export default function AddDashboardModal({ isOpen, onClose, type }: AddDashboar
                   onChange={(e) => setName(e.target.value)}
                   className={`
                     w-full rounded-lg px-3 py-2 mt-1 outline-none transition
-                    ${isDark
-                      ? 'bg-[#3C3C3C] text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-400'
-                      : 'bg-gray-50 text-gray-700 placeholder-gray-600 focus:ring-2 focus:ring-blue-500'}
+                    ${'bg-gray-50 text-gray-700 placeholder-gray-600 focus:ring-2 focus:ring-blue-500'}
                   `}
                   required
                 />
@@ -392,9 +381,7 @@ export default function AddDashboardModal({ isOpen, onClose, type }: AddDashboar
                   onChange={(e) => setCategory(e.target.value)}
                   className={`
                     w-full rounded-lg px-3 py-2 mt-1 outline-none transition
-                    ${isDark
-                      ? 'bg-[#3C3C3C] text-white border border-gray-700 focus:ring-blue-400'
-                      : 'bg-gray-50 text-gray-700 border border-gray-300 focus:ring-blue-500'}
+                    ${'bg-gray-50 text-gray-700 border border-gray-300 focus:ring-blue-500'}
                   `}
                 >
                   <option value="">{type === 'despesas' ? t(addDashboardModal.selectCategory) : t(addDashboardModal.selectSource)}</option>
@@ -417,11 +404,11 @@ export default function AddDashboardModal({ isOpen, onClose, type }: AddDashboar
                 <div className="flex items-center gap-4">
                   <div className={`
                     w-1/2 mt-1 flex items-center rounded-lg overflow-hidden
-                    ${isDark ? 'bg-[#3C3C3C]' : 'bg-gray-50'}
+                    ${'bg-gray-50'}
                   `}>
                     <span className={`
                       px-3 py-2 font-medium
-                      ${isDark ? 'text-gray-400' : 'text-gray-600'}
+                      ${'text-gray-600'}
                     `}>
                       {getCurrencySymbol(userCurrency)}
                     </span>
@@ -432,15 +419,13 @@ export default function AddDashboardModal({ isOpen, onClose, type }: AddDashboar
                       onChange={handleValueChange}
                       className={`
                         flex-1 px-3 py-2 outline-none transition bg-transparent
-                        ${isDark
-                          ? 'text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-400'
-                          : 'text-gray-700 placeholder-gray-600 focus:ring-2 focus:ring-blue-500'}
+                        ${'text-gray-700 placeholder-gray-600 focus:ring-2 focus:ring-blue-500'}
                       `}
                       required
                     />
                   </div>
                 <label className="ml-4 text-sm flex items-center gap-2">
-                  <span className={isDark ? 'text-gray-200' : 'text-gray-700'}>
+                  <span className={'text-gray-700'}>
                     {t(addDashboardModal.isRecurring)}
                   </span>
                     <input
@@ -476,9 +461,7 @@ export default function AddDashboardModal({ isOpen, onClose, type }: AddDashboar
                 type="submit"
                 className={`
                   w-full py-2 mt-4 rounded-lg font-medium flex items-center justify-center gap-2 transition
-                  ${isDark
-                    ? 'bg-transparent border-2 border-blue-500 text-blue-400 hover:border-blue-400 hover:text-blue-300 hover:bg-blue-500/10'
-                    : 'bg-blue-600 hover:bg-blue-700 text-white'}
+                  ${'bg-blue-600 hover:bg-blue-700 text-white'}
                 `}
               >
                 <Save className="w-4 h-4" />

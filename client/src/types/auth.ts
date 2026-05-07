@@ -6,7 +6,6 @@ export interface User {
   nome: string;
   email: string;
   created_at?: string;
-  tema: boolean;  
   idioma: Idioma;
   moeda: Moeda;
 }

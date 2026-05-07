@@ -8,7 +8,6 @@ CREATE TABLE usuario (
     nome VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,
     senha VARCHAR(255) NOT NULL,
-    tema BOOLEAN NOT NULL DEFAULT FALSE, -- RN11 - O modo de visualização padrão será o “Claro”, podendo ser alterado nas configurações.
     idioma idioma_enum NOT NULL DEFAULT 'portugues', -- RN10 - O idioma padrão será Português, podendo ser alterado nas configurações.
     moeda moeda_enum NOT NULL DEFAULT 'real', -- RN09 - A moeda padrão do aplicativo será o Real (BRL), podendo ser alterada nas configurações.
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
