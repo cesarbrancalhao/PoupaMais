@@ -24,8 +24,8 @@
 */*.temp
 */*.tmp
 
-#server tests
-/server/tests/
-/server/coverage/
+# TypeScript build info
+*.tsbuildinfo
 
-/yg
+# server coverage
+/server/coverage/

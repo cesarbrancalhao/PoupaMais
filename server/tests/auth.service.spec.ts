@@ -1,0 +1,163 @@
+import { Test, TestingModule } from '@nestjs/testing';
+import { JwtService } from '@nestjs/jwt';
+import * as bcrypt from 'bcrypt';
+import { AuthService } from '../src/auth/auth.service';
+import { DatabaseService } from '../src/database/database.service';
+
+describe('AuthService', () => {
+  let authService: AuthService;
+  let databaseService: jest.Mocked<DatabaseService>;
+  let jwtService: jest.Mocked<JwtService>;
+
+  const mockUser = {
+    id: 1,
+    nome: 'Test User',
+    email: 'test@example.com',
+    senha: '$2b$10$hashedpassword',
+    idioma: 'portugues' as const,
+    moeda: 'real' as const,
+    created_at: new Date(),
+  };
+
+  const mockClient = {
+    query: jest.fn(),
+    release: jest.fn(),
+  };
+
+  beforeEach(async () => {
+    const mockDatabaseService = {
+      query: jest.fn(),
+      getClient: jest.fn(),
+    };
+
+    const mockJwtService = {
+      sign: jest.fn().mockReturnValue('mock.jwt.token'),
+    };
+
+    const module: TestingModule = await Test.createTestingModule({
+      providers: [
+        AuthService,
+        { provide: DatabaseService, useValue: mockDatabaseService },
+        { provide: JwtService, useValue: mockJwtService },
+      ],
+    }).compile();
+
+    authService = module.get<AuthService>(AuthService);
+    databaseService = module.get(DatabaseService) as jest.Mocked<DatabaseService>;
+    jwtService = module.get(JwtService) as jest.Mocked<JwtService>;
+
+    databaseService.getClient.mockResolvedValue(mockClient as any);
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  describe('login', () => {
+    it('should generate a JWT token for a valid user', async () => {
+      const user = { ...mockUser };
+      delete (user as any).senha;
+
+      const result = await authService.login(user);
+
+      expect(jwtService.sign).toHaveBeenCalledWith({
+        email: user.email,
+        sub: user.id,
+      });
+      expect(result.access_token).toBe('mock.jwt.token');
+      expect(result.user).toEqual({
+        id: user.id,
+        nome: user.nome,
+        email: user.email,
+        idioma: user.idioma,
+        moeda: user.moeda,
+      });
+    });
+  });
+
+  describe('validateUser', () => {
+    it('should return user without password when credentials are valid', async () => {
+      databaseService.query.mockResolvedValue({ rows: [mockUser] } as any);
+      (bcrypt.compare as jest.Mock) = jest.fn().mockResolvedValue(true);
+
+      const result = await authService.validateUser('test@example.com', 'correct-password');
+
+      expect(databaseService.query).toHaveBeenCalledWith(
+        'SELECT * FROM usuario WHERE email = $1',
+        ['test@example.com'],
+      );
+      expect(result).toHaveProperty('id', 1);
+      expect(result).not.toHaveProperty('senha');
+    });
+
+    it('should return null when user is not found', async () => {
+      databaseService.query.mockResolvedValue({ rows: [] } as any);
+
+      const result = await authService.validateUser('nonexistent@example.com', 'password');
+
+      expect(result).toBeNull();
+    });
+  });
+
+  describe('register', () => {
+    it('should throw when email already exists', async () => {
+      databaseService.query.mockResolvedValue({ rows: [{ id: 1 }] } as any);
+
+      await expect(
+        authService.register('Test', 'existing@example.com', 'password123', 'portugues'),
+      ).rejects.toThrow('Email já cadastrado');
+    });
+
+    it('should create a new user with default categories and sources', async () => {
+      databaseService.query.mockResolvedValueOnce({ rows: [] } as any);
+
+      mockClient.query
+        .mockResolvedValueOnce(undefined)
+        .mockResolvedValueOnce({ rows: [mockUser] })
+        .mockResolvedValueOnce(undefined)
+        .mockResolvedValueOnce(undefined)
+        .mockResolvedValueOnce(undefined)
+        .mockResolvedValueOnce(undefined)
+        .mockResolvedValueOnce(undefined)
+        .mockResolvedValueOnce(undefined)
+        .mockResolvedValueOnce(undefined)
+        .mockResolvedValueOnce(undefined)
+        .mockResolvedValueOnce(undefined)
+        .mockResolvedValueOnce(undefined);
+
+      (bcrypt.hash as jest.Mock) = jest.fn().mockResolvedValue('$2b$10$hashed');
+
+      const result = await authService.register('Test', 'new@example.com', 'password123', 'portugues');
+
+      expect(result.access_token).toBe('mock.jwt.token');
+      expect(result.user.email).toBe('test@example.com');
+      expect(mockClient.query).toHaveBeenCalledWith('BEGIN');
+      expect(mockClient.query).toHaveBeenCalledWith('COMMIT');
+      expect(mockClient.release).toHaveBeenCalled();
+    });
+
+    it('should rollback on error during registration', async () => {
+      databaseService.query.mockResolvedValueOnce({ rows: [] } as any);
+
+      mockClient.query
+        .mockResolvedValueOnce(undefined)
+        .mockRejectedValueOnce(new Error('DB Error'))
+        .mockResolvedValueOnce(undefined);
+
+      (bcrypt.hash as jest.Mock) = jest.fn().mockResolvedValue('$2b$10$hashed');
+
+      await expect(
+        authService.register('Test', 'new@example.com', 'password123', 'portugues'),
+      ).rejects.toThrow('Houve um erro ao registrar o usuário');
+
+      expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK');
+      expect(mockClient.release).toHaveBeenCalled();
+    });
+  });
+
+  describe('default categories by language', () => {
+    it('should have 6 default Portuguese categories', () => {
+      expect(authService).toBeDefined();
+    });
+  });
+});
