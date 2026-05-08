@@ -1,19 +1,16 @@
 export const analise = {
-  // Título da página
   title: {
     pt: 'Análise Financeira',
     en: 'Financial Analysis',
     es: 'Análisis Financiero',
   },
 
-  // Label de meses
   monthsLabel: {
     pt: '(12 meses)',
     en: '(12 months)',
     es: '(12 meses)',
   },
 
-  // Títulos dos gráficos
   yearlyBalance: {
     pt: `Evolução do Saldo`,
     en: `Balance Evolution`,
@@ -45,7 +42,6 @@ export const analise = {
     es: 'Resumen de las Metas',
   },
 
-  // Métricas principais
   incomeMonthlyAverage: {
     pt: 'Receita Média Mensal',
     en: 'Average Monthly Income',
@@ -87,7 +83,6 @@ export const analise = {
     es: 'Peor Mes',
   },
 
-  // Labels dos gráficos
   income: {
     pt: 'Receitas',
     en: 'Income',
@@ -104,7 +99,6 @@ export const analise = {
     es: 'Saldo',
   },
 
-  // Seletores de período
   last6Months: {
     pt: 'Últimos 6 Meses',
     en: 'Last 6 Months',
@@ -121,7 +115,6 @@ export const analise = {
     es: 'Todo el Período',
   },
 
-  // Estados vazios
   noDataAvailable: {
     pt: 'Nenhum dado disponível para análise',
     en: 'No data available for analysis',
@@ -133,7 +126,6 @@ export const analise = {
     es: 'Datos insuficientes para análisis',
   },
 
-  // Insights
   insights: {
     pt: 'Insights',
     en: 'Insights',
@@ -160,7 +152,6 @@ export const analise = {
     es: 'Tendencia de caída detectada',
   },
 
-  // Carregando e erros
   loadingAnalysis: {
     pt: 'Carregando análise...',
     en: 'Loading analysis...',

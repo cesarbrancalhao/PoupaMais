@@ -1,7 +1,6 @@
 import { Language } from './types';
 
 export const common = {
-  // Ações
   add: {
     pt: 'Adicionar',
     en: 'Add',
@@ -38,7 +37,6 @@ export const common = {
     es: 'Cerrar',
   },
 
-  // Mensagens de status
   loading: {
     pt: 'Carregando...',
     en: 'Loading...',
@@ -60,7 +58,6 @@ export const common = {
     es: 'Ver más',
   },
 
-  // Campos de formulário
   name: {
     pt: 'Nome',
     en: 'Name',
@@ -107,7 +104,6 @@ export const common = {
     es: 'Fuente',
   },
 
-  // Conceitos principais
   expenses: {
     pt: 'Despesas',
     en: 'Expenses',
@@ -129,7 +125,6 @@ export const common = {
     es: 'Total',
   },
 
-  // Mensagens
   checkConnection: {
     pt: 'Verifique sua conexão',
     en: 'Check your connection',
@@ -141,7 +136,6 @@ export const common = {
     es: 'No hay datos disponibles',
   },
 
-  // Sim/Não
   yes: {
     pt: 'Sim',
     en: 'Yes',
@@ -153,7 +147,6 @@ export const common = {
     es: 'No',
   },
 
-  // Paginação
   previous: {
     pt: 'Anterior',
     en: 'Previous',
@@ -170,7 +163,6 @@ export const common = {
     es: 'de',
   },
 
-  // Filtros
   search: {
     pt: 'Buscar...',
     en: 'Search...',

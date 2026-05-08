@@ -1,5 +1,4 @@
 export const addDashboardModal = {
-  // Títulos
   addExpenseTitle: {
     pt: 'Adicionar Despesa',
     en: 'Add Expense',
@@ -11,7 +10,6 @@ export const addDashboardModal = {
     es: 'Agregar Ingreso',
   },
 
-  // Campos do formulário
   namePlaceholder: {
     pt: 'Digite o nome',
     en: 'Enter the name',
@@ -63,7 +61,6 @@ export const addDashboardModal = {
     es: 'Seleccione una fuente',
   },
 
-  // Seleção de data
   calendarSelectedDateLabel: {
     pt: 'Data selecionada',
     en: 'Selected date',
@@ -80,7 +77,6 @@ export const addDashboardModal = {
     es: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
   },
 
-  // Opções recorrentes
   isRecurring: {
     pt: 'Recorrente',
     en: 'Recurring',
@@ -97,7 +93,6 @@ export const addDashboardModal = {
     es: 'Sin fecha Final',
   },
 
-  // Botões
   add: {
     pt: 'Adicionar',
     en: 'Add',
@@ -109,7 +104,6 @@ export const addDashboardModal = {
     es: 'Cancelar',
   },
 
-  // Mensagens de validação
   descriptionRequired: {
     pt: 'Descrição é obrigatória',
     en: 'Description is required',
@@ -136,7 +130,6 @@ export const addDashboardModal = {
     es: 'La fecha es obligatoria',
   },
 
-  // Mensagens de status
   expenseAdded: {
     pt: 'Despesa adicionada com sucesso',
     en: 'Expense added successfully',

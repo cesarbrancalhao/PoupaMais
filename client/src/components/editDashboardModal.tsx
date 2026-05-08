@@ -484,8 +484,6 @@ export default function EditDashboardModal({ isOpen, onClose, type, editItem, on
               </button>
             </div>
 
-            {/* RF04 - O sistema deve permitir ao usuário manter suas Despesas, com os campos: nome, valor, Categoria (opcional), data, recorrência (opcional) e data final (opcional). */}
-            {/* RF05 - O sistema deve permitir ao usuário manter suas Receitas, com os campos: valor, Fonte (opcional), data e recorrência (opcional). */}
             <form ref={formRef} onSubmit={(e) => e.preventDefault()} className="flex flex-col gap-5">
               <div>
                 <label className={`block text-sm font-medium mb-1 ${'text-gray-800'}`}>{t(common.name)}</label>

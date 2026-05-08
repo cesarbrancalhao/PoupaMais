@@ -1,5 +1,4 @@
 export const editDashboardModal = {
-  // Títulos
   editExpenseTitle: {
     pt: 'Editar Despesa',
     en: 'Edit Expense',
@@ -11,7 +10,6 @@ export const editDashboardModal = {
     es: 'Editar Ingreso',
   },
 
-  // Seleção de data
   calendarSelectedDateLabel: {
     pt: 'Data selecionada',
     en: 'Selected date',
@@ -28,7 +26,6 @@ export const editDashboardModal = {
     es: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
   },
 
-  // Opções recorrentes
   editOptions: {
     pt: 'Opções de Edição',
     en: 'Edit Options',
@@ -55,7 +52,6 @@ export const editDashboardModal = {
     es: 'Eliminar todas',
   },
 
-  // Botões
   update: {
     pt: 'Atualizar',
     en: 'Update',
@@ -72,7 +68,6 @@ export const editDashboardModal = {
     es: 'Cancelar',
   },
 
-  // Confirmação
   confirmDelete: {
     pt: 'Tem certeza que deseja excluir?',
     en: 'Are you sure you want to delete?',
@@ -84,7 +79,6 @@ export const editDashboardModal = {
     es: 'Esta es una transacción recurrente. ¿Qué le gustaría hacer?',
   },
 
-  // Mensagens de status
   expenseUpdated: {
     pt: 'Despesa atualizada com sucesso',
     en: 'Expense updated successfully',

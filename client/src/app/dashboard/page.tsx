@@ -265,7 +265,6 @@ export default function DashboardPage() {
     return saldo
   }
 
-  // RN18 - O sistema armazenará Despesas e Receitas recorrentes como um único registro no banco, e usará uma função de expansão para exibir os registros mensais.
   const expandRecurringEntries = <T extends Despesa | Receita>(
     items: T[],
     selectedMonth: string,
@@ -285,7 +284,6 @@ export default function DashboardPage() {
       const startOfItemMonth = new Date(itemStartYear, itemStartMonth, 1)
 
       if (item.recorrente) {
-        // RN20 - Receitas e Despesas recorrentes sem uma data de vencimento definida são exibidas indefinidamente mês a mês.
         const targetYear = targetDate.getFullYear()
         const targetMonth = targetDate.getMonth()
         const targetMonthStart = new Date(targetYear, targetMonth, 1)
@@ -302,7 +300,6 @@ export default function DashboardPage() {
 
           if (isWithinEndDate) {
             const monthKey = `${year}-${month}-01`
-            // RN19 - A expansão de Despesas e Receitas recorrentes utilizará as tabelas de Exclusão de Receita e Exclusão de Despesa para remover registros de cálculos, exibições, gráficos e Análise.
             const isExcluded = exclusoes.some(exc => {
               const isDespesa = 'despesa_id' in exc
               const itemId = isDespesa ? (exc as DespesaExclusao).despesa_id : (exc as ReceitaExclusao).receita_id
@@ -441,7 +438,6 @@ export default function DashboardPage() {
     return sorted
   }, [filteredRows, sortColumn, sortDirection])
   
-  // RN25 - O sistema deverá conter paginação dos registros nas telas de Metas, Receitas e Despesas.
   const totalPages = Math.ceil(sortedRows.length / ITEMS_PER_PAGE)
   const paginatedRows = sortedRows.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE)
 
@@ -680,7 +676,6 @@ export default function DashboardPage() {
                         <p className="text-sm text-center">{t(common.noData)}</p>
                       </div>
                     ) : (
-                      /* RF09 - A tela de Painel deve exibir ao usuário gráficos de Saldo mensal e Despesas por Categoria ou Receitas por Fonte. */
                       <BalanceChart data={monthlyBalanceData} moeda={user?.moeda ?? "real"} />
                     )}
                   </div>
@@ -695,7 +690,6 @@ export default function DashboardPage() {
                         <p className="text-sm mt-2">{t(dashboard.addExpense)}</p>
                       </div>
                     ) : (
-                      /* RF09 - A tela de Painel deve exibir ao usuário gráficos de Saldo mensal e Despesas por Categoria ou Receitas por Fonte. */
                       <DespesasChart data={despesasChartData} moeda={user?.moeda ?? "real"} />
                     )
                   ) : (
@@ -706,7 +700,6 @@ export default function DashboardPage() {
                         <p className="text-sm mt-2">{t(dashboard.addIncome)}</p>
                       </div>
                     ) : (
-                      /* RF09 - A tela de Painel deve exibir ao usuário gráficos de Saldo mensal e Despesas por Categoria ou Receitas por Fonte. */
                       <ReceitasChart data={receitasChartData} moeda={user?.moeda ?? "real"} />
                     )
                   )}
@@ -800,7 +793,6 @@ export default function DashboardPage() {
               </button>
             </div>
 
-            {/* RF15 - O sistema deverá ter na tela de Painel, filtros de: ordem de listagem, busca por nome, busca por valor mínimo e máximo, seleção de categoria ou fonte. */}
             <section className={`${'bg-white text-gray-800'} p-4 md:p-6 rounded-xl shadow-sm`}>
               <div className="flex justify-between items-center mb-3 md:mb-4">
                 <h2 className={`${'text-base md:text-lg font-semibold text-gray-800'}`}>{activeTab === 'despesas' ? `${t(dashboard.lastExpenses)}` : `${t(dashboard.lastIncome)}`}</h2>

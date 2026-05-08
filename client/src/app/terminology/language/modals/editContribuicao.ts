@@ -1,12 +1,10 @@
 export const editContribuicaoModal = {
-  // Título
   title: {
     pt: 'Editar Contribuição',
     en: 'Edit Contribution',
     es: 'Editar Contribución',
   },
 
-  // Seleção de data
   calendarSelectedDateLabel: {
     pt: 'Data selecionada',
     en: 'Selected date',
@@ -23,14 +21,12 @@ export const editContribuicaoModal = {
     es: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
   },
 
-  // Labels
   contributionLabel: {
     pt: 'contribuição',
     en: 'contribution',
     es: 'contribución',
   },
 
-  // Botões
   update: {
     pt: 'Atualizar',
     en: 'Update',
@@ -47,14 +43,12 @@ export const editContribuicaoModal = {
     es: 'Cancelar',
   },
 
-  // Confirmação
   confirmDelete: {
     pt: 'Tem certeza que deseja excluir esta contribuição?',
     en: 'Are you sure you want to delete this contribution?',
     es: '¿Está seguro de que desea eliminar esta contribución?',
   },
 
-  // Mensagens de status
   contributionUpdated: {
     pt: 'Contribuição atualizada com sucesso',
     en: 'Contribution updated successfully',

@@ -1,4 +1,3 @@
--- Esquema do Banco de Dados PoupaMais para PostgreSQL
 
 CREATE TYPE idioma_enum AS ENUM ('portugues', 'ingles', 'espanhol');
 CREATE TYPE moeda_enum AS ENUM ('real', 'dolar', 'euro');
@@ -8,12 +7,11 @@ CREATE TABLE usuario (
     nome VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,
     senha VARCHAR(255) NOT NULL,
-    idioma idioma_enum NOT NULL DEFAULT 'portugues', -- RN10 - O idioma padrão será Português, podendo ser alterado nas configurações.
-    moeda moeda_enum NOT NULL DEFAULT 'real', -- RN09 - A moeda padrão do aplicativo será o Real (BRL), podendo ser alterada nas configurações.
+    idioma idioma_enum NOT NULL DEFAULT 'portugues',
+    moeda moeda_enum NOT NULL DEFAULT 'real',
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
--- RF20 - O sistema deverá manter automaticamente registros de Verificação, que armazenam temporariamente: dados do usuário que ainda não validou seu email (nome, email, senha, idioma), código para verificação, tempo restante para validação, tentativas de validação.
 CREATE TABLE verificacao (
     id SERIAL PRIMARY KEY,
     nome VARCHAR(255) NOT NULL,
@@ -27,7 +25,6 @@ CREATE TABLE verificacao (
 );
 
 
--- RF21 - O sistema deverá manter automaticamente registros de Recuperação de Senha, que armazenam o usuário, email, código para verificação, tempo restante para validação e tentativas de validação.
 CREATE TABLE recuperacao_senha (
     id SERIAL PRIMARY KEY,
     email VARCHAR(255) NOT NULL,
@@ -59,7 +56,7 @@ CREATE TABLE fonte_receita (
 CREATE TABLE despesa (
     id SERIAL PRIMARY KEY,
     nome VARCHAR(70) NOT NULL,
-    valor DECIMAL(11,2) NOT NULL CHECK (valor > 0), -- RN06 - O valor de Despesas, Receitas e Metas deve ser positivo e maior que 0.
+    valor DECIMAL(11,2) NOT NULL CHECK (valor > 0),
     recorrente BOOLEAN NOT NULL DEFAULT FALSE,
     data DATE NOT NULL,
     data_vencimento DATE DEFAULT NULL,
@@ -71,7 +68,7 @@ CREATE TABLE despesa (
 CREATE TABLE receita (
     id SERIAL PRIMARY KEY,
     nome VARCHAR(70) NOT NULL,
-    valor DECIMAL(11,2) NOT NULL CHECK (valor > 0), -- RN06 - O valor de Despesas, Receitas e Metas deve ser positivo e maior que 0.
+    valor DECIMAL(11,2) NOT NULL CHECK (valor > 0),
     recorrente BOOLEAN NOT NULL DEFAULT FALSE,
     data DATE NOT NULL,
     data_vencimento DATE DEFAULT NULL,
@@ -80,7 +77,6 @@ CREATE TABLE receita (
     usuario_id INT NOT NULL REFERENCES usuario(id) ON DELETE CASCADE
 );
 
--- RF22 - O sistema deverá manter automaticamente registros de Exclusões para Despesas, que armazenam a despesa, data de exclusão e usuário.
 CREATE TABLE despesa_exclusao (
     id SERIAL PRIMARY KEY,
     despesa_id INT NOT NULL REFERENCES despesa(id) ON DELETE CASCADE,
@@ -89,7 +85,6 @@ CREATE TABLE despesa_exclusao (
     usuario_id INT NOT NULL REFERENCES usuario(id) ON DELETE CASCADE
 );
 
--- RF23 - O sistema deverá manter automaticamente registros de Exclusões para Receitas, que armazenam a receita, data de exclusão e usuário.
 CREATE TABLE receita_exclusao (
     id SERIAL PRIMARY KEY,
     receita_id INT NOT NULL REFERENCES receita(id) ON DELETE CASCADE,
@@ -102,8 +97,8 @@ CREATE TABLE meta (
     id SERIAL PRIMARY KEY,
     nome VARCHAR(70) NOT NULL,
     descricao TEXT,
-    valor DECIMAL(11,2) NOT NULL CHECK (valor > 0), -- RN06 - O valor de Despesas, Receitas e Metas deve ser positivo e maior que 0.
-    valor_atual DECIMAL(11,2) NOT NULL DEFAULT 0 CHECK (valor_atual >= 0), -- RN17 - O valor atual de uma meta será calculado automaticamente pelo sistema como a soma de todas as contribuições vinculadas.
+    valor DECIMAL(11,2) NOT NULL CHECK (valor > 0),
+    valor_atual DECIMAL(11,2) NOT NULL DEFAULT 0 CHECK (valor_atual >= 0),
     economia_mensal DECIMAL(11,2) NOT NULL DEFAULT 0 CHECK (economia_mensal >= 0),
     data_inicio DATE NOT NULL DEFAULT CURRENT_DATE,
     data_alvo DATE,

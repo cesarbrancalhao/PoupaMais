@@ -424,7 +424,6 @@ export default function EditMetaModal({ isOpen, onClose, editItem, onDelete }: E
               </button>
             </div>
 
-            {/* RF06 - O sistema deve permitir ao usuário manter Metas, podendo definir os campos: nome, valor, Fonte (opcional), data, recorrência (opcional) e data final (opcional). */}
             <form ref={formRef} onSubmit={handleSubmit} className="flex flex-col gap-5">
               <div>
                 <label className={`block text-sm font-medium mb-1 ${

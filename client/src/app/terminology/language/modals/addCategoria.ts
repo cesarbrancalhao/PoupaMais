@@ -1,5 +1,4 @@
 export const addCategoriaModal = {
-  // Títulos
   addCategoryTitle: {
     pt: 'Adicionar Categoria',
     en: 'Add Category',
@@ -11,7 +10,6 @@ export const addCategoriaModal = {
     es: 'Agregar Fuente',
   },
 
-  // Campos do formulário
   name: {
     pt: 'Nome',
     en: 'Name',
@@ -33,7 +31,6 @@ export const addCategoriaModal = {
     es: 'Seleccione un icono',
   },
 
-  // Botões
   add: {
     pt: 'Adicionar',
     en: 'Add',
@@ -45,7 +42,6 @@ export const addCategoriaModal = {
     es: 'Cancelar',
   },
 
-  // Mensagens de validação
   nameRequired: {
     pt: 'Nome é obrigatório',
     en: 'Name is required',
@@ -57,7 +53,6 @@ export const addCategoriaModal = {
     es: 'El icono es obligatorio',
   },
 
-  // Mensagens de status
   categoryAdded: {
     pt: 'Categoria adicionada com sucesso',
     en: 'Category added successfully',

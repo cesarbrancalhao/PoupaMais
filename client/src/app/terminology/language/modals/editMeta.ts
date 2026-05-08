@@ -1,12 +1,10 @@
 export const editMetaModal = {
-  // Título
   title: {
     pt: 'Alterar Meta',
     en: 'Edit Goal',
     es: 'Editar Meta',
   },
 
-  // Labels dos campos do formulário
   name: {
     pt: 'Nome',
     en: 'Name',
@@ -53,7 +51,6 @@ export const editMetaModal = {
     es: 'Fecha de inicio',
   },
 
-  // Meses
   january: {
     pt: 'Janeiro',
     en: 'January',
@@ -115,14 +112,12 @@ export const editMetaModal = {
     es: 'Diciembre',
   },
 
-  // Seletor de data
   selectMonthYear: {
     pt: 'Selecione mês/ano',
     en: 'Select month/year',
     es: 'Seleccionar mes/año',
   },
 
-  // Mensagens
   monthsNeeded: {
     pt: 'mês',
     en: 'month',
@@ -154,7 +149,6 @@ export const editMetaModal = {
     es: 'por mes para alcanzar tu meta.',
   },
 
-  // Botões
   saveGoal: {
     pt: 'Salvar meta',
     en: 'Save goal',
@@ -176,7 +170,6 @@ export const editMetaModal = {
     es: 'Cancelar',
   },
 
-  // Mensagens de erro
   error: {
     pt: 'Algo deu errado. Tente novamente.',
     en: 'Something went wrong. Try again.',

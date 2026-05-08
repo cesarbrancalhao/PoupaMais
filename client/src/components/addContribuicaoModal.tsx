@@ -293,7 +293,6 @@ export default function AddContribuicaoModal({ isOpen, onClose, metaId }: AddCon
               </button>
             </div>
 
-            {/* RF18 - O sistema deve permitir ao usuário manter Contribuições de metas com os campos: valor, data, observação. */}
             <form ref={formRef} onSubmit={handleSubmit} className="flex flex-col gap-5">
               <div>
                 <label className={`block text-sm font-medium mb-1 ${

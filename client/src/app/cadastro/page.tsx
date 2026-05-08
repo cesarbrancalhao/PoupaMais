@@ -139,7 +139,6 @@ export default function CadastroPage() {
             <h1 className="mt-4 text-2xl font-semibold text-gray-800">{t(auth.registerTitle)}</h1>
           </div>
 
-          {/* RF01 - O sistema deve permitir ao usuário fazer o cadastro com: nome, email e senha. */}
           <form onSubmit={handleSubmit} className="space-y-4">
             {error && (
               <div className="p-3 rounded-lg bg-red-50 border border-red-200">
@@ -189,7 +188,7 @@ export default function CadastroPage() {
                 disabled={loading}
                 className="w-full px-4 py-2 rounded-lg bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 border-0 disabled:opacity-50"
                 required
-                minLength={8} // RN22 - Senhas devem ter um mínimo de 8 caracteres.
+                minLength={8}
               />
               <p className="text-xs text-gray-500 mt-1">{t(auth.passwordMinLength)}</p>
             </div>

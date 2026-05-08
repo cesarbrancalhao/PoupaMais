@@ -81,7 +81,6 @@ export default function RecuperarPage() {
           </p>
         </div>
 
-        {/* RF03 - O sistema deve permitir ao usuário recuperar sua senha. */}
         <form onSubmit={handleRequestReset} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">

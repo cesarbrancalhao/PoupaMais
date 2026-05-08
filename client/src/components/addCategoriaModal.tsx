@@ -119,8 +119,6 @@ export default function AddCategoriaModal({ isOpen, onClose, type }: AddCategori
               </button>
             </div>
 
-            {/* RF07 - O sistema deve permitir ao usuário manter Categorias de despesas com os campos: nome, ícone. */}
-            {/* RF08 - O sistema deve permitir ao usuário manter Fontes de receitas com os campos: nome, ícone. */}
             <form ref={formRef} onSubmit={handleSubmit} className="flex flex-col gap-5">
               
               <div>

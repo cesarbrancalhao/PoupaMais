@@ -1,12 +1,10 @@
 export const configuracoes = {
-  // Título
   title: {
     pt: 'Configurações',
     en: 'Settings',
     es: 'Configuraciones',
   },
 
-  // Seções
   language: {
     pt: 'Idioma',
     en: 'Language',
@@ -23,7 +21,6 @@ export const configuracoes = {
     es: 'Seguridad',
   },
 
-  // Opções de idioma
   portuguese: {
     pt: 'Português',
     en: 'Portuguese',
@@ -40,7 +37,6 @@ export const configuracoes = {
     es: 'Español',
   },
 
-  // Opções de moeda
   realBRL: {
     pt: 'Real (R$)',
     en: 'Real (R$)',
@@ -57,7 +53,6 @@ export const configuracoes = {
     es: 'Euro (€)',
   },
 
-  // Alterar senha
   password: {
     pt: 'Senha',
     en: 'Password',
@@ -104,7 +99,6 @@ export const configuracoes = {
     es: 'Contraseña actual incorrecta',
   },
 
-  // Mensagens de sucesso
   settingsSaved: {
     pt: 'Configurações salvas com sucesso',
     en: 'Settings saved successfully',
@@ -121,7 +115,6 @@ export const configuracoes = {
     es: 'Moneda cambiada',
   },
 
-  // Mensagens de erro
   errorSavingSettings: {
     pt: 'Erro ao salvar configurações',
     en: 'Error saving settings',
@@ -133,7 +126,6 @@ export const configuracoes = {
     es: 'Error al cambiar contraseña',
   },
 
-  // Informações do usuário
   userProfile: {
     pt: 'Perfil do Usuário',
     en: 'User Profile',

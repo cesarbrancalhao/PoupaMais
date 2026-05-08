@@ -33,7 +33,6 @@ export function formatCurrency(value: number, moeda?: Moeda) {
   const safeMoeda = moeda ?? "real"; 
   const config = currencyMap[safeMoeda];
 
-  // RN15 - A alteração da moeda não afetará os valores salvos, apenas irá alterar o símbolo de moeda exibida na interface junto aos valores.
   return new Intl.NumberFormat("pt-BR", {
     style: "currency",
     currency: config.currency,

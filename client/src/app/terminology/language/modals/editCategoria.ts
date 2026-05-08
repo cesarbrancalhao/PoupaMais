@@ -1,5 +1,4 @@
 export const editCategoriaModal = {
-  // Título
   editCategoryTitle: {
     pt: 'Editar Categoria',
     en: 'Edit Category',
@@ -11,7 +10,6 @@ export const editCategoriaModal = {
     es: 'Editar Fuente',
   },
 
-  // Botões
   update: {
     pt: 'Atualizar',
     en: 'Update',
@@ -28,7 +26,6 @@ export const editCategoriaModal = {
     es: 'Cancelar',
   },
 
-  // Confirmação
   confirmDeleteCategory: {
     pt: 'Tem certeza que deseja excluir esta categoria?',
     en: 'Are you sure you want to delete this category?',
@@ -50,7 +47,6 @@ export const editCategoriaModal = {
     es: 'Todos los ingresos de esta fuente se verán afectados.',
   },
 
-  // Mensagens de status
   categoryUpdated: {
     pt: 'Categoria atualizada com sucesso',
     en: 'Category updated successfully',

@@ -1,5 +1,4 @@
 export const sidebar = {
-  // Itens de navegação
   dashboard: {
     pt: 'Painel',
     en: 'Dashboard',
@@ -21,7 +20,6 @@ export const sidebar = {
     es: 'Configuraciones',
   },
 
-  // Sair
   logout: {
     pt: 'Sair',
     en: 'Logout',

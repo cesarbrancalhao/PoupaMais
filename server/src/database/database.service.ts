@@ -21,7 +21,6 @@ export class DatabaseService implements OnModuleInit, OnModuleDestroy {
       connectionTimeoutMillis: 2000,
     });
 
-    // Testar conexão
     try {
       await this.pool.query('SELECT NOW()');
       this.logger.log('Conexão com banco de dados estabelecida com sucesso');

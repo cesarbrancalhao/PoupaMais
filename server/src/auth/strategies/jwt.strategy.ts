@@ -3,7 +3,6 @@ import { PassportStrategy } from '@nestjs/passport';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
-// RF26 - O sistema deverá utilizar sessões de autenticação JWT para a navegação e login.
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(private configService: ConfigService) {

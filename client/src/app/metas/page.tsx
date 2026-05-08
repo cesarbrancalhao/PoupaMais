@@ -117,7 +117,6 @@ export default function MetasPage() {
     return sorted
   }, [filteredMetas, sortColumn, sortDirection])
 
-  // RN25 - O sistema deverá conter paginação dos registros nas telas de Metas, Receitas e Despesas.
   const totalPages = Math.ceil(sortedMetas.length / ITEMS_PER_PAGE)
   const paginatedMetas = sortedMetas.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE)
 
@@ -140,7 +139,6 @@ export default function MetasPage() {
     }
   }
 
-  // RN18 - O sistema armazenará Despesas e Receitas recorrentes como um único registro no banco, e usará uma função de expansão para exibir os registros mensais.
   const expandirEntradasRecorrentes = <T extends Despesa | Receita>(
     itens: T[],
     mesSelecionado: string,
@@ -473,7 +471,6 @@ export default function MetasPage() {
               <section className={`${'bg-white text-gray-800'} p-4 md:p-6 rounded-xl shadow-sm`}>
                 <h2 className={`${'text-base md:text-lg font-semibold text-gray-800 mb-4'}`}>{t(metasTerms.title)}</h2>
 
-                {/* RF16 - O sistema deverá ter na tela de Metas, filtros de: ordem de listagem, busca por nome e busca por valor mínimo e máximo. */}
                 <div className={`mb-4 p-4 rounded-lg ${'bg-gray-50 border border-gray-200'}`}>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
                     <div className="relative">
@@ -610,7 +607,6 @@ export default function MetasPage() {
                                 <p className={'text-gray-500'}>{t(metasTerms.progress)}</p>
                                 <p className="font-medium text-green-600">{formatCurrency(Number(meta.valor_atual) || 0)}</p>
                               </div>
-                              {/* RF19 - O sistema deve calcular e exibir automaticamente o percentual de conclusão de uma meta baseado no valor atual vs valor alvo da meta. Esse percentual será usado para calcular o tempo restante necessário para a conclusão da meta. */}
                               <div>
                                 <p className={'text-gray-500'}>{t(metasTerms.remaining)}</p>
                                 <p className={`font-medium ${'text-gray-800'}`}>{timeRemaining}</p>

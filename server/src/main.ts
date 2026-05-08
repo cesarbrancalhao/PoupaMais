@@ -15,16 +15,13 @@ async function bootstrap() {
 
   const app = await NestFactory.create(AppModule);
 
-  // CORS
   app.enableCors({
     origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
     credentials: true,
   });
 
-  // Prefixo global
   app.setGlobalPrefix('api/v1');
 
-  // Pipe de validação
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
@@ -33,10 +30,8 @@ async function bootstrap() {
     }),
   );
 
-  // Filtro de exceções
   app.useGlobalFilters(new AllExceptionsFilter());
 
-  // Documentação Swagger
   const config = new DocumentBuilder()
     .setTitle('PoupaMais API')
     .setDescription('API de Gerenciamento de Finanças Pessoais')

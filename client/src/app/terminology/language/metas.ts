@@ -1,5 +1,4 @@
 export const metas = {
-  // Labels
   totalRequired: {
     pt: 'Total necessário',
     en: 'Total required',
@@ -11,14 +10,12 @@ export const metas = {
     es: 'Porcentaje de ingresos alocados',
   },
 
-  // Título da página
   title: {
     pt: 'Metas',
     en: 'Goals',
     es: 'Metas',
   },
 
-  // Botões
   clickToAddGoal: {
     pt: 'Clique em Adicionar Meta para começar!',
     en: 'Click on Add Goal to start!',
@@ -30,7 +27,6 @@ export const metas = {
     es: 'Agregar Meta',
   },
 
-  // Campos do card de meta
   goalName: {
     pt: 'Nome da Meta',
     en: 'Goal Name',
@@ -62,7 +58,6 @@ export const metas = {
     es: 'Contribuciones',
   },
 
-  // Ações
   addContribution: {
     pt: 'Adicionar Contribuição',
     en: 'Add Contribution',
@@ -79,7 +74,6 @@ export const metas = {
     es: 'Eliminar Meta',
   },
 
-  // Lista de contribuições
   contributionDate: {
     pt: 'Data',
     en: 'Date',
@@ -101,7 +95,6 @@ export const metas = {
     es: 'No hay contribuciones aún',
   },
 
-  // Seção de estatísticas
   statistics: {
     pt: 'Estatísticas',
     en: 'Statistics',
@@ -153,7 +146,6 @@ export const metas = {
     es: 'Seleccione una meta para ver las contribuciones',
   },
 
-  // Mensagens de status
   goalCompleted: {
     pt: 'Meta concluída!',
     en: 'Goal completed!',
@@ -165,7 +157,6 @@ export const metas = {
     es: '¡Casi lo logras!',
   },
 
-  // Carregando e erros
   loadingGoals: {
     pt: 'Carregando metas...',
     en: 'Loading goals...',

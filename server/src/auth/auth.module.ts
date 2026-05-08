@@ -19,7 +19,6 @@ import { EmailModule } from '../email/email.module';
       useFactory: async (configService: ConfigService) => ({
         secret: configService.get<string>('JWT_SECRET'),
         signOptions: {
-          // RN23 - A sessão JWT dura 7 dias por padrão, podendo ser definida nas variáveis de ambiente.
           expiresIn: configService.get<string>('JWT_EXPIRATION') || '7d',
         },
       }),

@@ -354,8 +354,6 @@ export default function AddDashboardModal({ isOpen, onClose, type }: AddDashboar
               </button>
             </div>
 
-            {/* RF04 - O sistema deve permitir ao usuário manter suas Despesas, com os campos: nome, valor, Categoria (opcional), data, recorrência (opcional) e data final (opcional). */}
-            {/* RF05 - O sistema deve permitir ao usuário manter suas Receitas, com os campos: valor, Fonte (opcional), data e recorrência (opcional). */}
             <form ref={formRef} onSubmit={handleSubmit} className="flex flex-col gap-5">
               <div>
                 <label className="text-sm font-medium">{t(common.name)}</label>

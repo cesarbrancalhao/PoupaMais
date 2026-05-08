@@ -11,7 +11,6 @@ export class VerificationService {
     private emailService: EmailService,
   ) {}
 
-  // RN25 - O código de verificação deve ser gerado aleatoriamente e ser um código alfanumérico de 6 dígitos com números e letras maiúsculas.
   private generateOTP(): string {
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     let code = '';
@@ -22,7 +21,6 @@ export class VerificationService {
   }
 
   async createVerification(nome: string, email: string, password: string, idioma: 'portugues' | 'ingles' | 'espanhol'): Promise<void> {
-    // RN02 - O cadastro do usuário deve ser confirmado por um código enviado para o email inserido.
     const existingUser = await this.databaseService.query(
       'SELECT id FROM usuario WHERE email = $1',
       [email],
@@ -34,8 +32,7 @@ export class VerificationService {
 
     const hashedPassword = await bcrypt.hash(password, 10);
     const code = this.generateOTP();
-    // RN03 - O código de confirmação expira em 15 minutos; caso não seja utilizado, o usuário deve solicitar um novo código.
-    const expiresAt = new Date(Date.now() + 15 * 60 * 1000); // 15 minutos
+    const expiresAt = new Date(Date.now() + 15 * 60 * 1000);
 
     await this.databaseService.query(
       'DELETE FROM verificacao WHERE email = $1',
@@ -62,13 +59,11 @@ export class VerificationService {
 
     const verification = result.rows[0];
 
-    // RN21 - A validação de tempo de expiração do código de validação será feita pelo backend, utilizando o horário de criação salvo no banco de dados.
     if (new Date() > new Date(verification.expira_em)) {
       await this.databaseService.query('DELETE FROM verificacao WHERE id = $1', [verification.id]);
       throw new BadRequestException('Código expirado');
     }
 
-    // RN05 - O sistema dará 5 tentativas para a confirmação do código. Após isso será necessário solicitar um novo código.
     if (verification.tentativas >= 5) {
       await this.databaseService.query('DELETE FROM verificacao WHERE id = $1', [verification.id]);
       throw new BadRequestException('Muitas tentativas inválidas');
@@ -93,7 +88,6 @@ export class VerificationService {
 
       const newUser = userResult.rows[0];
 
-      // RN07 - No momento do cadastro do usuário, o sistema deverá cadastrar as seguintes categorias de despesas: Moradia, Eletrônicos, Transporte, Alimentação, Saúde, Lazer.
       const defaultCategoriesByLanguage = {
         portugues: [
           { nome: 'Moradia', icone: 'Home' },
@@ -129,7 +123,6 @@ export class VerificationService {
         );
       }
 
-      // RN08 - No momento do cadastro do usuário, o sistema deverá cadastrar as seguintes fontes de receitas: Salário, Renda Fixa, Renda Variável, Extra.
       const defaultSourcesByLanguage = {
         portugues: [
           { nome: 'Salário', icone: 'Briefcase' },

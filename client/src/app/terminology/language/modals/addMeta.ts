@@ -1,12 +1,10 @@
 export const addMetaModal = {
-  // Título
   title: {
     pt: 'Adicionar Meta',
     en: 'Add Goal',
     es: 'Agregar Meta',
   },
 
-  // Campos do formulário
   name: {
     pt: 'Nome',
     en: 'Name',
@@ -58,21 +56,18 @@ export const addMetaModal = {
     es: 'Fecha final',
   },
 
-  // Meses
   months: {
     pt: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
     en: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
     es: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
   },
 
-  // Seletor de data
   selectMonthYear: {
     pt: 'Selecione mês/ano',
     en: 'Select month/year',
     es: 'Seleccione mes/año',
   },
 
-  // Cálculos
   monthsNeeded: {
     pt: 'Você precisará de {months} {monthLabel} para alcançar sua meta.',
     en: 'You will need {months} {monthLabel} to reach your goal.',
@@ -94,14 +89,12 @@ export const addMetaModal = {
     es: 'Necesitará ahorrar {amount} por mes para alcanzar su meta.',
   },
 
-  // Botões
   saveGoal: {
     pt: 'Salvar meta',
     en: 'Save goal',
     es: 'Guardar meta',
   },
 
-  // Mensagens de erro
   error: {
     pt: 'Algo deu errado. Tente novamente.',
     en: 'Something went wrong. Try again.',

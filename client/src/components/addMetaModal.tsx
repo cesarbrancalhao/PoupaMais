@@ -373,7 +373,6 @@ export default function AddMetaModal({ isOpen, onClose }: AddMetaModalProps) {
               </button>
             </div>
 
-            {/* RF06 - O sistema deve permitir ao usuário manter Metas, podendo definir os campos: nome, valor, Economia mensal (opcional), data de início (opcional) e data final (opcional). */}
             <form ref={formRef} onSubmit={handleSubmit} className="flex flex-col gap-5">
               <div>
                 <label className={`block text-sm font-medium mb-1 ${
@@ -439,7 +438,6 @@ export default function AddMetaModal({ isOpen, onClose }: AddMetaModalProps) {
                   'text-gray-800'
                 }`}>{t(addMetaModal.defineGoalBy)}</label>
                 <div className="flex gap-4">
-                  {/* RN16 - O sistema deve permitir ao usuário definir a meta por Economia mensal (ele escolhe o valor-alvo de economia mensal) ou Data final (ele escolhe a data em que pretende alcançar o objetivo e o sistema calcula quanto será o valor-alvo necessário para alcançar a Meta nesse intervalo). */}
                   <label className="flex items-center gap-2 cursor-pointer">
                     <input
                       type="radio"

@@ -1,19 +1,16 @@
 export const addContribuicaoModal = {
-  // Título
   title: {
     pt: 'Adicionar Contribuição',
     en: 'Add Contribution',
     es: 'Agregar Contribución',
   },
 
-  // Labels
   contributionLabel: {
     pt: 'contribuição',
     en: 'contribution',
     es: 'contribución',
   },
 
-  // Campos do formulário
   goalName: {
     pt: 'Meta',
     en: 'Goal',
@@ -35,7 +32,6 @@ export const addContribuicaoModal = {
     es: 'Fecha',
   },
   
-  // Seleção de data
   calendarSelectedDateLabel: {
     pt: 'Data selecionada',
     en: 'Selected date',
@@ -62,7 +58,6 @@ export const addContribuicaoModal = {
     es: 'Describa esta contribución',
   },
 
-  // Botões
   add: {
     pt: 'Adicionar',
     en: 'Add',
@@ -74,7 +69,6 @@ export const addContribuicaoModal = {
     es: 'Cancelar',
   },
 
-  // Mensagens de validação
   valueRequired: {
     pt: 'Valor é obrigatório',
     en: 'Value is required',
@@ -86,7 +80,6 @@ export const addContribuicaoModal = {
     es: 'Valor inválido',
   },
 
-  // Mensagens de status
   contributionAdded: {
     pt: 'Contribuição adicionada com sucesso',
     en: 'Contribution added successfully',

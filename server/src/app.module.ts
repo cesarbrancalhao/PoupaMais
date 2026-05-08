@@ -18,8 +18,6 @@ import { ContribuicaoMetaModule } from './contribuicao-meta/contribuicao-meta.mo
       isGlobal: true,
       envFilePath: '.env',
     }),
-    // RF24 - O sistema deverá limitar requisições para previnir abusos e ataques como DDoS e BruteForce.
-    // RN24 - As requisições serão limitadas à API em 100 requisições por minuto.
     ThrottlerModule.forRoot([{
       ttl: 60000,
       limit: 100,

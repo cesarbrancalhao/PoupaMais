@@ -1,12 +1,10 @@
 export const passwordModal = {
-  // Título
   title: {
     pt: 'Alterar Senha',
     en: 'Change Password',
     es: 'Cambiar Contraseña',
   },
 
-  // Campos do formulário
   currentPassword: {
     pt: 'Senha Atual',
     en: 'Current Password',
@@ -38,7 +36,6 @@ export const passwordModal = {
     es: 'Ingrese nuevamente su nueva contraseña',
   },
 
-  // Botões
   change: {
     pt: 'Alterar',
     en: 'Change',
@@ -50,7 +47,6 @@ export const passwordModal = {
     es: 'Cancelar',
   },
 
-  // Mensagens de validação
   currentPasswordRequired: {
     pt: 'Senha atual é obrigatória',
     en: 'Current password is required',
@@ -77,7 +73,6 @@ export const passwordModal = {
     es: 'Contraseña actual incorrecta',
   },
 
-  // Mensagens de status
   passwordChanged: {
     pt: 'Senha alterada com sucesso',
     en: 'Password changed successfully',
