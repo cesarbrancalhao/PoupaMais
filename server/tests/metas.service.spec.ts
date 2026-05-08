@@ -1,16 +1,16 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { NotFoundException, BadRequestException } from '@nestjs/common';
-import { MetasService } from '../src/metas/metas.service';
+import { GoalsService } from '../src/goals/goals.service';
 import { DatabaseService } from '../src/database/database.service';
 
-describe('MetasService', () => {
-  let metasService: MetasService;
+describe('GoalsService', () => {
+  let goalsService: GoalsService;
   let databaseService: jest.Mocked<DatabaseService>;
 
-  const mockMeta = {
+  const mockGoal = {
     id: 1,
-    nome: 'Viagem',
-    descricao: 'Viagem para Europa',
+    nome: 'Trip',
+    descricao: 'Trip to Europe',
     valor: 5000,
     economia_mensal: 500,
     data_inicio: new Date('2025-01-01'),
@@ -32,12 +32,12 @@ describe('MetasService', () => {
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        MetasService,
+        GoalsService,
         { provide: DatabaseService, useValue: mockDatabaseService },
       ],
     }).compile();
 
-    metasService = module.get<MetasService>(MetasService);
+    goalsService = module.get<GoalsService>(GoalsService);
     databaseService = module.get(DatabaseService) as jest.Mocked<DatabaseService>;
 
     databaseService.getClient.mockResolvedValue(mockClient as any);
@@ -48,19 +48,19 @@ describe('MetasService', () => {
   });
 
   describe('create', () => {
-    it('should create a meta successfully', async () => {
+    it('should create a goal successfully', async () => {
       mockClient.query
         .mockResolvedValueOnce(undefined)
         .mockResolvedValueOnce({ rows: [{ id: 1 }] })
-        .mockResolvedValueOnce({ rows: [mockMeta] })
+        .mockResolvedValueOnce({ rows: [mockGoal] })
         .mockResolvedValueOnce(undefined);
 
-      const result = await metasService.create(1, {
-        nome: 'Viagem',
+      const result = await goalsService.create(1, {
+        nome: 'Trip',
         valor: 5000,
       });
 
-      expect(result).toEqual(mockMeta);
+      expect(result).toEqual(mockGoal);
       expect(mockClient.query).toHaveBeenCalledWith('BEGIN');
       expect(mockClient.query).toHaveBeenCalledWith('COMMIT');
       expect(mockClient.release).toHaveBeenCalled();
@@ -74,7 +74,7 @@ describe('MetasService', () => {
       mockClient.query.mockResolvedValueOnce(undefined); // ROLLBACK
 
       await expect(
-        metasService.create(999, { nome: 'Viagem', valor: 5000 }),
+        goalsService.create(999, { nome: 'Trip', valor: 5000 }),
       ).rejects.toThrow(BadRequestException);
 
       expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK');
@@ -83,12 +83,12 @@ describe('MetasService', () => {
   });
 
   describe('findAll', () => {
-    it('should return paginated metas', async () => {
+    it('should return paginated goals', async () => {
       (databaseService.query as jest.Mock)
-        .mockResolvedValueOnce({ rows: [mockMeta], command: '', rowCount: 1, oid: 0, fields: [] })
+        .mockResolvedValueOnce({ rows: [mockGoal], command: '', rowCount: 1, oid: 0, fields: [] })
         .mockResolvedValueOnce({ rows: [{ count: '1' }], command: '', rowCount: 1, oid: 0, fields: [] });
 
-      const result = await metasService.findAll(1, 1, 20);
+      const result = await goalsService.findAll(1, 1, 20);
 
       expect(result.data).toHaveLength(1);
       expect(result.pagination.total).toBe(1);
@@ -101,7 +101,7 @@ describe('MetasService', () => {
         .mockResolvedValueOnce({ rows: [], command: '', rowCount: 0, oid: 0, fields: [] })
         .mockResolvedValueOnce({ rows: [{ count: '0' }], command: '', rowCount: 1, oid: 0, fields: [] });
 
-      await metasService.findAll(1, 1, 5000);
+      await goalsService.findAll(1, 1, 5000);
 
       const calls = databaseService.query.mock.calls;
       expect(calls[0][1][1]).toBe(2000);
@@ -109,42 +109,42 @@ describe('MetasService', () => {
   });
 
   describe('findOne', () => {
-    it('should return a meta by id and userId', async () => {
-      (databaseService.query as jest.Mock).mockResolvedValue({ rows: [mockMeta], command: '', rowCount: 1, oid: 0, fields: [] });
+    it('should return a goal by id and userId', async () => {
+      (databaseService.query as jest.Mock).mockResolvedValue({ rows: [mockGoal], command: '', rowCount: 1, oid: 0, fields: [] });
 
-      const result = await metasService.findOne(1, 1);
+      const result = await goalsService.findOne(1, 1);
 
-      expect(result).toEqual(mockMeta);
+      expect(result).toEqual(mockGoal);
       expect(databaseService.query).toHaveBeenCalledWith(
         'SELECT * FROM meta WHERE id = $1 AND usuario_id = $2',
         [1, 1],
       );
     });
 
-    it('should throw NotFoundException when meta is not found', async () => {
+    it('should throw NotFoundException when goal is not found', async () => {
       (databaseService.query as jest.Mock).mockResolvedValue({ rows: [], command: '', rowCount: 0, oid: 0, fields: [] });
 
-      await expect(metasService.findOne(999, 1)).rejects.toThrow(NotFoundException);
+      await expect(goalsService.findOne(999, 1)).rejects.toThrow(NotFoundException);
     });
   });
 
   describe('update', () => {
-    it('should update a meta', async () => {
-      const updatedMeta = { ...mockMeta, nome: 'Viagem Atualizada' };
+    it('should update a goal', async () => {
+      const updatedGoal = { ...mockGoal, nome: 'Updated Trip' };
 
       mockClient.query
         .mockResolvedValueOnce(undefined)
-        .mockResolvedValueOnce({ rows: [updatedMeta] })
+        .mockResolvedValueOnce({ rows: [updatedGoal] })
         .mockResolvedValueOnce(undefined);
 
-      const result = await metasService.update(1, 1, { nome: 'Viagem Atualizada' });
+      const result = await goalsService.update(1, 1, { nome: 'Updated Trip' });
 
-      expect(result.nome).toBe('Viagem Atualizada');
+      expect(result.nome).toBe('Updated Trip');
       expect(mockClient.query).toHaveBeenCalledWith('BEGIN');
       expect(mockClient.query).toHaveBeenCalledWith('COMMIT');
     });
 
-    it('should throw NotFoundException when meta to update is not found', async () => {
+    it('should throw NotFoundException when goal to update is not found', async () => {
       mockClient.query
         .mockResolvedValueOnce(undefined)
         .mockResolvedValueOnce({ rows: [] });
@@ -152,7 +152,7 @@ describe('MetasService', () => {
       mockClient.query.mockResolvedValueOnce(undefined); // ROLLBACK
 
       await expect(
-        metasService.update(999, 1, { nome: 'Teste' }),
+        goalsService.update(999, 1, { nome: 'Test' }),
       ).rejects.toThrow(NotFoundException);
 
       expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK');
@@ -160,18 +160,18 @@ describe('MetasService', () => {
   });
 
   describe('remove', () => {
-    it('should delete a meta', async () => {
+    it('should delete a goal', async () => {
       (databaseService.query as jest.Mock).mockResolvedValue({ rows: [], command: '', rowCount: 1, oid: 0, fields: [] });
 
-      const result = await metasService.remove(1, 1);
+      const result = await goalsService.remove(1, 1);
 
-      expect(result.message).toBe('Meta excluída com sucesso');
+      expect(result.message).toBe('Goal deleted successfully');
     });
 
-    it('should throw NotFoundException when meta to delete is not found', async () => {
+    it('should throw NotFoundException when goal to delete is not found', async () => {
       (databaseService.query as jest.Mock).mockResolvedValue({ rows: [], command: '', rowCount: 0, oid: 0, fields: [] });
 
-      await expect(metasService.remove(999, 1)).rejects.toThrow(NotFoundException);
+      await expect(goalsService.remove(999, 1)).rejects.toThrow(NotFoundException);
     });
   });
 });

@@ -1,4 +1,4 @@
-export interface Usuario {
+export interface User {
   id: number;
   nome: string;
   email: string;
@@ -8,7 +8,7 @@ export interface Usuario {
   created_at: Date;
 }
 
-export interface CategoriaDespesa {
+export interface ExpenseCategory {
   id: number;
   nome: string;
   cor: string;
@@ -16,7 +16,7 @@ export interface CategoriaDespesa {
   usuario_id: number;
 }
 
-export interface FonteReceita {
+export interface IncomeSource {
   id: number;
   nome: string;
   cor: string;
@@ -24,7 +24,7 @@ export interface FonteReceita {
   usuario_id: number;
 }
 
-export interface Despesa {
+export interface Expense {
   id: number;
   nome: string;
   valor: number;
@@ -36,7 +36,7 @@ export interface Despesa {
   usuario_id: number;
 }
 
-export interface Receita {
+export interface Income {
   id: number;
   nome: string;
   valor: number;
@@ -48,7 +48,7 @@ export interface Receita {
   usuario_id: number;
 }
 
-export interface Meta {
+export interface Goal {
   id: number;
   nome: string;
   valor: number;

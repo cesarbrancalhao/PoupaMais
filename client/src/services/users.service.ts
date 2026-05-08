@@ -1,17 +1,17 @@
 import { apiService } from './api';
-import { User, Idioma, Moeda } from '@/types/auth';
+import { User, Language, Currency } from '@/types/auth';
 
 export const usersService = {
   async getProfile(): Promise<User> {
     return apiService.get('/users/profile');
   },
 
-  async updateProfile(nome: string, email: string): Promise<User> {
-    return apiService.put('/users/profile', { nome, email });
+  async updateProfile(name: string, email: string): Promise<User> {
+    return apiService.put('/users/profile', { name, email });
   },
 
-  async updateSettings(idioma: Idioma, moeda: Moeda): Promise<User> {
-    return apiService.put('/users/settings', { idioma, moeda });
+  async updateSettings(language: Language, currency: Currency): Promise<User> {
+    return apiService.put('/users/settings', { language, currency });
   },
 
   async changePassword(currentPassword: string, newPassword: string): Promise<void> {

@@ -5,12 +5,12 @@ import { APP_GUARD } from '@nestjs/core';
 import { DatabaseModule } from './database/database.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
-import { CategoriaDespesaModule } from './categoria-despesa/categoria-despesa.module';
-import { FonteReceitaModule } from './fonte-receita/fonte-receita.module';
-import { DespesasModule } from './despesas/despesas.module';
-import { ReceitasModule } from './receitas/receitas.module';
-import { MetasModule } from './metas/metas.module';
-import { ContribuicaoMetaModule } from './contribuicao-meta/contribuicao-meta.module';
+import { ExpenseCategoryModule } from './expense-category/expense-category.module';
+import { IncomeSourceModule } from './income-source/income-source.module';
+import { ExpensesModule } from './expenses/expenses.module';
+import { IncomesModule } from './incomes/incomes.module';
+import { GoalsModule } from './goals/goals.module';
+import { GoalContributionModule } from './goal-contribution/goal-contribution.module';
 
 @Module({
   imports: [
@@ -25,12 +25,12 @@ import { ContribuicaoMetaModule } from './contribuicao-meta/contribuicao-meta.mo
     DatabaseModule,
     AuthModule,
     UsersModule,
-    CategoriaDespesaModule,
-    FonteReceitaModule,
-    DespesasModule,
-    ReceitasModule,
-    MetasModule,
-    ContribuicaoMetaModule,
+    ExpenseCategoryModule,
+    IncomeSourceModule,
+    ExpensesModule,
+    IncomesModule,
+    GoalsModule,
+    GoalContributionModule,
   ],
   providers: [
     {

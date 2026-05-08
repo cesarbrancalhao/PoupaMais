@@ -13,7 +13,7 @@ export class UsersService {
     );
 
     if (result.rows.length === 0) {
-      throw new NotFoundException('Usuário não encontrado');
+      throw new NotFoundException('User not found');
     }
 
     return result.rows[0];
@@ -26,7 +26,7 @@ export class UsersService {
     );
 
     if (existingMail.rows.length > 0) {
-      throw new UnauthorizedException('Email já existe');
+      throw new UnauthorizedException('Email already exists');
     }
 
     const result = await this.databaseService.query(
@@ -35,7 +35,7 @@ export class UsersService {
     );
 
     if (result.rows.length === 0) {
-      throw new NotFoundException('Usuário não encontrado');
+      throw new NotFoundException('User not found');
     }
 
     return result.rows[0];
@@ -48,7 +48,7 @@ export class UsersService {
     );
 
     if (result.rows.length === 0) {
-      throw new NotFoundException('Usuário não encontrado');
+      throw new NotFoundException('User not found');
     }
 
     return result.rows[0];
@@ -61,14 +61,14 @@ export class UsersService {
     );
 
     if (result.rows.length === 0) {
-      throw new NotFoundException('Usuário não encontrado');
+      throw new NotFoundException('User not found');
     }
 
     const user = result.rows[0];
     const isPasswordValid = await bcrypt.compare(currentPassword, user.senha);
 
     if (!isPasswordValid) {
-      throw new UnauthorizedException('Senha atual incorreta');
+      throw new UnauthorizedException('Current password is incorrect');
     }
 
     const hashedPassword = await bcrypt.hash(newPassword, 10);
@@ -78,7 +78,7 @@ export class UsersService {
       [hashedPassword, userId],
     );
 
-    return { message: 'Senha alterada com sucesso' };
+    return { message: 'Password changed successfully' };
   }
 
   async deleteAccount(userId: number) {
@@ -90,10 +90,10 @@ export class UsersService {
         'DELETE FROM usuario WHERE id = $1',
         [userId],
       );
-      if (result.rowCount === 0) throw new NotFoundException('Usuário não encontrado');
+      if (result.rowCount === 0) throw new NotFoundException('User not found');
 
       await client.query('COMMIT');
-      return { message: 'Conta excluída com sucesso' };
+      return { message: 'Account deleted successfully' };
     } catch (error) {
       await client.query('ROLLBACK');
       throw error;

@@ -4,9 +4,9 @@ export * from './common';
 export * from './auth';
 export * from './sidebar';
 export * from './dashboard';
-export * from './metas';
-export * from './analise';
-export * from './configuracoes';
+export * from './goals';
+export * from './analysis';
+export * from './settings';
 
 export * from './modals/addDashboard';
 export * from './modals/editDashboard';

@@ -22,7 +22,7 @@ class ApiService {
   }
 
   private async handleError(response: Response): Promise<never> {
-    let errorMessage = 'Erro ao processar a requisição';
+    let errorMessage = 'Error processing request';
 
     try {
       const errorData = await response.json();
@@ -34,7 +34,7 @@ class ApiService {
         }
       }
     } catch {
-      errorMessage = `Erro ${response.status}: ${response.statusText}`;
+      errorMessage = `Error ${response.status}: ${response.statusText}`;
     }
 
     const error = new Error(errorMessage) as ApiError;

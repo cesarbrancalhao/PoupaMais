@@ -23,10 +23,10 @@ export class DatabaseService implements OnModuleInit, OnModuleDestroy {
 
     try {
       await this.pool.query('SELECT NOW()');
-      this.logger.log('Conexão com banco de dados estabelecida com sucesso');
+      this.logger.log('Database connection established successfully');
     } catch (error) {
-      this.logger.error('Falha na conexão com banco de dados:', error);
-      throw new Error('Falha na conexão com o banco de dados');
+      this.logger.error('Database connection failed:', error);
+      throw new Error('Database connection failed');
     }
   }
 
@@ -39,11 +39,11 @@ export class DatabaseService implements OnModuleInit, OnModuleDestroy {
     try {
       const result = await this.pool.query(text, params);
       const duration = Date.now() - start;
-      this.logger.debug(`Consulta executada em ${duration}ms - Linhas: ${result.rowCount}`);
+      this.logger.debug(`Query executed in ${duration}ms - Rows: ${result.rowCount}`);
       return result;
     } catch (error) {
-      this.logger.error('Erro na consulta:', error);
-      throw new Error('Erro na consulta');
+      this.logger.error('Query error:', error);
+      throw new Error('Query error');
     }
   }
 

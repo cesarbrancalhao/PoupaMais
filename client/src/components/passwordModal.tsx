@@ -35,7 +35,7 @@ export default function PasswordModal({ isOpen, onClose }: PasswordModalProps) {
     setError("");
 
     if (newPassword.length < 8) {
-      setError(t(passwordModal.passwordTooShort || "A senha deve ter no mínimo 8 caracteres"));
+      setError(t(passwordModal.passwordTooShort || "Password must be at least 8 characters"));
       return;
     }
 
@@ -54,7 +54,7 @@ export default function PasswordModal({ isOpen, onClose }: PasswordModalProps) {
       if (err instanceof Error) {
         setError(err.message);
       } else {
-        setError("Erro ao alterar a senha.");
+        setError("Error changing password.");
       }
     }
   };

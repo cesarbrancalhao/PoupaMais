@@ -70,7 +70,7 @@ describe('DatabaseService', () => {
     it('should throw when connection fails', async () => {
       mockPoolInstance.query.mockRejectedValueOnce(new Error('Connection refused'));
 
-      await expect(service.onModuleInit()).rejects.toThrow('Falha na conexão com o banco de dados');
+      await expect(service.onModuleInit()).rejects.toThrow('Database connection failed');
     });
   });
 

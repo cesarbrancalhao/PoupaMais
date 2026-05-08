@@ -14,20 +14,20 @@ import {
   Filler
 } from 'chart.js'
 import { formatCurrency } from "@/app/terminology/currency"
-import { Moeda } from "@/types/auth"
+import { Currency } from "@/types/auth"
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend, Filler)
 
 interface YearlyBalanceData {
   month: string
   balance: number
-  receitas: number
-  despesas: number
+  income: number
+  expenses: number
 }
 
 interface YearlyBalanceChartProps {
   data: YearlyBalanceData[]
-  moeda: Moeda
+  moeda: Currency
 }
 
 export default function YearlyBalanceChart({ data, moeda }: YearlyBalanceChartProps) {
@@ -56,7 +56,7 @@ export default function YearlyBalanceChart({ data, moeda }: YearlyBalanceChartPr
     labels: data.map(item => item.month),
     datasets: [
       {
-        label: 'Balanço',
+        label: 'Balance',
         data: data.map(item => item.balance),
         borderColor: 'rgba(59, 130, 246, 1)',
         backgroundColor: 'rgba(59, 130, 246, 0.1)',
@@ -92,10 +92,10 @@ export default function YearlyBalanceChart({ data, moeda }: YearlyBalanceChartPr
 
             if (Math.abs(value) >= 1000) {
               const shortened = Math.round(value / 1000)
-              return `Balanço: ${symbol} ${shortened}K`
+              return `Balance: ${symbol} ${shortened}K`
             }
 
-            return `Balanço: ${symbol} ${Math.round(value)}`
+            return `Balance: ${symbol} ${Math.round(value)}`
           }
         }
       }

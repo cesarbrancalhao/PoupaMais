@@ -10,7 +10,7 @@ import {
   ChartOptions
 } from 'chart.js'
 import { formatCurrency } from "@/app/terminology/currency"
-import { Moeda } from "@/types/auth"
+import { Currency } from "@/types/auth"
 
 ChartJS.register(ArcElement, Tooltip, Legend)
 
@@ -21,7 +21,7 @@ interface ExpenseData {
 
 interface ExpenseDistributionChartProps {
   data: ExpenseData[]
-  moeda: Moeda
+  moeda: Currency
 }
 
 export default function ExpenseDistributionChart({ data, moeda }: ExpenseDistributionChartProps) {

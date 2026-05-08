@@ -105,7 +105,7 @@ describe('AuthService', () => {
 
       await expect(
         authService.register('Test', 'existing@example.com', 'password123', 'portugues'),
-      ).rejects.toThrow('Email já cadastrado');
+      ).rejects.toThrow('Email already registered');
     });
 
     it('should create a new user with default categories and sources', async () => {
@@ -148,7 +148,7 @@ describe('AuthService', () => {
 
       await expect(
         authService.register('Test', 'new@example.com', 'password123', 'portugues'),
-      ).rejects.toThrow('Houve um erro ao registrar o usuário');
+      ).rejects.toThrow('There was an error registering the user');
 
       expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK');
       expect(mockClient.release).toHaveBeenCalled();

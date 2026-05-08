@@ -28,11 +28,11 @@ test.describe('Smoke Tests', () => {
   });
 
   test('registration page loads correctly', async ({ page }) => {
-    await page.goto('/cadastro');
+    await page.goto('/register');
 
     await expect(page.locator('form')).toBeVisible();
 
-    const nameInput = page.locator('input[name="nome"]');
+    const nameInput = page.locator('input[name="name"]');
     const emailInput = page.locator('input[type="email"]');
     const passwordInput = page.locator('input[type="password"]').first();
 

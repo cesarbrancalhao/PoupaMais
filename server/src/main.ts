@@ -9,7 +9,7 @@ async function bootstrap() {
   const requiredEnvs = ['JWT_SECRET', 'DB_HOST', 'DB_PASSWORD'];
   requiredEnvs.forEach(variable => {
     if (!process.env[variable]) {
-      throw new Error(`Variável de ambiente ${variable} não definida`);
+      throw new Error(`Environment variable ${variable} is not defined`);
     }
   });
 
@@ -34,7 +34,7 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .setTitle('PoupaMais API')
-    .setDescription('API de Gerenciamento de Finanças Pessoais')
+    .setDescription('Personal Finance Management API')
     .setVersion('1.0')
     .addBearerAuth()
     .build();
@@ -45,10 +45,10 @@ async function bootstrap() {
   
   try {
     await app.listen(port);
-    logger.log(`Aplicação rodando em: http://localhost:${port}`);
-    logger.log(`Documentação Swagger disponível em: http://localhost:${port}/api/docs`);
+    logger.log(`Application running at: http://localhost:${port}`);
+    logger.log(`Swagger documentation available at: http://localhost:${port}/api/docs`);
   } catch (error) {
-    logger.error('Erro ao iniciar a aplicação:', error);
+    logger.error('Error starting application:', error);
     process.exit(1);
   }
 }

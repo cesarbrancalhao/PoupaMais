@@ -12,20 +12,20 @@ import {
   ChartOptions
 } from 'chart.js'
 import { formatCurrency } from "@/app/terminology/currency"
-import { Moeda } from "@/types/auth"
+import { Currency } from "@/types/auth"
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend)
 
 interface MonthlyTrendData {
   month: string
   balance: number
-  receitas: number
-  despesas: number
+  income: number
+  expenses: number
 }
 
 interface MonthlyTrendChartProps {
   data: MonthlyTrendData[]
-  moeda: Moeda
+  moeda: Currency
 }
 
 export default function MonthlyTrendChart({ data, moeda }: MonthlyTrendChartProps) {
@@ -54,16 +54,16 @@ export default function MonthlyTrendChart({ data, moeda }: MonthlyTrendChartProp
     labels: data.map(item => item.month),
     datasets: [
       {
-        label: 'Receitas',
-        data: data.map(item => item.receitas),
+        label: 'Income',
+        data: data.map(item => item.income),
         backgroundColor: 'rgba(34, 197, 94, 0.8)',
         borderColor: 'rgba(34, 197, 94, 1)',
         borderWidth: 1,
         borderRadius: 4
       },
       {
-        label: 'Despesas',
-        data: data.map(item => item.despesas),
+        label: 'Expenses',
+        data: data.map(item => item.expenses),
         backgroundColor: 'rgba(251, 146, 120, 0.8)',
         borderColor: 'rgba(251, 146, 120, 1)',
         borderWidth: 1,

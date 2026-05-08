@@ -26,7 +26,7 @@ export class PasswordResetService {
     );
 
     if (userResult.rows.length === 0) {
-      throw new BadRequestException('Email não encontrado');
+      throw new BadRequestException('Email not found');
     }
 
     const user = userResult.rows[0];
@@ -36,7 +36,7 @@ export class PasswordResetService {
       [user.id],
     );
 
-    const idioma = configResult.rows[0]?.idioma || 'portugues';
+    const language = configResult.rows[0]?.idioma || 'portugues';
 
     const code = this.generateOTP();
     const expiresAt = new Date(Date.now() + 15 * 60 * 1000);
@@ -51,7 +51,7 @@ export class PasswordResetService {
       [email, code, expiresAt, user.id],
     );
 
-    await this.emailService.sendPasswordResetEmail(email, code, user.nome, idioma);
+    await this.emailService.sendPasswordResetEmail(email, code, user.nome, language);
   }
 
   async verifyResetCode(email: string, code: string): Promise<boolean> {
@@ -61,19 +61,19 @@ export class PasswordResetService {
     );
 
     if (result.rows.length === 0) {
-      throw new BadRequestException('Solicitação de recuperação não encontrada');
+      throw new BadRequestException('Password reset request not found');
     }
 
     const recovery = result.rows[0];
 
     if (new Date() > new Date(recovery.expira_em)) {
       await this.databaseService.query('DELETE FROM recuperacao_senha WHERE id = $1', [recovery.id]);
-      throw new BadRequestException('Código expirado');
+      throw new BadRequestException('Code expired');
     }
 
     if (recovery.tentativas >= 5) {
       await this.databaseService.query('DELETE FROM recuperacao_senha WHERE id = $1', [recovery.id]);
-      throw new BadRequestException('Muitas tentativas inválidas');
+      throw new BadRequestException('Too many invalid attempts');
     }
 
     if (recovery.codigo !== code.toUpperCase()) {
@@ -81,7 +81,7 @@ export class PasswordResetService {
         'UPDATE recuperacao_senha SET tentativas = tentativas + 1 WHERE id = $1',
         [recovery.id],
       );
-      throw new UnauthorizedException('Código inválido');
+      throw new UnauthorizedException('Invalid code');
     }
 
     return true;
@@ -96,7 +96,7 @@ export class PasswordResetService {
     );
 
     if (result.rows.length === 0) {
-      throw new BadRequestException('Solicitação de recuperação não encontrada');
+      throw new BadRequestException('Password reset request not found');
     }
 
     const recovery = result.rows[0];

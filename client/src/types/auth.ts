@@ -1,13 +1,13 @@
-export type Moeda = "real" | "dolar" | "euro";
-export type Idioma = "portugues" | "ingles" | "espanhol";
+export type Currency = "real" | "dollar" | "euro";
+export type Language = "portuguese" | "english" | "spanish";
 
 export interface User {
   id: number;
-  nome: string;
+  name: string;
   email: string;
   created_at?: string;
-  idioma: Idioma;
-  moeda: Moeda;
+  language: Language;
+  currency: Currency;
 }
 
 export interface LoginRequest {
@@ -16,10 +16,10 @@ export interface LoginRequest {
 }
 
 export interface RegisterRequest {
-  nome: string;
+  name: string;
   email: string;
   password: string;
-  idioma?: Idioma;
+  language?: Language;
 }
 
 export interface AuthResponse {

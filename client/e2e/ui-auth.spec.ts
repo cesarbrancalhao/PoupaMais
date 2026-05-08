@@ -15,15 +15,15 @@ test.describe('UI Tests - Authentication', () => {
   test('can navigate from login to registration page', async ({ page }) => {
     await page.goto('/auth');
 
-    const registerLink = page.locator('a[href*="cadastro"]').first();
+    const registerLink = page.locator('a[href*="register"]').first();
     if (await registerLink.isVisible()) {
       await registerLink.click();
-      await expect(page).toHaveURL(/cadastro/);
+      await expect(page).toHaveURL(/register/);
     }
   });
 
   test('can navigate from registration to login page', async ({ page }) => {
-    await page.goto('/cadastro');
+    await page.goto('/register');
 
     const loginLink = page.locator('a[href*="auth"]').first();
     if (await loginLink.isVisible()) {

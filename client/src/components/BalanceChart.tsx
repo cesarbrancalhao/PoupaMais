@@ -12,7 +12,7 @@ import {
   ChartOptions
 } from 'chart.js'
 import { formatCurrency } from "@/app/terminology/currency";
-import { Moeda } from "@/types/auth";
+import { Currency } from "@/types/auth";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend)
 
@@ -23,7 +23,7 @@ interface MonthlyBalance {
 
 interface BalanceChartProps {
   data: MonthlyBalance[];
-  moeda: Moeda;
+  moeda: Currency;
 }
 
 export default function BalanceChart({ data, moeda }: BalanceChartProps) {
@@ -60,7 +60,7 @@ export default function BalanceChart({ data, moeda }: BalanceChartProps) {
     labels: data.map(item => item.month),
     datasets: [
       {
-        label: 'Balanço',
+        label: 'Balance',
         data: data.map(item => item.balance),
         backgroundColor: data.map(item =>
           item.balance >= 0 ? positiveBar : negativeBar

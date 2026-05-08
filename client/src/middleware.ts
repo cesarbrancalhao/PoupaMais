@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-const publicPaths = ['/', '/auth', '/cadastro', '/recuperar', '/confirmar'];
-const protectedPaths = ['/dashboard', '/metas', '/analise', '/configuracoes'];
+const publicPaths = ['/', '/auth', '/register', '/recover', '/verify'];
+const protectedPaths = ['/dashboard', '/goals', '/analysis', '/settings'];
 
 function isTokenValid(token: string): boolean {
   try {
@@ -35,7 +35,7 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL('/auth', request.url));
   }
 
-  if ((pathname === '/auth' || pathname === '/cadastro') && isAuthenticated) {
+  if ((pathname === '/auth' || pathname === '/register') && isAuthenticated) {
     return NextResponse.redirect(new URL('/dashboard', request.url));
   }
 

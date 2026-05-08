@@ -102,7 +102,7 @@ export default function AuthPage() {
                 required
               />
               <div className="text-right mt-1">
-                <Link href="/recuperar" className="text-xs text-indigo-500 hover:underline">
+                <Link href="/recover" className="text-xs text-indigo-500 hover:underline">
                   {t(auth.forgotPassword)}
                 </Link>
               </div>
@@ -118,7 +118,7 @@ export default function AuthPage() {
 
             <p className="text-center text-sm text-gray-600">
               {t(auth.noAccount)}{" "}
-              <Link href="/cadastro" className="text-indigo-500 hover:underline">
+              <Link href="/register" className="text-indigo-500 hover:underline">
                 {t(auth.registerHere)}
               </Link>
             </p>

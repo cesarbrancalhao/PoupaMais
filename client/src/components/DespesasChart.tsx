@@ -10,7 +10,7 @@ import {
   ChartOptions
 } from 'chart.js'
 import { formatCurrency } from "@/app/terminology/currency"
-import { Moeda } from "@/types/auth"
+import { Currency } from "@/types/auth"
 import { dashboard } from '@/app/terminology/language/dashboard'
 import { useLanguage } from '@/app/terminology/LanguageContext'
 
@@ -23,7 +23,7 @@ interface CategoryData {
 
 interface DespesasChartProps {
   data: CategoryData[]
-  moeda: Moeda
+  moeda: Currency
 }
 
 export default function DespesasChart({ data, moeda }: DespesasChartProps) {

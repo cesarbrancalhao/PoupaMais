@@ -2,11 +2,11 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { DatabaseService } from '../database/database.service';
-import { Usuario } from '../common/interfaces/user.interface';
+import { User } from '../common/interfaces/user.interface';
 
-type Idioma = 'portugues' | 'ingles' | 'espanhol';
+type Language = 'portugues' | 'ingles' | 'espanhol';
 
-const defaultCategoriesByLanguage: Record<Idioma, { nome: string; icone: string }[]> = {
+const defaultCategoriesByLanguage: Record<Language, { nome: string; icone: string }[]> = {
   portugues: [
     { nome: 'Moradia', icone: 'Home' },
     { nome: 'Eletrônicos', icone: 'Plug' },
@@ -33,7 +33,7 @@ const defaultCategoriesByLanguage: Record<Idioma, { nome: string; icone: string 
   ],
 };
 
-const defaultSourcesByLanguage: Record<Idioma, { nome: string; icone: string }[]> = {
+const defaultSourcesByLanguage: Record<Language, { nome: string; icone: string }[]> = {
   portugues: [
     { nome: 'Salário', icone: 'Briefcase' },
     { nome: 'Renda Fixa', icone: 'DollarSign' },
@@ -61,7 +61,7 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async validateUser(email: string, password: string): Promise<Omit<Usuario, 'senha'> | null> {
+  async validateUser(email: string, password: string): Promise<Omit<User, 'senha'> | null> {
     const result = await this.databaseService.query(
       'SELECT * FROM usuario WHERE email = $1',
       [email],
@@ -71,7 +71,7 @@ export class AuthService {
       return null;
     }
 
-    const user = result.rows[0] as Usuario;
+    const user = result.rows[0] as User;
     const isPasswordValid = await bcrypt.compare(password, user.senha);
 
     if (!isPasswordValid) {
@@ -82,7 +82,7 @@ export class AuthService {
     return userWithoutPassword;
   }
 
-  async login(user: Omit<Usuario, 'senha'>) {
+  async login(user: Omit<User, 'senha'>) {
     const payload = { email: user.email, sub: user.id };
     return {
       access_token: this.jwtService.sign(payload),
@@ -96,14 +96,14 @@ export class AuthService {
     };
   }
 
-  async register(nome: string, email: string, password: string, idioma: Idioma = 'portugues') {
+  async register(name: string, email: string, password: string, language: Language = 'portugues') {
     const existingUser = await this.databaseService.query(
       'SELECT id FROM usuario WHERE email = $1',
       [email],
     );
 
     if (existingUser.rows.length > 0) {
-      throw new UnauthorizedException('Email já cadastrado');
+      throw new UnauthorizedException('Email already registered');
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -114,24 +114,24 @@ export class AuthService {
 
       const result = await client.query(
         'INSERT INTO usuario (nome, email, senha, idioma) VALUES ($1, $2, $3, $4) RETURNING id, nome, email, idioma, moeda, created_at',
-        [nome, email, hashedPassword, idioma],
+        [name, email, hashedPassword, language],
       );
 
       const newUser = result.rows[0];
 
-      const categorias = defaultCategoriesByLanguage[idioma] || defaultCategoriesByLanguage.portugues;
-      for (const categoria of categorias) {
+      const categories = defaultCategoriesByLanguage[language] || defaultCategoriesByLanguage.portugues;
+      for (const category of categories) {
         await client.query(
           'INSERT INTO categoria_despesa (nome, icone, usuario_id) VALUES ($1, $2, $3)',
-          [categoria.nome, categoria.icone, newUser.id],
+          [category.nome, category.icone, newUser.id],
         );
       }
 
-      const fontes = defaultSourcesByLanguage[idioma] || defaultSourcesByLanguage.portugues;
-      for (const fonte of fontes) {
+      const sources = defaultSourcesByLanguage[language] || defaultSourcesByLanguage.portugues;
+      for (const source of sources) {
         await client.query(
           'INSERT INTO fonte_receita (nome, icone, usuario_id) VALUES ($1, $2, $3)',
-          [fonte.nome, fonte.icone, newUser.id],
+          [source.nome, source.icone, newUser.id],
         );
       }
 
@@ -140,7 +140,7 @@ export class AuthService {
       return this.login(newUser);
     } catch (error) {
       await client.query('ROLLBACK');
-      throw new UnauthorizedException('Houve um erro ao registrar o usuário');
+      throw new UnauthorizedException('There was an error registering the user');
     }
     finally {
       await client.release();

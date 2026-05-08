@@ -23,15 +23,15 @@ export default function Sidebar() {
   }
   const cancelLogout = () => setShowLogoutModal(false)
 
-  const initials = user?.nome
-    ? user.nome.split(' ').map(word => word[0]).join('').toUpperCase()
+  const initials = user?.name
+    ? user.name.split(' ').map(word => word[0]).join('').toUpperCase()
     : 'JS'
 
   const links = [
     { name: t(sidebar.dashboard), href: '/dashboard', icon: <SquareStack className="w-5 h-5" /> },
-    { name: t(sidebar.goals), href: '/metas', icon: <Goal className="w-5 h-5" /> },
-    { name: t(sidebar.analysis), href: '/analise', icon: <LineChart className="w-5 h-5" /> },
-    { name: t(sidebar.settings), href: '/configuracoes', icon: <Settings className="w-5 h-5" /> }
+    { name: t(sidebar.goals), href: '/goals', icon: <Goal className="w-5 h-5" /> },
+    { name: t(sidebar.analysis), href: '/analysis', icon: <LineChart className="w-5 h-5" /> },
+    { name: t(sidebar.settings), href: '/settings', icon: <Settings className="w-5 h-5" /> }
   ]
 
   return (
@@ -59,7 +59,7 @@ export default function Sidebar() {
             </div>
 
             <div className="flex-1">
-              <p className="text-sm font-medium">{user?.nome || 'Carregando...'}</p>
+              <p className="text-sm font-medium">{user?.name || 'Loading...'}</p>
             </div>
 
             <button

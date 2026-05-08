@@ -10,17 +10,17 @@ import {
   ChartOptions
 } from 'chart.js'
 import { formatCurrency } from "@/app/terminology/currency"
-import { Moeda } from "@/types/auth"
-import { Meta } from "@/types"
+import { Currency } from "@/types/auth"
+import { Goal } from "@/types"
 
 ChartJS.register(ArcElement, Tooltip, Legend)
 
 interface GoalAllocationChartProps {
-  metas: Meta[]
-  moeda: Moeda
+  goals: Goal[]
+  moeda: Currency
 }
 
-export default function GoalAllocationChart({ metas, moeda }: GoalAllocationChartProps) {
+export default function GoalAllocationChart({ goals, moeda }: GoalAllocationChartProps) {
   const [containerKey, setContainerKey] = useState(0)
 
   useEffect(() => {
@@ -63,11 +63,11 @@ export default function GoalAllocationChart({ metas, moeda }: GoalAllocationChar
   ]
 
   const chartData = {
-    labels: metas.map(meta => meta.nome),
+    labels: goals.map(goal => goal.name),
     datasets: [
       {
-        data: metas.map(meta => Number(meta.economia_mensal) || 0),
-        backgroundColor: colors.slice(0, metas.length),
+        data: goals.map(goal => Number(goal.monthly_savings) || 0),
+        backgroundColor: colors.slice(0, goals.length),
         borderWidth: 0,
         cutout: '70%',
       }
@@ -90,7 +90,7 @@ export default function GoalAllocationChart({ metas, moeda }: GoalAllocationChar
         callbacks: {
           label(context) {
             const value = context.parsed
-            return `${context.label}: ${formatCurrency(value, moeda)}/mês`
+            return `${context.label}: ${formatCurrency(value, moeda)}/month`
           }
         }
       }
@@ -109,8 +109,8 @@ export default function GoalAllocationChart({ metas, moeda }: GoalAllocationChar
       </div>
 
       <div className="flex flex-wrap gap-3 justify-center">
-        {metas.map((meta, index) => (
-          <div key={meta.id} className="flex items-center gap-2">
+        {goals.map((goal, index) => (
+          <div key={goal.id} className="flex items-center gap-2">
             <div
               className="w-3 h-3 rounded-full"
               style={{ backgroundColor: colors[index % colors.length] }}
@@ -120,7 +120,7 @@ export default function GoalAllocationChart({ metas, moeda }: GoalAllocationChar
                 'text-gray-600'
               }`}
             >
-              {meta.nome}
+              {goal.name}
             </span>
           </div>
         ))}

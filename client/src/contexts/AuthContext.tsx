@@ -57,7 +57,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           authService.logout();
           setUser(null);
         } else {
-          console.error("Erro ao inicializar auth:", err);
+          console.error("Error initializing auth:", err);
           setUser(baseUser);
         }
       } finally {
@@ -118,7 +118,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 export function useAuth() {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error('Erro ao usar o contexto de autenticação');
+    throw new Error('Error using auth context');
   }
   return context;
 }

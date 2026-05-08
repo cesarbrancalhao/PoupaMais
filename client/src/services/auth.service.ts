@@ -10,7 +10,7 @@ class AuthService {
     try {
       this.validateEmail(data.email);
       this.validatePassword(data.password);
-      this.validateName(data.nome);
+      this.validateName(data.name);
 
       const response = await apiService.post<{ message: string }>('/auth/register', data);
 
@@ -117,11 +117,11 @@ class AuthService {
   private sanitizeUser(user: User): User {
     return {
       id: user.id,
-      nome: this.sanitizeString(user.nome),
+      name: this.sanitizeString(user.name),
       email: this.sanitizeString(user.email),
       ...(user.created_at && { created_at: user.created_at }),
-      idioma: user.idioma,
-      moeda: user.moeda,
+      language: user.language,
+      currency: user.currency,
     };
   }
 
@@ -137,19 +137,19 @@ class AuthService {
   private validateEmail(email: string): void {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!email || !emailRegex.test(email)) {
-      throw new Error('Email inválido');
+      throw new Error('Invalid email');
     }
   }
 
   private validatePassword(password: string): void {
     if (!password || password.length < 6) {
-      throw new Error('A senha deve ter no mínimo 6 caracteres');
+      throw new Error('Password must be at least 6 characters');
     }
   }
 
   private validateName(name: string): void {
     if (!name || name.trim().length < 2) {
-      throw new Error('Nome deve ter no mínimo 2 caracteres');
+      throw new Error('Name must be at least 2 characters');
     }
   }
 
@@ -157,7 +157,7 @@ class AuthService {
     if (error instanceof Error) {
       return error;
     }
-    return new Error('Erro ao processar a requisição. Tente novamente');
+    return new Error('Error processing request. Please try again');
   }
 }
 

@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { Doughnut } from 'react-chartjs-2'
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, ChartOptions } from 'chart.js'
 import { formatCurrency } from "@/app/terminology/currency"
-import { Moeda } from "@/types/auth"
+import { Currency } from "@/types/auth"
 import { dashboard } from '@/app/terminology/language/dashboard'
 import { useLanguage } from '@/app/terminology/LanguageContext'
 
@@ -17,7 +17,7 @@ interface SourceData {
 
 interface ReceitasChartProps {
   data: SourceData[]
-  moeda: Moeda
+  moeda: Currency
 }
 
 export default function ReceitasChart({ data, moeda }: ReceitasChartProps) {
