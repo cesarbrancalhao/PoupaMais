@@ -1,7 +1,7 @@
 .PHONY: help init dev prod install clean db db-purge
 
-# Change this to "podman" if you use Podman instead of Docker
-RUNTIME   := docker
+# Change to "docker" if you use Docker instead of Podman
+RUNTIME   := podman
 DOCKER    := $(RUNTIME)
 COMPOSE   := $(RUNTIME) compose
 
