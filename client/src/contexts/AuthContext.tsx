@@ -53,7 +53,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         if (!isMounted || abortController.signal.aborted) return;
         
         const error = err as ApiError;
-        if (error && (error.status === 401 || error.status === 403)) {
+        if (error && (error.status === 401 || error.status === 403 || error.status === 404)) {
           authService.logout();
           setUser(null);
         } else {
