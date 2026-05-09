@@ -26,6 +26,8 @@ export default function AnalysisPage() {
   const [incomeExclusions, setIncomeExclusions] = useState<IncomeExclusion[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [timeFilter, setTimeFilter] = useState<'12months' | 'year'>('12months')
+  const [selectedYear, setSelectedYear] = useState<number | null>(null)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -72,6 +74,23 @@ export default function AnalysisPage() {
 
     fetchData()
   }, [t, user])
+
+  const yearOptions = useMemo(() => {
+    const years = new Set<number>()
+    const allItems = [...expenses, ...incomes]
+    allItems.forEach(item => {
+      if (item.date) {
+        years.add(new Date(item.date).getFullYear())
+      }
+    })
+    return Array.from(years).sort((a, b) => b - a)
+  }, [expenses, incomes])
+
+  useEffect(() => {
+    if (timeFilter === 'year' && selectedYear === null && yearOptions.length > 0) {
+      setSelectedYear(yearOptions[0])
+    }
+  }, [timeFilter, selectedYear, yearOptions])
 
   const formatCurrency = (value: number) => {
     return formatMoney(value, user?.currency || "real")
@@ -143,39 +162,80 @@ export default function AnalysisPage() {
 
   const yearlyBalanceData = useMemo(() => {
     const balances = []
-    const now = new Date()
 
-    for (let i = 11; i >= 0; i--) {
-      const date = new Date(now.getFullYear(), now.getMonth() - i, 1)
-      const month = String(date.getMonth() + 1).padStart(2, '0')
-      const year = date.getFullYear()
-      const monthKey = `${month}-${year}`
+    if (timeFilter === 'year' && selectedYear) {
+      for (let i = 0; i < 12; i++) {
+        const month = String(i + 1).padStart(2, '0')
+        const year = selectedYear
+        const monthKey = `${month}-${year}`
 
-      const monthExpenses = expandRecurringEntries(expenses, monthKey, expenseExclusions)
-      const monthIncomes = expandRecurringEntries(incomes, monthKey, incomeExclusions)
+        const monthExpenses = expandRecurringEntries(expenses, monthKey, expenseExclusions)
+        const monthIncomes = expandRecurringEntries(incomes, monthKey, incomeExclusions)
 
-      const totalIncomesMonth = monthIncomes.reduce((sum, r) => sum + (Number(r.value) || 0), 0)
-      const totalExpensesMonth = monthExpenses.reduce((sum, d) => sum + (Number(d.value) || 0), 0)
-      const balance = totalIncomesMonth - totalExpensesMonth
+        const totalIncomesMonth = monthIncomes.reduce((sum, r) => sum + (Number(r.value) || 0), 0)
+        const totalExpensesMonth = monthExpenses.reduce((sum, d) => sum + (Number(d.value) || 0), 0)
+        const balance = totalIncomesMonth - totalExpensesMonth
 
-      const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-      const monthLabel = `${monthNames[date.getMonth()]} ${year}`
+        const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+        const monthLabel = `${monthNames[i]} ${year}`
 
-      balances.push({
-        month: monthLabel,
-        balance: balance,
-        income: totalIncomesMonth,
-        expenses: totalExpensesMonth
-      })
+        balances.push({
+          month: monthLabel,
+          balance: balance,
+          income: totalIncomesMonth,
+          expenses: totalExpensesMonth
+        })
+      }
+    } else {
+      const now = new Date()
+
+      for (let i = 11; i >= 0; i--) {
+        const date = new Date(now.getFullYear(), now.getMonth() - i, 1)
+        const month = String(date.getMonth() + 1).padStart(2, '0')
+        const year = date.getFullYear()
+        const monthKey = `${month}-${year}`
+
+        const monthExpenses = expandRecurringEntries(expenses, monthKey, expenseExclusions)
+        const monthIncomes = expandRecurringEntries(incomes, monthKey, incomeExclusions)
+
+        const totalIncomesMonth = monthIncomes.reduce((sum, r) => sum + (Number(r.value) || 0), 0)
+        const totalExpensesMonth = monthExpenses.reduce((sum, d) => sum + (Number(d.value) || 0), 0)
+        const balance = totalIncomesMonth - totalExpensesMonth
+
+        const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+        const monthLabel = `${monthNames[date.getMonth()]} ${year}`
+
+        balances.push({
+          month: monthLabel,
+          balance: balance,
+          income: totalIncomesMonth,
+          expenses: totalExpensesMonth
+        })
+      }
     }
 
     return balances
-  }, [expenses, incomes, expenseExclusions, incomeExclusions])
+  }, [expenses, incomes, expenseExclusions, incomeExclusions, timeFilter, selectedYear])
+
+  const monthsWithIncome = useMemo(() =>
+    yearlyBalanceData.filter(m => m.income > 0).length,
+    [yearlyBalanceData]
+  )
+
+  const monthsWithExpenses = useMemo(() =>
+    yearlyBalanceData.filter(m => m.expenses > 0).length,
+    [yearlyBalanceData]
+  )
+
+  const monthsWithData = useMemo(() =>
+    yearlyBalanceData.filter(m => m.income > 0 || m.expenses > 0).length,
+    [yearlyBalanceData]
+  )
 
   const averageBalance = useMemo(() => {
     const total = yearlyBalanceData.reduce((sum, item) => sum + item.balance, 0)
-    return total / yearlyBalanceData.length
-  }, [yearlyBalanceData])
+    return total / Math.max(1, monthsWithData)
+  }, [yearlyBalanceData, monthsWithData])
 
   const yearlyTotals = useMemo(() => {
     const totalIncomes = yearlyBalanceData.reduce((sum, item) => sum + item.income, 0)
@@ -184,8 +244,8 @@ export default function AnalysisPage() {
   }, [yearlyBalanceData])
 
   const averageMonthlyIncome = useMemo(() => {
-    return yearlyTotals.totalIncomes / 12
-  }, [yearlyTotals])
+    return yearlyTotals.totalIncomes / Math.max(1, monthsWithIncome)
+  }, [yearlyTotals, monthsWithIncome])
 
   const goalAllocationRate = useMemo(() => {
     if (averageMonthlyIncome === 0) return 0
@@ -194,20 +254,20 @@ export default function AnalysisPage() {
   }, [goals, averageMonthlyIncome])
 
   const goalAchievementRate = useMemo(() => {
-    const expectedTotalAllocation = goals.reduce((sum, goal) => sum + (Number(goal.monthly_savings) || 0), 0) * 6
+    const expectedTotalAllocation = goals.reduce((sum, goal) => sum + (Number(goal.monthly_savings) || 0), 0) * monthsWithData
 
     if (expectedTotalAllocation === 0) return 0
 
     const actualTotalAllocation = goals.reduce((sum, goal) => sum + (Number(goal.current_value) || 0), 0)
 
     return (actualTotalAllocation / expectedTotalAllocation) * 100
-  }, [goals])
+  }, [goals, monthsWithData])
 
   const savingsRate = useMemo(() => {
     if (averageMonthlyIncome === 0) return 0
-    const averageExpenses = yearlyTotals.totalExpenses / 12
+    const averageExpenses = yearlyTotals.totalExpenses / Math.max(1, monthsWithExpenses)
     return ((averageMonthlyIncome - averageExpenses) / averageMonthlyIncome) * 100
-  }, [averageMonthlyIncome, yearlyTotals])
+  }, [averageMonthlyIncome, yearlyTotals, monthsWithExpenses])
 
   const balanceTrend = useMemo(() => {
     if (yearlyBalanceData.length < 2) return 'stable'
@@ -221,6 +281,13 @@ export default function AnalysisPage() {
     if (recentAverage < previousAverage * 0.9) return 'down'
     return 'stable'
   }, [yearlyBalanceData])
+
+  const chartSubtitle = useMemo(() => {
+    if (timeFilter === 'year' && selectedYear) {
+      return selectedYear.toString()
+    }
+    return t(analysis.twelveMonths)
+  }, [timeFilter, selectedYear, t])
 
   if (loading) {
     return (
@@ -257,6 +324,36 @@ export default function AnalysisPage() {
             <h1 className={`${'text-xl md:text-2xl font-semibold text-gray-800 text-center md:text-left'}`}>
               {t(analysis.title)}
             </h1>
+            <div className="flex items-center gap-2 ml-auto md:ml-0">
+              {timeFilter === 'year' && (
+                <select
+                  value={selectedYear ?? ''}
+                  onChange={(e) => setSelectedYear(Number(e.target.value))}
+                  className="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                >
+                  {yearOptions.map(year => (
+                    <option key={year} value={year}>{year}</option>
+                  ))}
+                </select>
+              )}
+              <div className={`relative flex bg-white rounded-lg w-fit`}>
+                <div className={`absolute top-0 h-full bg-blue-600 rounded-lg transition-all duration-200 ease-in-out ${
+                  timeFilter === '12months' ? 'left-1 w-1/2' : 'left-1/2 w-1/2'
+                }`}></div>
+                <button
+                  onClick={() => setTimeFilter('12months')}
+                  className={`relative z-10 px-4 py-2 text-sm font-medium rounded-md transition-colors duration-200 whitespace-nowrap min-w-[90px] text-center ${timeFilter === '12months' ? 'text-white' : 'text-gray-600'}`}
+                >
+                  {t(analysis.twelveMonths)}
+                </button>
+                <button
+                  onClick={() => setTimeFilter('year')}
+                  className={`relative z-10 px-4 py-2 text-sm font-medium rounded-md transition-colors duration-200 whitespace-nowrap min-w-[90px] text-center ${timeFilter === 'year' ? 'text-white' : 'text-gray-600'}`}
+                >
+                  {t(common.year)}
+                </button>
+              </div>
+            </div>
           </header>
 
           <section className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-4 md:gap-6 mb-6">
@@ -371,7 +468,7 @@ export default function AnalysisPage() {
             <div className="w-full xl:w-2/3 flex flex-col gap-4 md:gap-6">
               <div className={`${'bg-white text-gray-800'} p-4 md:p-6 rounded-xl shadow-sm`}>
                 <h2 className={`${'text-base md:text-lg font-semibold text-gray-800 mb-4'}`}>
-                  {t(analysis.yearlyBalance)} {t(analysis.monthsLabel)}
+                  {t(analysis.yearlyBalance)} ({chartSubtitle})
                 </h2>
                 <div className="w-full h-[300px]">
                   {yearlyBalanceData.every(item => item.balance === 0) ? (
@@ -387,7 +484,7 @@ export default function AnalysisPage() {
 
               <div className={`${'bg-white text-gray-800'} p-4 md:p-6 rounded-xl shadow-sm`}>
                 <h2 className={`${'text-base md:text-lg font-semibold text-gray-800 mb-4'}`}>
-                  {t(analysis.income)} vs {t(analysis.expenses)} {t(analysis.monthsLabel)}
+                  {t(analysis.income)} vs {t(analysis.expenses)} ({chartSubtitle})
                 </h2>
                 <div className="w-full h-[300px]">
                   {yearlyBalanceData.every(item => item.income === 0 && item.expenses === 0) ? (

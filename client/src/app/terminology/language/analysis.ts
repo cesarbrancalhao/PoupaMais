@@ -162,4 +162,15 @@ export const analysis = {
     en: 'Error loading analysis',
     es: 'Error al cargar análisis',
   },
+
+  twelveMonths: {
+    pt: '12 Meses',
+    en: '12 Months',
+    es: '12 Meses',
+  },
+  selectYear: {
+    pt: 'Selecionar ano',
+    en: 'Select year',
+    es: 'Seleccionar año',
+  },
 } as const;

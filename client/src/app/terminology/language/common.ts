@@ -198,6 +198,12 @@ export const common = {
     en: 'No source',
     es: 'Sin fuente',
   },
+
+  year: {
+    pt: 'Ano',
+    en: 'Year',
+    es: 'Año',
+  },
 } as const;
 
 export type CommonKey = keyof typeof common;
