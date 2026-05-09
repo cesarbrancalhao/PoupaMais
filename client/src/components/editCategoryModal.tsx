@@ -2,8 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react'
 import {
-  X, Home, Plug, Shirt, ShoppingCart, Utensils, Car, Heart,
-  BookOpen, Briefcase, Gift, Apple, Gamepad2, Save, Trash
+  X, Home, Plug, Shirt, ShoppingCart, Utensils, Car, Heart, BookOpen, Briefcase, Gift, Apple, Gamepad2, Save, PiggyBank, Plane, GraduationCap, PawPrint, Pill, Wrench, Wifi, Zap, Monitor, Baby, Banknote, Dumbbell, Music, Building2, Phone, Sparkles, Coffee, CreditCard, Train, Wallet, Trash
 } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ExpenseCategory, IncomeSource } from '@/types'
@@ -35,6 +34,26 @@ const availableIcons = [
   { name: 'BookOpen', component: BookOpen },
   { name: 'Briefcase', component: Briefcase },
   { name: 'Gift', component: Gift },
+  { name: 'PiggyBank', component: PiggyBank },
+  { name: 'Plane', component: Plane },
+  { name: 'GraduationCap', component: GraduationCap },
+  { name: 'PawPrint', component: PawPrint },
+  { name: 'Pill', component: Pill },
+  { name: 'Wrench', component: Wrench },
+  { name: 'Wifi', component: Wifi },
+  { name: 'Zap', component: Zap },
+  { name: 'Monitor', component: Monitor },
+  { name: 'Baby', component: Baby },
+  { name: 'Banknote', component: Banknote },
+  { name: 'Dumbbell', component: Dumbbell },
+  { name: 'Music', component: Music },
+  { name: 'Building2', component: Building2 },
+  { name: 'Phone', component: Phone },
+  { name: 'Sparkles', component: Sparkles },
+  { name: 'Coffee', component: Coffee },
+  { name: 'CreditCard', component: CreditCard },
+  { name: 'Train', component: Train },
+  { name: 'Wallet', component: Wallet },
 ]
 
 export default function EditCategoryModal({
