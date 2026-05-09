@@ -9,14 +9,14 @@ describe('GoalsService', () => {
 
   const mockGoal = {
     id: 1,
-    nome: 'Trip',
-    descricao: 'Trip to Europe',
-    valor: 5000,
-    economia_mensal: 500,
-    data_inicio: new Date('2025-01-01'),
-    data_alvo: new Date('2025-12-31'),
+    name: 'Trip',
+    description: 'Trip to Europe',
+    value: 5000,
+    monthly_savings: 500,
+    start_date: new Date('2025-01-01'),
+    target_date: new Date('2025-12-31'),
     created_at: new Date('2025-01-01'),
-    usuario_id: 1,
+    user_id: 1,
   };
 
   const mockClient = {
@@ -56,8 +56,8 @@ describe('GoalsService', () => {
         .mockResolvedValueOnce(undefined);
 
       const result = await goalsService.create(1, {
-        nome: 'Trip',
-        valor: 5000,
+        name: 'Trip',
+        value: 5000,
       });
 
       expect(result).toEqual(mockGoal);
@@ -74,7 +74,7 @@ describe('GoalsService', () => {
       mockClient.query.mockResolvedValueOnce(undefined); // ROLLBACK
 
       await expect(
-        goalsService.create(999, { nome: 'Trip', valor: 5000 }),
+        goalsService.create(999, { name: 'Trip', value: 5000 }),
       ).rejects.toThrow(BadRequestException);
 
       expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK');
@@ -116,7 +116,7 @@ describe('GoalsService', () => {
 
       expect(result).toEqual(mockGoal);
       expect(databaseService.query).toHaveBeenCalledWith(
-        'SELECT * FROM meta WHERE id = $1 AND usuario_id = $2',
+        'SELECT * FROM goal WHERE id = $1 AND user_id = $2',
         [1, 1],
       );
     });
@@ -130,16 +130,16 @@ describe('GoalsService', () => {
 
   describe('update', () => {
     it('should update a goal', async () => {
-      const updatedGoal = { ...mockGoal, nome: 'Updated Trip' };
+      const updatedGoal = { ...mockGoal, name: 'Updated Trip' };
 
       mockClient.query
         .mockResolvedValueOnce(undefined)
         .mockResolvedValueOnce({ rows: [updatedGoal] })
         .mockResolvedValueOnce(undefined);
 
-      const result = await goalsService.update(1, 1, { nome: 'Updated Trip' });
+      const result = await goalsService.update(1, 1, { name: 'Updated Trip' });
 
-      expect(result.nome).toBe('Updated Trip');
+      expect(result.name).toBe('Updated Trip');
       expect(mockClient.query).toHaveBeenCalledWith('BEGIN');
       expect(mockClient.query).toHaveBeenCalledWith('COMMIT');
     });
@@ -152,7 +152,7 @@ describe('GoalsService', () => {
       mockClient.query.mockResolvedValueOnce(undefined); // ROLLBACK
 
       await expect(
-        goalsService.update(999, 1, { nome: 'Test' }),
+        goalsService.update(999, 1, { name: 'Test' }),
       ).rejects.toThrow(NotFoundException);
 
       expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK');

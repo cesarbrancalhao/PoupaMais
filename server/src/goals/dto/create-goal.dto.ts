@@ -4,31 +4,31 @@ import { ApiProperty } from '@nestjs/swagger';
 export class CreateGoalDto {
   @ApiProperty({ example: 'Trip to Europe' })
   @IsString()
-  nome: string;
+  name: string;
 
   @ApiProperty({ example: 'Planning a trip to Europe', required: false })
   @IsString()
   @IsOptional()
-  descricao?: string;
+  description?: string;
 
   @ApiProperty({ example: 5000.00 })
   @IsNumber()
   @Min(0.01)
-  valor: number;
+  value: number;
 
   @ApiProperty({ example: 500.00, required: false })
   @IsNumber()
   @IsOptional()
   @Min(0)
-  economia_mensal?: number;
+  monthly_savings?: number;
 
   @ApiProperty({ example: '2025-10-09', required: false })
   @IsDateString()
   @IsOptional()
-  data_inicio?: string;
+  start_date?: string;
 
   @ApiProperty({ example: '2026-12-31', required: false })
   @IsDateString()
   @IsOptional()
-  data_alvo?: string;
+  target_date?: string;
 }

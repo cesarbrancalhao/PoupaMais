@@ -4,53 +4,53 @@ import * as bcrypt from 'bcrypt';
 import { DatabaseService } from '../database/database.service';
 import { User } from '../common/interfaces/user.interface';
 
-type Language = 'portugues' | 'ingles' | 'espanhol';
+type Language = 'portuguese' | 'english' | 'spanish';
 
-const defaultCategoriesByLanguage: Record<Language, { nome: string; icone: string }[]> = {
-  portugues: [
-    { nome: 'Moradia', icone: 'Home' },
-    { nome: 'Eletrônicos', icone: 'Plug' },
-    { nome: 'Transporte', icone: 'Car' },
-    { nome: 'Alimentação', icone: 'Utensils' },
-    { nome: 'Saúde', icone: 'Heart' },
-    { nome: 'Lazer', icone: 'Gamepad-2' },
+const defaultCategoriesByLanguage: Record<Language, { name: string; icon: string }[]> = {
+  portuguese: [
+    { name: 'Moradia', icon: 'Home' },
+    { name: 'Eletrônicos', icon: 'Plug' },
+    { name: 'Transporte', icon: 'Car' },
+    { name: 'Alimentação', icon: 'Utensils' },
+    { name: 'Saúde', icon: 'Heart' },
+    { name: 'Lazer', icon: 'Gamepad-2' },
   ],
-  ingles: [
-    { nome: 'Housing', icone: 'Home' },
-    { nome: 'Electronics', icone: 'Plug' },
-    { nome: 'Transportation', icone: 'Car' },
-    { nome: 'Food', icone: 'Utensils' },
-    { nome: 'Health', icone: 'Heart' },
-    { nome: 'Leisure', icone: 'Gamepad-2' },
+  english: [
+    { name: 'Housing', icon: 'Home' },
+    { name: 'Electronics', icon: 'Plug' },
+    { name: 'Transportation', icon: 'Car' },
+    { name: 'Food', icon: 'Utensils' },
+    { name: 'Health', icon: 'Heart' },
+    { name: 'Leisure', icon: 'Gamepad-2' },
   ],
-  espanhol: [
-    { nome: 'Vivienda', icone: 'Home' },
-    { nome: 'Electrónica', icone: 'Plug' },
-    { nome: 'Transporte', icone: 'Car' },
-    { nome: 'Alimentación', icone: 'Utensils' },
-    { nome: 'Salud', icone: 'Heart' },
-    { nome: 'Ocio', icone: 'Gamepad-2' },
+  spanish: [
+    { name: 'Vivienda', icon: 'Home' },
+    { name: 'Electrónica', icon: 'Plug' },
+    { name: 'Transporte', icon: 'Car' },
+    { name: 'Alimentación', icon: 'Utensils' },
+    { name: 'Salud', icon: 'Heart' },
+    { name: 'Ocio', icon: 'Gamepad-2' },
   ],
 };
 
-const defaultSourcesByLanguage: Record<Language, { nome: string; icone: string }[]> = {
-  portugues: [
-    { nome: 'Salário', icone: 'Briefcase' },
-    { nome: 'Renda Fixa', icone: 'DollarSign' },
-    { nome: 'Renda Variável', icone: 'Apple' },
-    { nome: 'Extra', icone: 'Gift' },
+const defaultSourcesByLanguage: Record<Language, { name: string; icon: string }[]> = {
+  portuguese: [
+    { name: 'Salário', icon: 'Briefcase' },
+    { name: 'Renda Fixa', icon: 'DollarSign' },
+    { name: 'Renda Variável', icon: 'Apple' },
+    { name: 'Extra', icon: 'Gift' },
   ],
-  ingles: [
-    { nome: 'Salary', icone: 'Briefcase' },
-    { nome: 'Fixed Income', icone: 'DollarSign' },
-    { nome: 'Variable Income', icone: 'Apple' },
-    { nome: 'Extra Income', icone: 'Gift' },
+  english: [
+    { name: 'Salary', icon: 'Briefcase' },
+    { name: 'Fixed Income', icon: 'DollarSign' },
+    { name: 'Variable Income', icon: 'Apple' },
+    { name: 'Extra Income', icon: 'Gift' },
   ],
-  espanhol: [
-    { nome: 'Salario', icone: 'Briefcase' },
-    { nome: 'Renta Fija', icone: 'DollarSign' },
-    { nome: 'Renta Variable', icone: 'Apple' },
-    { nome: 'Extra', icone: 'Gift' },
+  spanish: [
+    { name: 'Salario', icon: 'Briefcase' },
+    { name: 'Renta Fija', icon: 'DollarSign' },
+    { name: 'Renta Variable', icon: 'Apple' },
+    { name: 'Extra', icon: 'Gift' },
   ],
 };
 
@@ -61,9 +61,9 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async validateUser(email: string, password: string): Promise<Omit<User, 'senha'> | null> {
+  async validateUser(email: string, password: string): Promise<Omit<User, 'password'> | null> {
     const result = await this.databaseService.query(
-      'SELECT * FROM usuario WHERE email = $1',
+      'SELECT * FROM users WHERE email = $1',
       [email],
     );
 
@@ -72,33 +72,33 @@ export class AuthService {
     }
 
     const user = result.rows[0] as User;
-    const isPasswordValid = await bcrypt.compare(password, user.senha);
+    const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (!isPasswordValid) {
       return null;
     }
 
-    const { senha, ...userWithoutPassword } = user;
+    const { password: _, ...userWithoutPassword } = user;
     return userWithoutPassword;
   }
 
-  async login(user: Omit<User, 'senha'>) {
+  async login(user: Omit<User, 'password'>) {
     const payload = { email: user.email, sub: user.id };
     return {
       access_token: this.jwtService.sign(payload),
       user: {
         id: user.id,
-        nome: user.nome,
+        name: user.name,
         email: user.email,
-        idioma: user.idioma,
-        moeda: user.moeda,
+        language: user.language,
+        currency: user.currency,
       },
     };
   }
 
-  async register(name: string, email: string, password: string, language: Language = 'portugues') {
+  async register(name: string, email: string, password: string, language: Language = 'portuguese') {
     const existingUser = await this.databaseService.query(
-      'SELECT id FROM usuario WHERE email = $1',
+      'SELECT id FROM users WHERE email = $1',
       [email],
     );
 
@@ -113,25 +113,25 @@ export class AuthService {
       await client.query('BEGIN');
 
       const result = await client.query(
-        'INSERT INTO usuario (nome, email, senha, idioma) VALUES ($1, $2, $3, $4) RETURNING id, nome, email, idioma, moeda, created_at',
+        'INSERT INTO users (name, email, password, language) VALUES ($1, $2, $3, $4) RETURNING id, name, email, language, currency, created_at',
         [name, email, hashedPassword, language],
       );
 
       const newUser = result.rows[0];
 
-      const categories = defaultCategoriesByLanguage[language] || defaultCategoriesByLanguage.portugues;
+      const categories = defaultCategoriesByLanguage[language] || defaultCategoriesByLanguage.portuguese;
       for (const category of categories) {
         await client.query(
-          'INSERT INTO categoria_despesa (nome, icone, usuario_id) VALUES ($1, $2, $3)',
-          [category.nome, category.icone, newUser.id],
+          'INSERT INTO expense_category (name, icon, user_id) VALUES ($1, $2, $3)',
+          [category.name, category.icon, newUser.id],
         );
       }
 
-      const sources = defaultSourcesByLanguage[language] || defaultSourcesByLanguage.portugues;
+      const sources = defaultSourcesByLanguage[language] || defaultSourcesByLanguage.portuguese;
       for (const source of sources) {
         await client.query(
-          'INSERT INTO fonte_receita (nome, icone, usuario_id) VALUES ($1, $2, $3)',
-          [source.nome, source.icone, newUser.id],
+          'INSERT INTO income_source (name, icon, user_id) VALUES ($1, $2, $3)',
+          [source.name, source.icon, newUser.id],
         );
       }
 

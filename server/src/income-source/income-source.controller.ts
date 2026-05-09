@@ -14,7 +14,7 @@ export class IncomeSourceController {
 
   @Post()
   create(@Request() req, @Body() body: CreateIncomeSourceDto) {
-    return this.service.create(req.user.userId, body.nome, body.icone);
+    return this.service.create(req.user.userId, body.name, body.icon);
   }
 
   @Get()
@@ -29,7 +29,7 @@ export class IncomeSourceController {
 
   @Put(':id')
   update(@Param('id') id: string, @Request() req, @Body() body: UpdateIncomeSourceDto) {
-    return this.service.update(+id, req.user.userId, body.nome, body.icone);
+    return this.service.update(+id, req.user.userId, body.name, body.icon);
   }
 
   @Delete(':id')

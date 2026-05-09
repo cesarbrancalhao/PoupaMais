@@ -17,10 +17,10 @@ interface SourceData {
 
 interface ReceitasChartProps {
   data: SourceData[]
-  moeda: Currency
+  currency: Currency
 }
 
-export default function ReceitasChart({ data, moeda }: ReceitasChartProps) {
+export default function ReceitasChart({ data, currency }: ReceitasChartProps) {
   const [containerKey, setContainerKey] = useState(0)
   const { t } = useLanguage()
 
@@ -80,7 +80,7 @@ export default function ReceitasChart({ data, moeda }: ReceitasChartProps) {
         callbacks: {
           label: function (context) {
             const value = context.parsed
-            return formatCurrency(value, moeda)
+            return formatCurrency(value, currency)
           }
         }
       }

@@ -14,7 +14,7 @@ export class GoalsService {
       await client.query('BEGIN');
 
       const userCheck = await client.query(
-        'SELECT id FROM usuario WHERE id = $1',
+        'SELECT id FROM users WHERE id = $1',
         [userId],
       );
       if (userCheck.rows.length === 0) {
@@ -22,15 +22,15 @@ export class GoalsService {
       }
 
       const result = await client.query(
-        `INSERT INTO meta (nome, descricao, valor, economia_mensal, data_inicio, data_alvo, usuario_id)
+        `INSERT INTO goal (name, description, value, monthly_savings, start_date, target_date, user_id)
          VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
         [
-          data.nome,
-          data.descricao || null,
-          data.valor,
-          data.economia_mensal || 0,
-          data.data_inicio || new Date(),
-          data.data_alvo || null,
+          data.name,
+          data.description || null,
+          data.value,
+          data.monthly_savings || 0,
+          data.start_date || new Date(),
+          data.target_date || null,
           userId
         ],
       );
@@ -51,11 +51,11 @@ export class GoalsService {
 
     const [dataResult, countResult] = await Promise.all([
       this.databaseService.query(
-        'SELECT * FROM meta WHERE usuario_id = $1 ORDER BY created_at DESC LIMIT $2 OFFSET $3',
+        'SELECT * FROM goal WHERE user_id = $1 ORDER BY created_at DESC LIMIT $2 OFFSET $3',
         [userId, maxLimit, offset],
       ),
       this.databaseService.query(
-        'SELECT COUNT(*) FROM meta WHERE usuario_id = $1',
+        'SELECT COUNT(*) FROM goal WHERE user_id = $1',
         [userId],
       ),
     ]);
@@ -75,7 +75,7 @@ export class GoalsService {
 
   async findOne(id: number, userId: number) {
     const result = await this.databaseService.query(
-      'SELECT * FROM meta WHERE id = $1 AND usuario_id = $2',
+      'SELECT * FROM goal WHERE id = $1 AND user_id = $2',
       [id, userId],
     );
     if (result.rows.length === 0) throw new NotFoundException('Goal not found');
@@ -88,15 +88,15 @@ export class GoalsService {
       await client.query('BEGIN');
 
       const result = await client.query(
-        `UPDATE meta
-         SET nome = COALESCE($1, nome),
-             descricao = COALESCE($2, descricao),
-             valor = COALESCE($3, valor),
-             economia_mensal = COALESCE($4, economia_mensal),
-             data_inicio = COALESCE($5, data_inicio),
-             data_alvo = COALESCE($6, data_alvo)
-         WHERE id = $7 AND usuario_id = $8 RETURNING *`,
-        [data.nome, data.descricao, data.valor, data.economia_mensal, data.data_inicio, data.data_alvo, id, userId],
+        `UPDATE goal
+         SET name = COALESCE($1, name),
+             description = COALESCE($2, description),
+             value = COALESCE($3, value),
+             monthly_savings = COALESCE($4, monthly_savings),
+             start_date = COALESCE($5, start_date),
+             target_date = COALESCE($6, target_date)
+         WHERE id = $7 AND user_id = $8 RETURNING *`,
+        [data.name, data.description, data.value, data.monthly_savings, data.start_date, data.target_date, id, userId],
       );
       if (result.rows.length === 0) throw new NotFoundException('Goal not found');
 
@@ -112,7 +112,7 @@ export class GoalsService {
 
   async remove(id: number, userId: number) {
     const result = await this.databaseService.query(
-      'DELETE FROM meta WHERE id = $1 AND usuario_id = $2',
+      'DELETE FROM goal WHERE id = $1 AND user_id = $2',
       [id, userId],
     );
     if (result.rowCount === 0) throw new NotFoundException('Goal not found');

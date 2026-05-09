@@ -2,30 +2,30 @@ import { IsString, IsNumber, IsBoolean, IsDateString, IsOptional, Min } from 'cl
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateExpenseDto {
-  @ApiProperty({ example: 'Supermercado' })
+  @ApiProperty({ example: 'Supermarket' })
   @IsString()
-  nome: string;
+  name: string;
 
   @ApiProperty({ example: 150.50 })
   @IsNumber()
   @Min(0.01)
-  valor: number;
+  value: number;
 
   @ApiProperty({ example: false })
   @IsBoolean()
-  recorrente: boolean;
+  recurring: boolean;
 
   @ApiProperty({ example: '2025-10-09' })
   @IsDateString()
-  data: string;
+  date: string;
 
   @ApiProperty({ example: '2025-10-15', required: false })
   @IsDateString()
   @IsOptional()
-  data_vencimento?: string;
+  due_date?: string;
 
   @ApiProperty({ example: 1, required: false })
   @IsNumber()
   @IsOptional()
-  categoria_despesa_id?: number;
+  expense_category_id?: number;
 }

@@ -21,7 +21,7 @@ export class PasswordResetService {
 
   async requestPasswordReset(email: string): Promise<void> {
     const userResult = await this.databaseService.query(
-      'SELECT id, nome FROM usuario WHERE email = $1',
+      'SELECT id, name FROM users WHERE email = $1',
       [email],
     );
 
@@ -32,31 +32,31 @@ export class PasswordResetService {
     const user = userResult.rows[0];
 
     const configResult = await this.databaseService.query(
-      'SELECT idioma FROM config WHERE usuario_id = $1',
+      'SELECT language FROM config WHERE user_id = $1',
       [user.id],
     );
 
-    const language = configResult.rows[0]?.idioma || 'portugues';
+    const language = configResult.rows[0]?.language || 'portuguese';
 
     const code = this.generateOTP();
     const expiresAt = new Date(Date.now() + 15 * 60 * 1000);
 
     await this.databaseService.query(
-      'DELETE FROM recuperacao_senha WHERE email = $1',
+      'DELETE FROM password_reset WHERE email = $1',
       [email],
     );
 
     await this.databaseService.query(
-      'INSERT INTO recuperacao_senha (email, codigo, expira_em, usuario_id) VALUES ($1, $2, $3, $4)',
+      'INSERT INTO password_reset (email, code, expires_at, user_id) VALUES ($1, $2, $3, $4)',
       [email, code, expiresAt, user.id],
     );
 
-    await this.emailService.sendPasswordResetEmail(email, code, user.nome, language);
+    await this.emailService.sendPasswordResetEmail(email, code, user.name, language);
   }
 
   async verifyResetCode(email: string, code: string): Promise<boolean> {
     const result = await this.databaseService.query(
-      'SELECT * FROM recuperacao_senha WHERE email = $1',
+      'SELECT * FROM password_reset WHERE email = $1',
       [email],
     );
 
@@ -66,19 +66,19 @@ export class PasswordResetService {
 
     const recovery = result.rows[0];
 
-    if (new Date() > new Date(recovery.expira_em)) {
-      await this.databaseService.query('DELETE FROM recuperacao_senha WHERE id = $1', [recovery.id]);
+    if (new Date() > new Date(recovery.expires_at)) {
+      await this.databaseService.query('DELETE FROM password_reset WHERE id = $1', [recovery.id]);
       throw new BadRequestException('Code expired');
     }
 
-    if (recovery.tentativas >= 5) {
-      await this.databaseService.query('DELETE FROM recuperacao_senha WHERE id = $1', [recovery.id]);
+    if (recovery.attempts >= 5) {
+      await this.databaseService.query('DELETE FROM password_reset WHERE id = $1', [recovery.id]);
       throw new BadRequestException('Too many invalid attempts');
     }
 
-    if (recovery.codigo !== code.toUpperCase()) {
+    if (recovery.code !== code.toUpperCase()) {
       await this.databaseService.query(
-        'UPDATE recuperacao_senha SET tentativas = tentativas + 1 WHERE id = $1',
+        'UPDATE password_reset SET attempts = attempts + 1 WHERE id = $1',
         [recovery.id],
       );
       throw new UnauthorizedException('Invalid code');
@@ -91,7 +91,7 @@ export class PasswordResetService {
     await this.verifyResetCode(email, code);
 
     const result = await this.databaseService.query(
-      'SELECT usuario_id FROM recuperacao_senha WHERE email = $1 AND codigo = $2',
+      'SELECT user_id FROM password_reset WHERE email = $1 AND code = $2',
       [email, code.toUpperCase()],
     );
 
@@ -103,12 +103,12 @@ export class PasswordResetService {
     const hashedPassword = await bcrypt.hash(newPassword, 10);
 
     await this.databaseService.query(
-      'UPDATE usuario SET senha = $1 WHERE id = $2',
-      [hashedPassword, recovery.usuario_id],
+      'UPDATE users SET password = $1 WHERE id = $2',
+      [hashedPassword, recovery.user_id],
     );
 
     await this.databaseService.query(
-      'DELETE FROM recuperacao_senha WHERE id = $1',
+      'DELETE FROM password_reset WHERE id = $1',
       [recovery.id],
     );
   }

@@ -25,10 +25,10 @@ interface MonthlyTrendData {
 
 interface MonthlyTrendChartProps {
   data: MonthlyTrendData[]
-  moeda: Currency
+  currency: Currency
 }
 
-export default function MonthlyTrendChart({ data, moeda }: MonthlyTrendChartProps) {
+export default function MonthlyTrendChart({ data, currency }: MonthlyTrendChartProps) {
   const [containerKey, setContainerKey] = useState(0)
 
   useEffect(() => {
@@ -97,7 +97,7 @@ export default function MonthlyTrendChart({ data, moeda }: MonthlyTrendChartProp
         callbacks: {
           label: function (context) {
             const value = context.parsed.y ?? 0
-            const formatted = formatCurrency(1, moeda)
+            const formatted = formatCurrency(1, currency)
             const symbol = formatted.replace(/[\d.,\s]/g, '')
 
             if (Math.abs(value) >= 1000) {
@@ -129,7 +129,7 @@ export default function MonthlyTrendChart({ data, moeda }: MonthlyTrendChartProp
           color: textColor,
           callback: (value) => {
             const num = value as number
-            const formatted = formatCurrency(1, moeda)
+            const formatted = formatCurrency(1, currency)
             const symbol = formatted.replace(/[\d.,\s]/g, '')
 
             if (Math.abs(num) >= 1000) {

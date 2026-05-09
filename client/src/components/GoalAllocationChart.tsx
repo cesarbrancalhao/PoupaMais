@@ -17,10 +17,10 @@ ChartJS.register(ArcElement, Tooltip, Legend)
 
 interface GoalAllocationChartProps {
   goals: Goal[]
-  moeda: Currency
+  currency: Currency
 }
 
-export default function GoalAllocationChart({ goals, moeda }: GoalAllocationChartProps) {
+export default function GoalAllocationChart({ goals, currency }: GoalAllocationChartProps) {
   const [containerKey, setContainerKey] = useState(0)
 
   useEffect(() => {
@@ -90,7 +90,7 @@ export default function GoalAllocationChart({ goals, moeda }: GoalAllocationChar
         callbacks: {
           label(context) {
             const value = context.parsed
-            return `${context.label}: ${formatCurrency(value, moeda)}/month`
+            return `${context.label}: ${formatCurrency(value, currency)}/month`
           }
         }
       }

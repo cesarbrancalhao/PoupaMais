@@ -14,10 +14,10 @@ export class ExpensesService {
     try {
       await client.query('BEGIN');
 
-      if (createExpenseDto.categoria_despesa_id !== undefined && createExpenseDto.categoria_despesa_id !== null) {
+      if (createExpenseDto.expense_category_id !== undefined && createExpenseDto.expense_category_id !== null) {
         const categoryExists = await client.query(
-          'SELECT * FROM categoria_despesa WHERE id = $1 AND usuario_id = $2',
-          [createExpenseDto.categoria_despesa_id, userId],
+          'SELECT * FROM expense_category WHERE id = $1 AND user_id = $2',
+          [createExpenseDto.expense_category_id, userId],
         );
         if (categoryExists.rows.length === 0) {
           throw new NotFoundException('Category not found');
@@ -25,15 +25,15 @@ export class ExpensesService {
       }
 
       const result = await client.query(
-        `INSERT INTO despesa (nome, valor, recorrente, data, data_vencimento, categoria_despesa_id, usuario_id)
+        `INSERT INTO expense (name, value, recurring, date, due_date, expense_category_id, user_id)
          VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
         [
-          createExpenseDto.nome,
-          createExpenseDto.valor,
-          createExpenseDto.recorrente,
-          createExpenseDto.data,
-          createExpenseDto.data_vencimento,
-          createExpenseDto.categoria_despesa_id,
+          createExpenseDto.name,
+          createExpenseDto.value,
+          createExpenseDto.recurring,
+          createExpenseDto.date,
+          createExpenseDto.due_date,
+          createExpenseDto.expense_category_id,
           userId,
         ],
       );
@@ -54,11 +54,11 @@ export class ExpensesService {
 
     const [dataResult, countResult] = await Promise.all([
       this.databaseService.query(
-        'SELECT * FROM despesa WHERE usuario_id = $1 ORDER BY data DESC LIMIT $2 OFFSET $3',
+        'SELECT * FROM expense WHERE user_id = $1 ORDER BY date DESC LIMIT $2 OFFSET $3',
         [userId, maxLimit, offset],
       ),
       this.databaseService.query(
-        'SELECT COUNT(*) FROM despesa WHERE usuario_id = $1',
+        'SELECT COUNT(*) FROM expense WHERE user_id = $1',
         [userId],
       ),
     ]);
@@ -78,7 +78,7 @@ export class ExpensesService {
 
   async findOne(id: number, userId: number) {
     const result = await this.databaseService.query(
-      'SELECT * FROM despesa WHERE id = $1 AND usuario_id = $2',
+      'SELECT * FROM expense WHERE id = $1 AND user_id = $2',
       [id, userId],
     );
     if (result.rows.length === 0) {
@@ -92,10 +92,10 @@ export class ExpensesService {
     try {
       await client.query('BEGIN');
 
-      if (updateExpenseDto.categoria_despesa_id !== undefined && updateExpenseDto.categoria_despesa_id !== null) {
+      if (updateExpenseDto.expense_category_id !== undefined && updateExpenseDto.expense_category_id !== null) {
         const categoryExists = await client.query(
-          'SELECT * FROM categoria_despesa WHERE id = $1 AND usuario_id = $2',
-          [updateExpenseDto.categoria_despesa_id, userId],
+          'SELECT * FROM expense_category WHERE id = $1 AND user_id = $2',
+          [updateExpenseDto.expense_category_id, userId],
         );
         if (categoryExists.rows.length === 0) throw new NotFoundException('Category not found');
       }
@@ -104,40 +104,40 @@ export class ExpensesService {
       const values: any[] = [];
       let paramIndex = 1;
 
-      if (updateExpenseDto.nome !== undefined) {
-        fields.push(`nome = $${paramIndex++}`);
-        values.push(updateExpenseDto.nome);
+      if (updateExpenseDto.name !== undefined) {
+        fields.push(`name = $${paramIndex++}`);
+        values.push(updateExpenseDto.name);
       }
-      if (updateExpenseDto.valor !== undefined) {
-        fields.push(`valor = $${paramIndex++}`);
-        values.push(updateExpenseDto.valor);
+      if (updateExpenseDto.value !== undefined) {
+        fields.push(`value = $${paramIndex++}`);
+        values.push(updateExpenseDto.value);
       }
-      if (updateExpenseDto.recorrente !== undefined) {
-        fields.push(`recorrente = $${paramIndex++}`);
-        values.push(updateExpenseDto.recorrente);
+      if (updateExpenseDto.recurring !== undefined) {
+        fields.push(`recurring = $${paramIndex++}`);
+        values.push(updateExpenseDto.recurring);
       }
-      if (updateExpenseDto.data !== undefined) {
-        fields.push(`data = $${paramIndex++}`);
-        values.push(updateExpenseDto.data);
+      if (updateExpenseDto.date !== undefined) {
+        fields.push(`date = $${paramIndex++}`);
+        values.push(updateExpenseDto.date);
       }
-      if (updateExpenseDto.data_vencimento !== undefined) {
-        fields.push(`data_vencimento = $${paramIndex++}`);
-        values.push(updateExpenseDto.data_vencimento);
+      if (updateExpenseDto.due_date !== undefined) {
+        fields.push(`due_date = $${paramIndex++}`);
+        values.push(updateExpenseDto.due_date);
       }
-      if (updateExpenseDto.categoria_despesa_id !== undefined) {
-        fields.push(`categoria_despesa_id = $${paramIndex++}`);
-        values.push(updateExpenseDto.categoria_despesa_id);
+      if (updateExpenseDto.expense_category_id !== undefined) {
+        fields.push(`expense_category_id = $${paramIndex++}`);
+        values.push(updateExpenseDto.expense_category_id);
       }
 
       if (fields.length === 0) {
-        const existing = await client.query('SELECT * FROM despesa WHERE id = $1 AND usuario_id = $2', [id, userId]);
+        const existing = await client.query('SELECT * FROM expense WHERE id = $1 AND user_id = $2', [id, userId]);
         if (existing.rows.length === 0) throw new NotFoundException('Expense not found');
         await client.query('COMMIT');
         return existing.rows[0];
       }
 
       values.push(id, userId);
-      const query = `UPDATE despesa SET ${fields.join(', ')} WHERE id = $${paramIndex++} AND usuario_id = $${paramIndex++} RETURNING *`;
+      const query = `UPDATE expense SET ${fields.join(', ')} WHERE id = $${paramIndex++} AND user_id = $${paramIndex++} RETURNING *`;
 
       const result = await client.query(query, values);
 
@@ -155,7 +155,7 @@ export class ExpensesService {
 
   async remove(id: number, userId: number) {
     const result = await this.databaseService.query(
-      'DELETE FROM despesa WHERE id = $1 AND usuario_id = $2',
+      'DELETE FROM expense WHERE id = $1 AND user_id = $2',
       [id, userId],
     );
     if (result.rowCount === 0) throw new NotFoundException('Expense not found');
@@ -168,7 +168,7 @@ export class ExpensesService {
       await client.query('BEGIN');
 
       const expenseExists = await client.query(
-        'SELECT * FROM despesa WHERE id = $1 AND usuario_id = $2',
+        'SELECT * FROM expense WHERE id = $1 AND user_id = $2',
         [expenseId, userId],
       );
       if (expenseExists.rows.length === 0) {
@@ -176,9 +176,9 @@ export class ExpensesService {
       }
 
       const result = await client.query(
-        `INSERT INTO despesa_exclusao (despesa_id, data_exclusao, usuario_id)
+        `INSERT INTO expense_exclusion (expense_id, exclusion_date, user_id)
          VALUES ($1, $2, $3) RETURNING *`,
-        [expenseId, createExclusionDto.data_exclusao, userId],
+        [expenseId, createExclusionDto.exclusion_date, userId],
       );
 
       await client.query('COMMIT');
@@ -193,7 +193,7 @@ export class ExpensesService {
 
   async findAllExclusions(userId: number) {
     const result = await this.databaseService.query(
-      'SELECT * FROM despesa_exclusao WHERE usuario_id = $1 ORDER BY data_exclusao DESC',
+      'SELECT * FROM expense_exclusion WHERE user_id = $1 ORDER BY exclusion_date DESC',
       [userId],
     );
     return result.rows;
@@ -201,7 +201,7 @@ export class ExpensesService {
 
   async removeExclusion(id: number, userId: number) {
     const result = await this.databaseService.query(
-      'DELETE FROM despesa_exclusao WHERE id = $1 AND usuario_id = $2',
+      'DELETE FROM expense_exclusion WHERE id = $1 AND user_id = $2',
       [id, userId],
     );
     if (result.rowCount === 0) throw new NotFoundException('Exclusion not found');

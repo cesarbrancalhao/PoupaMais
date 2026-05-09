@@ -21,10 +21,10 @@ interface ExpenseData {
 
 interface ExpenseDistributionChartProps {
   data: ExpenseData[]
-  moeda: Currency
+  currency: Currency
 }
 
-export default function ExpenseDistributionChart({ data, moeda }: ExpenseDistributionChartProps) {
+export default function ExpenseDistributionChart({ data, currency }: ExpenseDistributionChartProps) {
   const [containerKey, setContainerKey] = useState(0)
 
   useEffect(() => {
@@ -103,7 +103,7 @@ export default function ExpenseDistributionChart({ data, moeda }: ExpenseDistrib
         callbacks: {
           label(context) {
             const value = context.parsed
-            return formatCurrency(value, moeda)
+            return formatCurrency(value, currency)
           }
         }
       }

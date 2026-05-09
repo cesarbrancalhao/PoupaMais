@@ -4,6 +4,5 @@ import { ApiProperty } from '@nestjs/swagger';
 export class CreateIncomeExclusionDto {
   @ApiProperty({ example: '2025-11-01', description: 'Exclusion date (month that should not appear)' })
   @IsDateString()
-  data_exclusao: string;
+  exclusion_date: string;
 }
-

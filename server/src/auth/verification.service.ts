@@ -4,7 +4,7 @@ import { DatabaseService } from '../database/database.service';
 import { EmailService } from '../email/email.service';
 import { User } from '../common/interfaces/user.interface';
 
-type Language = 'portugues' | 'ingles' | 'espanhol';
+type Language = 'portuguese' | 'english' | 'spanish';
 
 @Injectable()
 export class VerificationService {
@@ -24,7 +24,7 @@ export class VerificationService {
 
   async createVerification(name: string, email: string, password: string, language: Language): Promise<void> {
     const existingUser = await this.databaseService.query(
-      'SELECT id FROM usuario WHERE email = $1',
+      'SELECT id FROM users WHERE email = $1',
       [email],
     );
 
@@ -37,21 +37,21 @@ export class VerificationService {
     const expiresAt = new Date(Date.now() + 15 * 60 * 1000);
 
     await this.databaseService.query(
-      'DELETE FROM verificacao WHERE email = $1',
+      'DELETE FROM verification WHERE email = $1',
       [email],
     );
 
     await this.databaseService.query(
-      'INSERT INTO verificacao (nome, email, senha, idioma, codigo, expira_em) VALUES ($1, $2, $3, $4, $5, $6)',
+      'INSERT INTO verification (name, email, password, language, code, expires_at) VALUES ($1, $2, $3, $4, $5, $6)',
       [name, email, hashedPassword, language, code, expiresAt],
     );
 
     await this.emailService.sendVerificationEmail(email, code, name, language);
   }
 
-  async verifyCode(email: string, code: string): Promise<Omit<User, 'senha'>> {
+  async verifyCode(email: string, code: string): Promise<Omit<User, 'password'>> {
     const result = await this.databaseService.query(
-      'SELECT * FROM verificacao WHERE email = $1',
+      'SELECT * FROM verification WHERE email = $1',
       [email],
     );
 
@@ -61,19 +61,19 @@ export class VerificationService {
 
     const verification = result.rows[0];
 
-    if (new Date() > new Date(verification.expira_em)) {
-      await this.databaseService.query('DELETE FROM verificacao WHERE id = $1', [verification.id]);
+    if (new Date() > new Date(verification.expires_at)) {
+      await this.databaseService.query('DELETE FROM verification WHERE id = $1', [verification.id]);
       throw new BadRequestException('Code expired');
     }
 
-    if (verification.tentativas >= 5) {
-      await this.databaseService.query('DELETE FROM verificacao WHERE id = $1', [verification.id]);
+    if (verification.attempts >= 5) {
+      await this.databaseService.query('DELETE FROM verification WHERE id = $1', [verification.id]);
       throw new BadRequestException('Too many invalid attempts');
     }
 
-    if (verification.codigo !== code.toUpperCase()) {
+    if (verification.code !== code.toUpperCase()) {
       await this.databaseService.query(
-        'UPDATE verificacao SET tentativas = tentativas + 1 WHERE id = $1',
+        'UPDATE verification SET attempts = attempts + 1 WHERE id = $1',
         [verification.id],
       );
       throw new UnauthorizedException('Invalid code');
@@ -84,81 +84,81 @@ export class VerificationService {
       await client.query('BEGIN');
 
       const userResult = await client.query(
-        'INSERT INTO usuario (nome, email, senha, idioma) VALUES ($1, $2, $3, $4) RETURNING id, nome, email, idioma, moeda, created_at',
-        [verification.nome, verification.email, verification.senha, verification.idioma],
+        'INSERT INTO users (name, email, password, language) VALUES ($1, $2, $3, $4) RETURNING id, name, email, language, currency, created_at',
+        [verification.name, verification.email, verification.password, verification.language],
       );
 
       const newUser = userResult.rows[0];
 
       const defaultCategoriesByLanguage = {
-        portugues: [
-          { nome: 'Moradia', icone: 'Home' },
-          { nome: 'Eletrônicos', icone: 'Plug' },
-          { nome: 'Transporte', icone: 'Car' },
-          { nome: 'Alimentação', icone: 'Utensils' },
-          { nome: 'Saúde', icone: 'Heart' },
-          { nome: 'Lazer', icone: 'Gamepad-2' },
+        portuguese: [
+          { name: 'Moradia', icon: 'Home' },
+          { name: 'Eletrônicos', icon: 'Plug' },
+          { name: 'Transporte', icon: 'Car' },
+          { name: 'Alimentação', icon: 'Utensils' },
+          { name: 'Saúde', icon: 'Heart' },
+          { name: 'Lazer', icon: 'Gamepad-2' },
         ],
-        ingles: [
-          { nome: 'Housing', icone: 'Home' },
-          { nome: 'Electronics', icone: 'Plug' },
-          { nome: 'Transportation', icone: 'Car' },
-          { nome: 'Food', icone: 'Utensils' },
-          { nome: 'Health', icone: 'Heart' },
-          { nome: 'Leisure', icone: 'Gamepad-2' },
+        english: [
+          { name: 'Housing', icon: 'Home' },
+          { name: 'Electronics', icon: 'Plug' },
+          { name: 'Transportation', icon: 'Car' },
+          { name: 'Food', icon: 'Utensils' },
+          { name: 'Health', icon: 'Heart' },
+          { name: 'Leisure', icon: 'Gamepad-2' },
         ],
-        espanhol: [
-          { nome: 'Vivienda', icone: 'Home' },
-          { nome: 'Electrónica', icone: 'Plug' },
-          { nome: 'Transporte', icone: 'Car' },
-          { nome: 'Alimentación', icone: 'Utensils' },
-          { nome: 'Salud', icone: 'Heart' },
-          { nome: 'Ocio', icone: 'Gamepad-2' },
+        spanish: [
+          { name: 'Vivienda', icon: 'Home' },
+          { name: 'Electrónica', icon: 'Plug' },
+          { name: 'Transporte', icon: 'Car' },
+          { name: 'Alimentación', icon: 'Utensils' },
+          { name: 'Salud', icon: 'Heart' },
+          { name: 'Ocio', icon: 'Gamepad-2' },
         ],
       };
 
-      const categories = defaultCategoriesByLanguage[verification.idioma] || defaultCategoriesByLanguage.portugues;
+      const categories = defaultCategoriesByLanguage[verification.language] || defaultCategoriesByLanguage.portuguese;
       for (const category of categories) {
         await client.query(
-          'INSERT INTO categoria_despesa (nome, icone, usuario_id) VALUES ($1, $2, $3)',
-          [category.nome, category.icone, newUser.id],
+          'INSERT INTO expense_category (name, icon, user_id) VALUES ($1, $2, $3)',
+          [category.name, category.icon, newUser.id],
         );
       }
 
       const defaultSourcesByLanguage = {
-        portugues: [
-          { nome: 'Salário', icone: 'Briefcase' },
-          { nome: 'Renda Fixa', icone: 'DollarSign' },
-          { nome: 'Renda Variável', icone: 'Apple' },
-          { nome: 'Extra', icone: 'Gift' },
+        portuguese: [
+          { name: 'Salário', icon: 'Briefcase' },
+          { name: 'Renda Fixa', icon: 'DollarSign' },
+          { name: 'Renda Variável', icon: 'Apple' },
+          { name: 'Extra', icon: 'Gift' },
         ],
-        ingles: [
-          { nome: 'Salary', icone: 'Briefcase' },
-          { nome: 'Fixed Income', icone: 'DollarSign' },
-          { nome: 'Variable Income', icone: 'Apple' },
-          { nome: 'Extra Income', icone: 'Gift' },
+        english: [
+          { name: 'Salary', icon: 'Briefcase' },
+          { name: 'Fixed Income', icon: 'DollarSign' },
+          { name: 'Variable Income', icon: 'Apple' },
+          { name: 'Extra Income', icon: 'Gift' },
         ],
-        espanhol: [
-          { nome: 'Salario', icone: 'Briefcase' },
-          { nome: 'Renta Fija', icone: 'DollarSign' },
-          { nome: 'Renta Variable', icone: 'Apple' },
-          { nome: 'Extra', icone: 'Gift' },
+        spanish: [
+          { name: 'Salario', icon: 'Briefcase' },
+          { name: 'Renta Fija', icon: 'DollarSign' },
+          { name: 'Renta Variable', icon: 'Apple' },
+          { name: 'Extra', icon: 'Gift' },
         ],
       };
 
-      const sources = defaultSourcesByLanguage[verification.idioma] || defaultSourcesByLanguage.portugues;
+      const sources = defaultSourcesByLanguage[verification.language] || defaultSourcesByLanguage.portuguese;
       for (const source of sources) {
         await client.query(
-          'INSERT INTO fonte_receita (nome, icone, usuario_id) VALUES ($1, $2, $3)',
-          [source.nome, source.icone, newUser.id],
+          'INSERT INTO income_source (name, icon, user_id) VALUES ($1, $2, $3)',
+          [source.name, source.icon, newUser.id],
         );
       }
 
-      await client.query('DELETE FROM verificacao WHERE id = $1', [verification.id]);
+      await client.query('DELETE FROM verification WHERE id = $1', [verification.id]);
 
       await client.query('COMMIT');
 
-      return newUser as Omit<User, 'senha'>;
+      return newUser as Omit<User, 'password'>;
     } catch (error) {
       await client.query('ROLLBACK');
       throw new BadRequestException('Error creating user');

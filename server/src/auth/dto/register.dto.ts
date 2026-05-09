@@ -2,28 +2,28 @@ import { IsEmail, IsIn, IsNotEmpty, IsOptional, IsString, MinLength } from 'clas
 import { ApiProperty } from '@nestjs/swagger';
 
 export class RegisterDto {
-  @ApiProperty({ example: 'Usuario da Silva' })
+  @ApiProperty({ example: 'John Doe' })
   @IsString()
   @IsNotEmpty()
-  nome: string;
+  name: string;
 
-  @ApiProperty({ example: 'usuario@example.com' })
+  @ApiProperty({ example: 'user@example.com' })
   @IsEmail()
   @IsNotEmpty()
   email: string;
 
-  @ApiProperty({ example: 'senha123', minLength: 8 })
+  @ApiProperty({ example: 'password123', minLength: 8 })
   @IsString()
-  @MinLength(8, { message: 'A senha deve ter no mínimo 8 caracteres' })
+  @MinLength(8, { message: 'Password must be at least 8 characters' })
   password: string;
 
   @ApiProperty({
-    example: 'ingles',
+    example: 'english',
     required: false,
-    enum: ['portugues', 'ingles', 'espanhol'],
-    description: 'Idioma selecionado para os dados iniciais do usuário',
+    enum: ['portuguese', 'english', 'spanish'],
+    description: 'Language selected for initial user data',
   })
   @IsOptional()
-  @IsIn(['portugues', 'ingles', 'espanhol'])
-  idioma?: 'portugues' | 'ingles' | 'espanhol';
+  @IsIn(['portuguese', 'english', 'spanish'])
+  language?: 'portuguese' | 'english' | 'spanish';
 }

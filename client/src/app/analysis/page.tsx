@@ -380,7 +380,7 @@ export default function AnalysisPage() {
                       <p className="text-sm text-center">{t(analysis.noDataAvailable)}</p>
                     </div>
                   ) : (
-                    <YearlyBalanceChart data={yearlyBalanceData} moeda={user?.currency ?? "real"} />
+                    <YearlyBalanceChart data={yearlyBalanceData} currency={user?.currency ?? "real"} />
                   )}
                 </div>
               </div>
@@ -396,7 +396,7 @@ export default function AnalysisPage() {
                       <p className="text-sm text-center">{t(analysis.noDataAvailable)}</p>
                     </div>
                   ) : (
-                    <MonthlyTrendChart data={yearlyBalanceData} moeda={user?.currency ?? "real"} />
+                    <MonthlyTrendChart data={yearlyBalanceData} currency={user?.currency ?? "real"} />
                   )}
                 </div>
               </div>
@@ -413,7 +413,7 @@ export default function AnalysisPage() {
                     <p className="text-sm text-center">{t(analysis.noDataAvailable)}</p>
                   </div>
                 ) : (
-                    <GoalAllocationChart goals={goals} moeda={user?.currency ?? "real"} />
+                    <GoalAllocationChart goals={goals} currency={user?.currency ?? "real"} />
                 )}
               </div>
 

@@ -3,7 +3,7 @@ import { IncomeExclusion } from '@/types';
 
 export const incomeExclusionService = {
   async create(incomeId: number, exclusionDate: string): Promise<IncomeExclusion> {
-    return apiService.post(`/incomes/${incomeId}/exclusions`, { data_exclusao: exclusionDate });
+    return apiService.post(`/incomes/${incomeId}/exclusions`, { exclusion_date: exclusionDate });
   },
 
   async getAll(): Promise<IncomeExclusion[]> {

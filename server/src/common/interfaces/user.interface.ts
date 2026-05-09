@@ -1,59 +1,59 @@
 export interface User {
   id: number;
-  nome: string;
+  name: string;
   email: string;
-  senha: string;
-  idioma: 'portugues' | 'ingles' | 'espanhol';
-  moeda: 'real' | 'dolar' | 'euro';
+  password: string;
+  language: 'portuguese' | 'english' | 'spanish';
+  currency: 'real' | 'dollar' | 'euro';
   created_at: Date;
 }
 
 export interface ExpenseCategory {
   id: number;
-  nome: string;
-  cor: string;
+  name: string;
+  icon: string;
   created_at: Date;
-  usuario_id: number;
+  user_id: number;
 }
 
 export interface IncomeSource {
   id: number;
-  nome: string;
-  cor: string;
+  name: string;
+  icon: string;
   created_at: Date;
-  usuario_id: number;
+  user_id: number;
 }
 
 export interface Expense {
   id: number;
-  nome: string;
-  valor: number;
-  recorrente: boolean;
-  data: Date;
-  data_vencimento: Date | null;
+  name: string;
+  value: number;
+  recurring: boolean;
+  date: Date;
+  due_date: Date | null;
   created_at: Date;
-  categoria_despesa_id: number | null;
-  usuario_id: number;
+  expense_category_id: number | null;
+  user_id: number;
 }
 
 export interface Income {
   id: number;
-  nome: string;
-  valor: number;
-  recorrente: boolean;
-  data: Date;
-  data_vencimento: Date | null;
+  name: string;
+  value: number;
+  recurring: boolean;
+  date: Date;
+  due_date: Date | null;
   created_at: Date;
-  fonte_receita_id: number | null;
-  usuario_id: number;
+  income_source_id: number | null;
+  user_id: number;
 }
 
 export interface Goal {
   id: number;
-  nome: string;
-  valor: number;
-  economia_mensal: number;
-  data_inicio: Date;
+  name: string;
+  value: number;
+  monthly_savings: number;
+  start_date: Date;
   created_at: Date;
-  usuario_id: number;
+  user_id: number;
 }

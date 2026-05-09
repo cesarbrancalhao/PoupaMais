@@ -20,10 +20,10 @@ jest.mock('js-cookie', () => ({
 
 const mockUser: User = {
   id: 1,
-  nome: 'Test User',
+  name: 'Test User',
   email: 'test@example.com',
-  idioma: 'portugues',
-  moeda: 'real',
+  language: 'portuguese',
+  currency: 'real',
 };
 
 const validJwtPayload = btoa(JSON.stringify({ exp: Math.floor(Date.now() / 1000) + 3600, sub: 1 }));
@@ -39,14 +39,14 @@ describe('AuthService', () => {
       (apiService.post as jest.Mock).mockResolvedValue({ message: 'User registered' });
 
       const result = await authService.register({
-        nome: 'Test User',
+        name: 'Test User',
         email: 'test@example.com',
         password: 'password123',
       });
 
       expect(result).toEqual({ message: 'User registered' });
       expect(apiService.post).toHaveBeenCalledWith('/auth/register', {
-        nome: 'Test User',
+        name: 'Test User',
         email: 'test@example.com',
         password: 'password123',
       });
@@ -55,31 +55,31 @@ describe('AuthService', () => {
     it('should throw on invalid email', async () => {
       await expect(
         authService.register({
-          nome: 'Test',
+          name: 'Test',
           email: 'invalid-email',
           password: 'password123',
         }),
-      ).rejects.toThrow('Email inválido');
+      ).rejects.toThrow('Invalid email');
     });
 
     it('should throw on short password', async () => {
       await expect(
         authService.register({
-          nome: 'Test',
+          name: 'Test',
           email: 'test@example.com',
           password: '12345',
         }),
-      ).rejects.toThrow('A senha deve ter no mínimo 6 caracteres');
+      ).rejects.toThrow('Password must be at least 6 characters');
     });
 
     it('should throw on short name', async () => {
       await expect(
         authService.register({
-          nome: 'A',
+          name: 'A',
           email: 'test@example.com',
           password: 'password123',
         }),
-      ).rejects.toThrow('Nome deve ter no mínimo 2 caracteres');
+      ).rejects.toThrow('Name must be at least 2 characters');
     });
   });
 
@@ -185,10 +185,10 @@ describe('AuthService', () => {
     it('should sanitize user data with XSS prevention', () => {
       const maliciousUser: User = {
         id: 1,
-        nome: '<script>alert("xss")</script>',
+        name: '<script>alert("xss")</script>',
         email: 'test@test.com',
-        idioma: 'portugues',
-        moeda: 'real',
+        language: 'portuguese',
+        currency: 'real',
       };
       const authResponse: AuthResponse = {
         access_token: 'token',
@@ -201,7 +201,7 @@ describe('AuthService', () => {
         (call: string[]) => call[0] === 'user',
       );
       const storedUser = JSON.parse(userCall[1]);
-      expect(storedUser.nome).toBe('&lt;script&gt;alert(&quot;xss&quot;)&lt;&#x2F;script&gt;');
+      expect(storedUser.name).toBe('&lt;script&gt;alert(&quot;xss&quot;)&lt;&#x2F;script&gt;');
     });
   });
 });

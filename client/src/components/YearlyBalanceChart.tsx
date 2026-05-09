@@ -27,10 +27,10 @@ interface YearlyBalanceData {
 
 interface YearlyBalanceChartProps {
   data: YearlyBalanceData[]
-  moeda: Currency
+  currency: Currency
 }
 
-export default function YearlyBalanceChart({ data, moeda }: YearlyBalanceChartProps) {
+export default function YearlyBalanceChart({ data, currency }: YearlyBalanceChartProps) {
   const [containerKey, setContainerKey] = useState(0)
 
   useEffect(() => {
@@ -87,7 +87,7 @@ export default function YearlyBalanceChart({ data, moeda }: YearlyBalanceChartPr
         callbacks: {
           label: function (context) {
             const value = context.parsed.y ?? 0
-            const formatted = formatCurrency(1, moeda)
+            const formatted = formatCurrency(1, currency)
             const symbol = formatted.replace(/[\d.,\s]/g, '')
 
             if (Math.abs(value) >= 1000) {
@@ -119,7 +119,7 @@ export default function YearlyBalanceChart({ data, moeda }: YearlyBalanceChartPr
           color: textColor,
           callback: (value) => {
             const num = value as number
-            const formatted = formatCurrency(1, moeda)
+            const formatted = formatCurrency(1, currency)
             const symbol = formatted.replace(/[\d.,\s]/g, '')
 
             if (Math.abs(num) >= 1000) {

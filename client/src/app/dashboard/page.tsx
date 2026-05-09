@@ -674,7 +674,7 @@ export default function DashboardPage() {
                         <p className="text-sm text-center">{t(common.noData)}</p>
                       </div>
                     ) : (
-                      <BalanceChart data={monthlyBalanceData} moeda={user?.currency ?? "real"} />
+                      <BalanceChart data={monthlyBalanceData} currency={user?.currency ?? "real"} />
                     )}
                   </div>
                 </div>
@@ -688,7 +688,7 @@ export default function DashboardPage() {
                         <p className="text-sm mt-2">{t(dashboard.addExpense)}</p>
                       </div>
                     ) : (
-                      <DespesasChart data={expenseChartData} moeda={user?.currency ?? "real"} />
+                      <DespesasChart data={expenseChartData} currency={user?.currency ?? "real"} />
                     )
                   ) : (
                     incomeChartData.length === 0 ? (
@@ -698,7 +698,7 @@ export default function DashboardPage() {
                         <p className="text-sm mt-2">{t(dashboard.addIncome)}</p>
                       </div>
                     ) : (
-                      <ReceitasChart data={incomeChartData} moeda={user?.currency ?? "real"} />
+                      <ReceitasChart data={incomeChartData} currency={user?.currency ?? "real"} />
                     )
                   )}
                 </div>
@@ -1079,7 +1079,7 @@ export default function DashboardPage() {
                     <p className="text-sm text-center">{t(common.noData)}</p>
                   </div>
                 ) : (
-                  <BalanceChart data={monthlyBalanceData} moeda={user?.currency ?? "real"} />
+                  <BalanceChart data={monthlyBalanceData} currency={user?.currency ?? "real"} />
                 )}
               </div>
             </div>
@@ -1091,7 +1091,7 @@ export default function DashboardPage() {
                     <p>{t(dashboard.noExpensesChart)}</p>
                   </div>
                 ) : (
-                  <DespesasChart data={expenseChartData} moeda={user?.currency ?? "real"} />
+                  <DespesasChart data={expenseChartData} currency={user?.currency ?? "real"} />
                 )
               ) : (
                 incomeChartData.length === 0 ? (
@@ -1100,7 +1100,7 @@ export default function DashboardPage() {
                     <p>{t(dashboard.noIncomeChart)}</p>
                   </div>
                 ) : (
-                  <ReceitasChart data={incomeChartData} moeda={user?.currency ?? "real"} />
+                  <ReceitasChart data={incomeChartData} currency={user?.currency ?? "real"} />
                 )
               )}
             </div>
@@ -1129,7 +1129,7 @@ export default function DashboardPage() {
             displayMonth: selectedItem.displayMonth
           }}
           onDelete={handleDelete}
-          moeda ={user?.currency ?? "real"}
+          currency ={user?.currency ?? "real"}
         />
       )}
 

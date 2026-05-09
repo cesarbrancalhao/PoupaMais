@@ -14,26 +14,26 @@ export class IncomesService {
     try {
       await client.query('BEGIN');
 
-      if (data.fonte_receita_id !== undefined && data.fonte_receita_id !== null) {
-        const fonteExists = await client.query(
-          'SELECT * FROM fonte_receita WHERE id = $1 AND usuario_id = $2',
-          [data.fonte_receita_id, userId],
+      if (data.income_source_id !== undefined && data.income_source_id !== null) {
+        const sourceExists = await client.query(
+          'SELECT * FROM income_source WHERE id = $1 AND user_id = $2',
+          [data.income_source_id, userId],
         );
-        if (fonteExists.rows.length === 0) {
+        if (sourceExists.rows.length === 0) {
           throw new NotFoundException('Income source not found');
         }
       }
 
       const result = await client.query(
-        `INSERT INTO receita (nome, valor, recorrente, data, data_vencimento, fonte_receita_id, usuario_id)
+        `INSERT INTO income (name, value, recurring, date, due_date, income_source_id, user_id)
          VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
         [
-          data.nome,
-          data.valor,
-          data.recorrente,
-          data.data,
-          data.data_vencimento,
-          data.fonte_receita_id,
+          data.name,
+          data.value,
+          data.recurring,
+          data.date,
+          data.due_date,
+          data.income_source_id,
           userId,
         ],
       );
@@ -54,11 +54,11 @@ export class IncomesService {
 
     const [dataResult, countResult] = await Promise.all([
       this.databaseService.query(
-        'SELECT * FROM receita WHERE usuario_id = $1 ORDER BY data DESC LIMIT $2 OFFSET $3',
+        'SELECT * FROM income WHERE user_id = $1 ORDER BY date DESC LIMIT $2 OFFSET $3',
         [userId, maxLimit, offset],
       ),
       this.databaseService.query(
-        'SELECT COUNT(*) FROM receita WHERE usuario_id = $1',
+        'SELECT COUNT(*) FROM income WHERE user_id = $1',
         [userId],
       ),
     ]);
@@ -78,7 +78,7 @@ export class IncomesService {
 
   async findOne(id: number, userId: number) {
     const result = await this.databaseService.query(
-      'SELECT * FROM receita WHERE id = $1 AND usuario_id = $2',
+      'SELECT * FROM income WHERE id = $1 AND user_id = $2',
       [id, userId],
     );
     if (result.rows.length === 0) throw new NotFoundException('Income not found');
@@ -90,52 +90,52 @@ export class IncomesService {
     try {
       await client.query('BEGIN');
 
-      if (data.fonte_receita_id !== undefined && data.fonte_receita_id !== null) {
-        const fonteExists = await client.query(
-          'SELECT * FROM fonte_receita WHERE id = $1 AND usuario_id = $2',
-          [data.fonte_receita_id, userId],
+      if (data.income_source_id !== undefined && data.income_source_id !== null) {
+        const sourceExists = await client.query(
+          'SELECT * FROM income_source WHERE id = $1 AND user_id = $2',
+          [data.income_source_id, userId],
         );
-        if (fonteExists.rows.length === 0) throw new NotFoundException('Income source not found');
+        if (sourceExists.rows.length === 0) throw new NotFoundException('Income source not found');
       }
 
       const fields: string[] = [];
       const values: any[] = [];
       let paramIndex = 1;
 
-      if (data.nome !== undefined) {
-        fields.push(`nome = $${paramIndex++}`);
-        values.push(data.nome);
+      if (data.name !== undefined) {
+        fields.push(`name = $${paramIndex++}`);
+        values.push(data.name);
       }
-      if (data.valor !== undefined) {
-        fields.push(`valor = $${paramIndex++}`);
-        values.push(data.valor);
+      if (data.value !== undefined) {
+        fields.push(`value = $${paramIndex++}`);
+        values.push(data.value);
       }
-      if (data.recorrente !== undefined) {
-        fields.push(`recorrente = $${paramIndex++}`);
-        values.push(data.recorrente);
+      if (data.recurring !== undefined) {
+        fields.push(`recurring = $${paramIndex++}`);
+        values.push(data.recurring);
       }
-      if (data.data !== undefined) {
-        fields.push(`data = $${paramIndex++}`);
-        values.push(data.data);
+      if (data.date !== undefined) {
+        fields.push(`date = $${paramIndex++}`);
+        values.push(data.date);
       }
-      if (data.data_vencimento !== undefined) {
-        fields.push(`data_vencimento = $${paramIndex++}`);
-        values.push(data.data_vencimento);
+      if (data.due_date !== undefined) {
+        fields.push(`due_date = $${paramIndex++}`);
+        values.push(data.due_date);
       }
-      if (data.fonte_receita_id !== undefined) {
-        fields.push(`fonte_receita_id = $${paramIndex++}`);
-        values.push(data.fonte_receita_id);
+      if (data.income_source_id !== undefined) {
+        fields.push(`income_source_id = $${paramIndex++}`);
+        values.push(data.income_source_id);
       }
 
       if (fields.length === 0) {
-        const existing = await client.query('SELECT * FROM receita WHERE id = $1 AND usuario_id = $2', [id, userId]);
+        const existing = await client.query('SELECT * FROM income WHERE id = $1 AND user_id = $2', [id, userId]);
         if (existing.rows.length === 0) throw new NotFoundException('Income not found');
         await client.query('COMMIT');
         return existing.rows[0];
       }
 
       values.push(id, userId);
-      const query = `UPDATE receita SET ${fields.join(', ')} WHERE id = $${paramIndex++} AND usuario_id = $${paramIndex++} RETURNING *`;
+      const query = `UPDATE income SET ${fields.join(', ')} WHERE id = $${paramIndex++} AND user_id = $${paramIndex++} RETURNING *`;
 
       const result = await client.query(query, values);
 
@@ -153,7 +153,7 @@ export class IncomesService {
 
   async remove(id: number, userId: number) {
     const result = await this.databaseService.query(
-      'DELETE FROM receita WHERE id = $1 AND usuario_id = $2',
+      'DELETE FROM income WHERE id = $1 AND user_id = $2',
       [id, userId],
     );
     if (result.rowCount === 0) throw new NotFoundException('Income not found');
@@ -166,7 +166,7 @@ export class IncomesService {
       await client.query('BEGIN');
       
       const incomeExists = await client.query(
-        'SELECT * FROM receita WHERE id = $1 AND usuario_id = $2',
+        'SELECT * FROM income WHERE id = $1 AND user_id = $2',
         [incomeId, userId],
       );
       if (incomeExists.rows.length === 0) {
@@ -174,9 +174,9 @@ export class IncomesService {
       }
 
       const result = await client.query(
-        `INSERT INTO receita_exclusao (receita_id, data_exclusao, usuario_id)
+        `INSERT INTO income_exclusion (income_id, exclusion_date, user_id)
          VALUES ($1, $2, $3) RETURNING *`,
-        [incomeId, createExclusionDto.data_exclusao, userId],
+        [incomeId, createExclusionDto.exclusion_date, userId],
       );
       await client.query('COMMIT');
       return result.rows[0];
@@ -190,7 +190,7 @@ export class IncomesService {
 
   async findAllExclusions(userId: number) {
     const result = await this.databaseService.query(
-      'SELECT * FROM receita_exclusao WHERE usuario_id = $1 ORDER BY data_exclusao DESC',
+      'SELECT * FROM income_exclusion WHERE user_id = $1 ORDER BY exclusion_date DESC',
       [userId],
     );
     return result.rows;
@@ -198,7 +198,7 @@ export class IncomesService {
 
   async removeExclusion(id: number, userId: number) {
     const result = await this.databaseService.query(
-      'DELETE FROM receita_exclusao WHERE id = $1 AND usuario_id = $2',
+      'DELETE FROM income_exclusion WHERE id = $1 AND user_id = $2',
       [id, userId],
     );
     if (result.rowCount === 0) throw new NotFoundException('Exclusion not found');

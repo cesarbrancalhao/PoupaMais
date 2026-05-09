@@ -23,24 +23,24 @@ export class AuthController {
 
   @Throttle({ default: { limit: 5, ttl: 60000 } })
   @Post('register')
-  @ApiOperation({ summary: 'Iniciar registro - envia código de verificação por email' })
-  @ApiResponse({ status: 201, description: 'Código de verificação enviado' })
-  @ApiResponse({ status: 400, description: 'Requisição inválida' })
+  @ApiOperation({ summary: 'Start registration - sends verification code by email' })
+  @ApiResponse({ status: 201, description: 'Verification code sent' })
+  @ApiResponse({ status: 400, description: 'Invalid request' })
   async register(@Body() registerDto: RegisterDto) {
     await this.verificationService.createVerification(
-      registerDto.nome,
+      registerDto.name,
       registerDto.email,
       registerDto.password,
-      registerDto.idioma,
+      registerDto.language,
     );
-    return { message: 'Código de verificação enviado para o email' };
+    return { message: 'Verification code sent to email' };
   }
 
   @Throttle({ default: { limit: 10, ttl: 60000 } })
   @Post('verify')
-  @ApiOperation({ summary: 'Verificar código e completar registro' })
-  @ApiResponse({ status: 200, description: 'Usuário verificado e registrado com sucesso' })
-  @ApiResponse({ status: 400, description: 'Código inválido ou expirado' })
+  @ApiOperation({ summary: 'Verify code and complete registration' })
+  @ApiResponse({ status: 200, description: 'User verified and registered successfully' })
+  @ApiResponse({ status: 400, description: 'Invalid or expired code' })
   async verifyCode(@Body() verifyCodeDto: VerifyCodeDto) {
     const user = await this.verificationService.verifyCode(
       verifyCodeDto.email,
@@ -52,47 +52,47 @@ export class AuthController {
   @Throttle({ default: { limit: 10, ttl: 60000 } })
   @UseGuards(LocalAuthGuard)
   @Post('login')
-  @ApiOperation({ summary: 'Login de usuário' })
-  @ApiResponse({ status: 200, description: 'Login realizado com sucesso' })
-  @ApiResponse({ status: 401, description: 'Não autorizado' })
+  @ApiOperation({ summary: 'User login' })
+  @ApiResponse({ status: 200, description: 'Login successful' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
   async login(@Body() loginDto: LoginDto, @Request() req) {
     return this.authService.login(req.user);
   }
 
   @Throttle({ default: { limit: 3, ttl: 60000 } })
   @Post('request-password-reset')
-  @ApiOperation({ summary: 'Solicitar recuperação de senha - envia código por email' })
-  @ApiResponse({ status: 201, description: 'Código de recuperação enviado' })
-  @ApiResponse({ status: 400, description: 'Email não encontrado' })
+  @ApiOperation({ summary: 'Request password reset - sends code by email' })
+  @ApiResponse({ status: 201, description: 'Recovery code sent' })
+  @ApiResponse({ status: 400, description: 'Email not found' })
   async requestPasswordReset(@Body() requestPasswordResetDto: RequestPasswordResetDto) {
     await this.passwordResetService.requestPasswordReset(requestPasswordResetDto.email);
-    return { message: 'Código de recuperação enviado para o email' };
+    return { message: 'Recovery code sent to email' };
   }
 
   @Throttle({ default: { limit: 10, ttl: 60000 } })
   @Post('verify-reset-code')
-  @ApiOperation({ summary: 'Verificar código de recuperação de senha' })
-  @ApiResponse({ status: 200, description: 'Código válido' })
-  @ApiResponse({ status: 400, description: 'Código inválido ou expirado' })
+  @ApiOperation({ summary: 'Verify password reset code' })
+  @ApiResponse({ status: 200, description: 'Code is valid' })
+  @ApiResponse({ status: 400, description: 'Invalid or expired code' })
   async verifyResetCode(@Body() verifyPasswordResetDto: VerifyPasswordResetDto) {
     await this.passwordResetService.verifyResetCode(
       verifyPasswordResetDto.email,
       verifyPasswordResetDto.code,
     );
-    return { message: 'Código válido' };
+    return { message: 'Code is valid' };
   }
 
   @Throttle({ default: { limit: 5, ttl: 60000 } })
   @Post('reset-password')
-  @ApiOperation({ summary: 'Redefinir senha com código de verificação' })
-  @ApiResponse({ status: 200, description: 'Senha redefinida com sucesso' })
-  @ApiResponse({ status: 400, description: 'Código inválido ou expirado' })
+  @ApiOperation({ summary: 'Reset password with verification code' })
+  @ApiResponse({ status: 200, description: 'Password reset successfully' })
+  @ApiResponse({ status: 400, description: 'Invalid or expired code' })
   async resetPassword(@Body() resetPasswordDto: ResetPasswordDto) {
     await this.passwordResetService.resetPassword(
       resetPasswordDto.email,
       resetPasswordDto.code,
       resetPasswordDto.newPassword,
     );
-    return { message: 'Senha redefinida com sucesso' };
+    return { message: 'Password reset successfully' };
   }
 }

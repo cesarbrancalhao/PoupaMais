@@ -15,39 +15,39 @@ export class UsersController {
   constructor(private usersService: UsersService) {}
 
   @Get('profile')
-  @ApiOperation({ summary: 'Obter perfil do usuário atual' })
-  @ApiResponse({ status: 200, description: 'Perfil recuperado com sucesso' })
+  @ApiOperation({ summary: 'Get current user profile' })
+  @ApiResponse({ status: 200, description: 'Profile retrieved successfully' })
   async getProfile(@Request() req) {
     return this.usersService.findById(req.user.userId);
   }
 
   @Put('profile')
-  @ApiOperation({ summary: 'Atualizar perfil do usuário' })
-  @ApiResponse({ status: 200, description: 'Perfil atualizado com sucesso' })
+  @ApiOperation({ summary: 'Update user profile' })
+  @ApiResponse({ status: 200, description: 'Profile updated successfully' })
   async updateProfile(@Request() req, @Body() updateProfileDto: UpdateProfileDto) {
     return this.usersService.updateProfile(
       req.user.userId,
-      updateProfileDto.nome,
+      updateProfileDto.name,
       updateProfileDto.email,
     );
   }
 
   @Put('settings')
-  @ApiOperation({ summary: 'Atualizar configurações do usuário' })
-  @ApiResponse({ status: 200, description: 'Configurações atualizadas com sucesso' })
+  @ApiOperation({ summary: 'Update user settings' })
+  @ApiResponse({ status: 200, description: 'Settings updated successfully' })
   async updateSettings(@Request() req, @Body() updateSettingsDto: UpdateSettingsDto) {
     return this.usersService.updateSettings(
       req.user.userId,
-      updateSettingsDto.idioma,
-      updateSettingsDto.moeda,
+      updateSettingsDto.language,
+      updateSettingsDto.currency,
     );
   }
 
   @Put('change-password')
   @Throttle({ default: { limit: 5, ttl: 60000 } })
-  @ApiOperation({ summary: 'Alterar senha do usuário' })
-  @ApiResponse({ status: 200, description: 'Senha alterada com sucesso' })
-  @ApiResponse({ status: 401, description: 'Senha atual incorreta' })
+  @ApiOperation({ summary: 'Change user password' })
+  @ApiResponse({ status: 200, description: 'Password changed successfully' })
+  @ApiResponse({ status: 401, description: 'Current password is incorrect' })
   async changePassword(@Request() req, @Body() changePasswordDto: ChangePasswordDto) {
     return this.usersService.changePassword(
       req.user.userId,
@@ -57,8 +57,8 @@ export class UsersController {
   }
 
   @Delete('account')
-  @ApiOperation({ summary: 'Excluir conta do usuário' })
-  @ApiResponse({ status: 200, description: 'Conta excluída com sucesso' })
+  @ApiOperation({ summary: 'Delete user account' })
+  @ApiResponse({ status: 200, description: 'Account deleted successfully' })
   async deleteAccount(@Request() req) {
     return this.usersService.deleteAccount(req.user.userId);
   }

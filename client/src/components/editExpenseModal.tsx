@@ -33,7 +33,7 @@ interface EditExpenseModalProps {
     categoryId?: number
   }
   onDelete?: (id: string) => void
-  moeda: Currency
+  currency: Currency
 }
 
 interface CalendarProps {
@@ -191,7 +191,7 @@ function Calendar({ selectedDate, onDateSelect }: CalendarProps) {
   )
 }
 
-export default function EditExpenseModal({ isOpen, onClose, type, editItem, onDelete, moeda }: EditExpenseModalProps) {
+export default function EditExpenseModal({ isOpen, onClose, type, editItem, onDelete, currency }: EditExpenseModalProps) {
   const { t } = useLanguage();
 
   const formatValueWithoutSymbol = useCallback((valueString: string) => {
@@ -302,7 +302,7 @@ export default function EditExpenseModal({ isOpen, onClose, type, editItem, onDe
     }
 
     try {
-      const symbol = getCurrencySymbol(moeda);
+      const symbol = getCurrencySymbol(currency);
       const cleanValue = value
         .replace(symbol, '')           
         .replace(/\s*/g, '')
@@ -361,7 +361,7 @@ export default function EditExpenseModal({ isOpen, onClose, type, editItem, onDe
     }
 
     try {
-      const symbol = getCurrencySymbol(moeda);
+      const symbol = getCurrencySymbol(currency);
       const cleanValue = value
         .replace(symbol, '')           
         .replace(/\s*/g, '')
@@ -532,7 +532,7 @@ export default function EditExpenseModal({ isOpen, onClose, type, editItem, onDe
                       px-3 py-2 font-medium
                       ${'text-gray-600'}
                     `}>
-                      {getCurrencySymbol(moeda)}
+                      {getCurrencySymbol(currency)}
                     </span>
                     <input
                       type="text"

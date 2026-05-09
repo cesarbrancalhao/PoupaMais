@@ -1,92 +1,78 @@
-import { metasService } from '../metas.service';
+import { goalsService } from '../goals.service';
 import { apiService } from '../api';
 
 jest.mock('../api', () => ({
   apiService: {
-    post: jest.fn(),
     get: jest.fn(),
+    post: jest.fn(),
     put: jest.fn(),
     delete: jest.fn(),
   },
 }));
 
-describe('metasService', () => {
+describe('GoalsService', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  describe('getAll', () => {
-    it('should fetch paginated metas', async () => {
-      const mockResponse = {
-        data: [{ id: 1, nome: 'Meta 1', valor: 1000 }],
-        total: 1,
-        page: 1,
-        limit: 100,
+  describe('getGoals', () => {
+    it('should fetch goals list', async () => {
+      const mockGoals = {
+        data: [{ id: 1, name: 'Goal 1', value: 1000 }],
+        pagination: { page: 1, limit: 20, total: 1, totalPages: 1 },
       };
-      (apiService.get as jest.Mock).mockResolvedValue(mockResponse);
+      (apiService.get as jest.Mock).mockResolvedValue(mockGoals);
 
-      const result = await metasService.getAll();
+      const result = await goalsService.getGoals(1, 20);
 
-      expect(apiService.get).toHaveBeenCalledWith('/metas?page=1&limit=100');
-      expect(result).toEqual(mockResponse);
-    });
-
-    it('should use custom page and limit', async () => {
-      (apiService.get as jest.Mock).mockResolvedValue({ data: [], total: 0, page: 2, limit: 10 });
-
-      const result = await metasService.getAll(2, 10);
-
-      expect(apiService.get).toHaveBeenCalledWith('/metas?page=2&limit=10');
-      expect(result.page).toBe(2);
-      expect(result.limit).toBe(10);
+      expect(result).toEqual(mockGoals);
+      expect(apiService.get).toHaveBeenCalledWith('/goals?page=1&limit=20');
     });
   });
 
-  describe('getById', () => {
-    it('should fetch a single meta by id', async () => {
-      const mockMeta = { id: 1, nome: 'Viagem', valor: 5000 };
-      (apiService.get as jest.Mock).mockResolvedValue(mockMeta);
+  describe('getGoal', () => {
+    it('should fetch a single goal', async () => {
+      const mockGoal = { id: 1, name: 'Trip', value: 5000 };
+      (apiService.get as jest.Mock).mockResolvedValue(mockGoal);
 
-      const result = await metasService.getById(1);
+      const result = await goalsService.getGoal(1);
 
-      expect(apiService.get).toHaveBeenCalledWith('/metas/1');
-      expect(result).toEqual(mockMeta);
+      expect(result).toEqual(mockGoal);
+      expect(apiService.get).toHaveBeenCalledWith('/goals/1');
     });
   });
 
-  describe('create', () => {
-    it('should create a new meta', async () => {
-      const createDto = { nome: 'Nova Meta', valor: 3000, descricao: 'Desc' };
-      const mockCreated = { id: 2, ...createDto };
-      (apiService.post as jest.Mock).mockResolvedValue(mockCreated);
+  describe('createGoal', () => {
+    it('should create a new goal', async () => {
+      const createDto = { name: 'New Goal', value: 3000, description: 'Desc' };
+      (apiService.post as jest.Mock).mockResolvedValue(null);
 
-      const result = await metasService.create(createDto);
+      await goalsService.createGoal(createDto);
 
-      expect(apiService.post).toHaveBeenCalledWith('/metas', createDto);
-      expect(result).toEqual(mockCreated);
+      expect(apiService.post).toHaveBeenCalledWith('/goals', createDto);
     });
   });
 
-  describe('update', () => {
-    it('should update an existing meta', async () => {
-      const updateDto = { nome: 'Meta Atualizada' };
-      const mockUpdated = { id: 1, nome: 'Meta Atualizada', valor: 5000 };
+  describe('updateGoal', () => {
+    it('should update a goal', async () => {
+      const updateDto = { name: 'Updated Goal' };
+      const mockUpdated = { id: 1, name: 'Updated Goal', value: 5000 };
       (apiService.put as jest.Mock).mockResolvedValue(mockUpdated);
 
-      const result = await metasService.update(1, updateDto);
+      const result = await goalsService.updateGoal(1, updateDto);
 
-      expect(apiService.put).toHaveBeenCalledWith('/metas/1', updateDto);
       expect(result).toEqual(mockUpdated);
+      expect(apiService.put).toHaveBeenCalledWith('/goals/1', updateDto);
     });
   });
 
-  describe('delete', () => {
-    it('should delete a meta by id', async () => {
-      (apiService.delete as jest.Mock).mockResolvedValue(undefined);
+  describe('deleteGoal', () => {
+    it('should delete a goal', async () => {
+      (apiService.delete as jest.Mock).mockResolvedValue(null);
 
-      await metasService.delete(1);
+      await goalsService.deleteGoal(1);
 
-      expect(apiService.delete).toHaveBeenCalledWith('/metas/1');
+      expect(apiService.delete).toHaveBeenCalledWith('/goals/1');
     });
   });
 });

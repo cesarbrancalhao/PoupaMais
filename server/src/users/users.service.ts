@@ -8,7 +8,7 @@ export class UsersService {
 
   async findById(id: number) {
     const result = await this.databaseService.query(
-      'SELECT id, nome, email, idioma, moeda, created_at FROM usuario WHERE id = $1',
+      'SELECT id, name, email, language, currency, created_at FROM users WHERE id = $1',
       [id],
     );
 
@@ -19,9 +19,9 @@ export class UsersService {
     return result.rows[0];
   }
 
-  async updateProfile(userId: number, nome: string, email: string) {
+  async updateProfile(userId: number, name: string, email: string) {
     const existingMail = await this.databaseService.query(
-      'SELECT id FROM usuario WHERE email = $1 AND id != $2',
+      'SELECT id FROM users WHERE email = $1 AND id != $2',
       [email, userId],
     );
 
@@ -30,8 +30,8 @@ export class UsersService {
     }
 
     const result = await this.databaseService.query(
-      'UPDATE usuario SET nome = $1, email = $2 WHERE id = $3 RETURNING id, nome, email, idioma, moeda, created_at',
-      [nome, email, userId],
+      'UPDATE users SET name = $1, email = $2 WHERE id = $3 RETURNING id, name, email, language, currency, created_at',
+      [name, email, userId],
     );
 
     if (result.rows.length === 0) {
@@ -41,10 +41,10 @@ export class UsersService {
     return result.rows[0];
   }
 
-  async updateSettings(userId: number, idioma: string, moeda: string) {
+  async updateSettings(userId: number, language: string, currency: string) {
     const result = await this.databaseService.query(
-      'UPDATE usuario SET idioma = $1, moeda = $2 WHERE id = $3 RETURNING id, nome, email, idioma, moeda, created_at',
-      [idioma, moeda, userId],
+      'UPDATE users SET language = $1, currency = $2 WHERE id = $3 RETURNING id, name, email, language, currency, created_at',
+      [language, currency, userId],
     );
 
     if (result.rows.length === 0) {
@@ -56,7 +56,7 @@ export class UsersService {
 
   async changePassword(userId: number, currentPassword: string, newPassword: string) {
     const result = await this.databaseService.query(
-      'SELECT senha FROM usuario WHERE id = $1',
+      'SELECT password FROM users WHERE id = $1',
       [userId],
     );
 
@@ -65,7 +65,7 @@ export class UsersService {
     }
 
     const user = result.rows[0];
-    const isPasswordValid = await bcrypt.compare(currentPassword, user.senha);
+    const isPasswordValid = await bcrypt.compare(currentPassword, user.password);
 
     if (!isPasswordValid) {
       throw new UnauthorizedException('Current password is incorrect');
@@ -74,7 +74,7 @@ export class UsersService {
     const hashedPassword = await bcrypt.hash(newPassword, 10);
 
     await this.databaseService.query(
-      'UPDATE usuario SET senha = $1 WHERE id = $2',
+      'UPDATE users SET password = $1 WHERE id = $2',
       [hashedPassword, userId],
     );
 
@@ -87,7 +87,7 @@ export class UsersService {
       await client.query('BEGIN');
 
       const result = await client.query(
-        'DELETE FROM usuario WHERE id = $1',
+        'DELETE FROM users WHERE id = $1',
         [userId],
       );
       if (result.rowCount === 0) throw new NotFoundException('User not found');

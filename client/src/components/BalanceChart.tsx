@@ -23,10 +23,10 @@ interface MonthlyBalance {
 
 interface BalanceChartProps {
   data: MonthlyBalance[];
-  moeda: Currency;
+  currency: Currency;
 }
 
-export default function BalanceChart({ data, moeda }: BalanceChartProps) {
+export default function BalanceChart({ data, currency }: BalanceChartProps) {
   const [containerKey, setContainerKey] = useState(0)
 
   useEffect(() => {
@@ -92,7 +92,7 @@ export default function BalanceChart({ data, moeda }: BalanceChartProps) {
         callbacks: {
           label: function (context) {
             const value = context.parsed.x ?? 0
-            const formatted = formatCurrency(1, moeda)
+            const formatted = formatCurrency(1, currency)
             const symbol = formatted.replace(/[\d.,\s]/g, '')
             
             if (Math.abs(value) >= 1000) {
@@ -118,7 +118,7 @@ export default function BalanceChart({ data, moeda }: BalanceChartProps) {
           callback: (value) => {
             const num = value as number
             
-            const formatted = formatCurrency(1, moeda)
+            const formatted = formatCurrency(1, currency)
             const symbol = formatted.replace(/[\d.,\s]/g, '')
 
             if (Math.abs(num) >= 1000) {

@@ -14,17 +14,17 @@ export class GoalContributionService {
       await client.query('BEGIN');
 
       const goalResult = await client.query(
-        'SELECT id FROM meta WHERE id = $1 AND usuario_id = $2',
-        [data.meta_id, userId],
+        'SELECT id FROM goal WHERE id = $1 AND user_id = $2',
+        [data.goal_id, userId],
       );
       if (goalResult.rows.length === 0) {
         throw new NotFoundException('Goal not found');
       }
 
       const result = await client.query(
-        `INSERT INTO contribuicao_meta (meta_id, valor, data, observacao, usuario_id)
+        `INSERT INTO goal_contribution (goal_id, value, date, observation, user_id)
          VALUES ($1, $2, $3, $4, $5) RETURNING *`,
-        [data.meta_id, data.valor, data.data || new Date(), data.observacao || null, userId],
+        [data.goal_id, data.value, data.date || new Date(), data.observation || null, userId],
       );
 
       await client.query('COMMIT');
@@ -43,16 +43,16 @@ export class GoalContributionService {
 
     const [dataResult, countResult] = await Promise.all([
       this.databaseService.query(
-        `SELECT cm.*, m.nome as meta_nome
-         FROM contribuicao_meta cm
-         JOIN meta m ON cm.meta_id = m.id
-         WHERE cm.usuario_id = $1
-         ORDER BY cm.data DESC, cm.created_at DESC
+        `SELECT cm.*, g.name as goal_name
+         FROM goal_contribution cm
+         JOIN goal g ON cm.goal_id = g.id
+         WHERE cm.user_id = $1
+         ORDER BY cm.date DESC, cm.created_at DESC
          LIMIT $2 OFFSET $3`,
         [userId, maxLimit, offset],
       ),
       this.databaseService.query(
-        'SELECT COUNT(*) FROM contribuicao_meta WHERE usuario_id = $1',
+        'SELECT COUNT(*) FROM goal_contribution WHERE user_id = $1',
         [userId],
       ),
     ]);
@@ -72,7 +72,7 @@ export class GoalContributionService {
 
   async findAllByGoal(goalId: number, userId: number, page: number = 1, limit: number = 20): Promise<PaginationResponse<any>> {
     const goalResult = await this.databaseService.query(
-      'SELECT id FROM meta WHERE id = $1 AND usuario_id = $2',
+      'SELECT id FROM goal WHERE id = $1 AND user_id = $2',
       [goalId, userId],
     );
     if (goalResult.rows.length === 0) {
@@ -84,14 +84,14 @@ export class GoalContributionService {
 
     const [dataResult, countResult] = await Promise.all([
       this.databaseService.query(
-        `SELECT * FROM contribuicao_meta
-         WHERE meta_id = $1 AND usuario_id = $2
-         ORDER BY data DESC, created_at DESC
+        `SELECT * FROM goal_contribution
+         WHERE goal_id = $1 AND user_id = $2
+         ORDER BY date DESC, created_at DESC
          LIMIT $3 OFFSET $4`,
         [goalId, userId, maxLimit, offset],
       ),
       this.databaseService.query(
-        'SELECT COUNT(*) FROM contribuicao_meta WHERE meta_id = $1 AND usuario_id = $2',
+        'SELECT COUNT(*) FROM goal_contribution WHERE goal_id = $1 AND user_id = $2',
         [goalId, userId],
       ),
     ]);
@@ -111,10 +111,10 @@ export class GoalContributionService {
 
   async findOne(id: number, userId: number) {
     const result = await this.databaseService.query(
-      `SELECT cm.*, m.nome as meta_nome
-       FROM contribuicao_meta cm
-       JOIN meta m ON cm.meta_id = m.id
-       WHERE cm.id = $1 AND cm.usuario_id = $2`,
+      `SELECT cm.*, g.name as goal_name
+       FROM goal_contribution cm
+       JOIN goal g ON cm.goal_id = g.id
+       WHERE cm.id = $1 AND cm.user_id = $2`,
       [id, userId],
     );
     if (result.rows.length === 0) {
@@ -129,7 +129,7 @@ export class GoalContributionService {
       await client.query('BEGIN');
 
       const checkResult = await client.query(
-        'SELECT id FROM contribuicao_meta WHERE id = $1 AND usuario_id = $2',
+        'SELECT id FROM goal_contribution WHERE id = $1 AND user_id = $2',
         [id, userId],
       );
       if (checkResult.rows.length === 0) {
@@ -137,12 +137,12 @@ export class GoalContributionService {
       }
 
       const result = await client.query(
-        `UPDATE contribuicao_meta
-         SET valor = COALESCE($1, valor),
-             data = COALESCE($2, data),
-             observacao = COALESCE($3, observacao)
-         WHERE id = $4 AND usuario_id = $5 RETURNING *`,
-        [data.valor, data.data, data.observacao, id, userId],
+        `UPDATE goal_contribution
+         SET value = COALESCE($1, value),
+             date = COALESCE($2, date),
+             observation = COALESCE($3, observation)
+         WHERE id = $4 AND user_id = $5 RETURNING *`,
+        [data.value, data.date, data.observation, id, userId],
       );
 
       await client.query('COMMIT');
@@ -157,7 +157,7 @@ export class GoalContributionService {
 
   async remove(id: number, userId: number) {
     const result = await this.databaseService.query(
-      'DELETE FROM contribuicao_meta WHERE id = $1 AND usuario_id = $2',
+      'DELETE FROM goal_contribution WHERE id = $1 AND user_id = $2',
       [id, userId],
     );
     if (result.rowCount === 0) {

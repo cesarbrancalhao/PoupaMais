@@ -11,11 +11,11 @@ describe('AuthService', () => {
 
   const mockUser = {
     id: 1,
-    nome: 'Test User',
+    name: 'Test User',
     email: 'test@example.com',
-    senha: '$2b$10$hashedpassword',
-    idioma: 'portugues' as const,
-    moeda: 'real' as const,
+    password: '$2b$10$hashedpassword',
+    language: 'portuguese' as const,
+    currency: 'real' as const,
     created_at: new Date(),
   };
 
@@ -56,7 +56,7 @@ describe('AuthService', () => {
   describe('login', () => {
     it('should generate a JWT token for a valid user', async () => {
       const user = { ...mockUser };
-      delete (user as any).senha;
+      delete (user as any).password;
 
       const result = await authService.login(user);
 
@@ -67,10 +67,10 @@ describe('AuthService', () => {
       expect(result.access_token).toBe('mock.jwt.token');
       expect(result.user).toEqual({
         id: user.id,
-        nome: user.nome,
+        name: user.name,
         email: user.email,
-        idioma: user.idioma,
-        moeda: user.moeda,
+        language: user.language,
+        currency: user.currency,
       });
     });
   });
@@ -83,11 +83,11 @@ describe('AuthService', () => {
       const result = await authService.validateUser('test@example.com', 'correct-password');
 
       expect(databaseService.query).toHaveBeenCalledWith(
-        'SELECT * FROM usuario WHERE email = $1',
+        'SELECT * FROM users WHERE email = $1',
         ['test@example.com'],
       );
       expect(result).toHaveProperty('id', 1);
-      expect(result).not.toHaveProperty('senha');
+      expect(result).not.toHaveProperty('password');
     });
 
     it('should return null when user is not found', async () => {
@@ -104,7 +104,7 @@ describe('AuthService', () => {
       databaseService.query.mockResolvedValue({ rows: [{ id: 1 }] } as any);
 
       await expect(
-        authService.register('Test', 'existing@example.com', 'password123', 'portugues'),
+        authService.register('Test', 'existing@example.com', 'password123', 'portuguese'),
       ).rejects.toThrow('Email already registered');
     });
 
@@ -122,12 +122,11 @@ describe('AuthService', () => {
         .mockResolvedValueOnce(undefined)
         .mockResolvedValueOnce(undefined)
         .mockResolvedValueOnce(undefined)
-        .mockResolvedValueOnce(undefined)
         .mockResolvedValueOnce(undefined);
 
       (bcrypt.hash as jest.Mock) = jest.fn().mockResolvedValue('$2b$10$hashed');
 
-      const result = await authService.register('Test', 'new@example.com', 'password123', 'portugues');
+      const result = await authService.register('Test', 'new@example.com', 'password123', 'portuguese');
 
       expect(result.access_token).toBe('mock.jwt.token');
       expect(result.user.email).toBe('test@example.com');
@@ -147,7 +146,7 @@ describe('AuthService', () => {
       (bcrypt.hash as jest.Mock) = jest.fn().mockResolvedValue('$2b$10$hashed');
 
       await expect(
-        authService.register('Test', 'new@example.com', 'password123', 'portugues'),
+        authService.register('Test', 'new@example.com', 'password123', 'portuguese'),
       ).rejects.toThrow('There was an error registering the user');
 
       expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK');

@@ -23,10 +23,10 @@ interface CategoryData {
 
 interface DespesasChartProps {
   data: CategoryData[]
-  moeda: Currency
+  currency: Currency
 }
 
-export default function DespesasChart({ data, moeda }: DespesasChartProps) {
+export default function DespesasChart({ data, currency }: DespesasChartProps) {
   const [containerKey, setContainerKey] = useState(0)
   const { t } = useLanguage()
 
@@ -97,7 +97,7 @@ export default function DespesasChart({ data, moeda }: DespesasChartProps) {
         callbacks: {
           label(context) {
             const value = context.parsed
-            return formatCurrency(value, moeda)
+            return formatCurrency(value, currency)
           }
         }
       }

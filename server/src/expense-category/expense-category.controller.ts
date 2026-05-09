@@ -14,7 +14,7 @@ export class ExpenseCategoryController {
 
   @Post()
   create(@Request() req, @Body() body: CreateExpenseCategoryDto) {
-    return this.service.create(req.user.userId, body.nome, body.icone);
+    return this.service.create(req.user.userId, body.name, body.icon);
   }
 
   @Get()
@@ -29,7 +29,7 @@ export class ExpenseCategoryController {
 
   @Put(':id')
   update(@Param('id') id: string, @Request() req, @Body() body: UpdateExpenseCategoryDto) {
-    return this.service.update(+id, req.user.userId, body.nome, body.icone);
+    return this.service.update(+id, req.user.userId, body.name, body.icon);
   }
 
   @Delete(':id')
