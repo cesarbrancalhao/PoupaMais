@@ -1,4 +1,4 @@
-.PHONY: help init dev prod install clean db db-purge
+.PHONY: help init dev prod install clean db db-purge dump
 
 # Change to "docker" if you use Docker instead of Podman
 RUNTIME   := podman
@@ -14,6 +14,7 @@ help:
 	@echo "  make clean           - Clean client & server builds"
 	@echo "  make db              - Start the database"
 	@echo "  make db-purge        - Purge the database (volumes included)"
+	@echo "  make dump <email>    - Dump all tables for a user by email"
 	@echo ""
 	@echo "To use Podman: make RUNTIME=podman <command>"
 	@echo "Or change the RUNTIME variable at the top of this file"
@@ -72,3 +73,14 @@ db-purge:
 	@echo "Purging database..."
 	@cd server && $(COMPOSE) down -v
 	@echo "Database purged successfully!"
+
+dump:
+	@if [ -z "$(filter-out $@,$(MAKECMDGOALS))" ]; then \
+		echo "Usage: make dump <email>"; \
+		echo "Example: make dump useremail554@gmail.com"; \
+		exit 1; \
+	fi
+	@scripts/dump-user.sh $(filter-out $@,$(MAKECMDGOALS))
+
+%:
+	@:
