@@ -7,7 +7,7 @@ import { goalContributionService } from '@/services/goal-contribution.service'
 import { useAuth } from '@/contexts/AuthContext'
 import { getCurrencySymbol } from '@/app/terminology/currency'
 import { useLanguage } from '@/app/terminology/LanguageContext'
-import { editContribuicaoModal } from '@/app/terminology/language/modals/editContribuicao'
+import { editContributionModal } from '@/app/terminology/language/modals/editContribution'
 import { common } from '@/app/terminology/language/common'
 
 interface EditContributionModalProps {
@@ -103,13 +103,13 @@ function Calendar({ selectedDate, onDateSelect}: CalendarProps) {
 
   const days = getDaysInMonth(currentMonth)
 
-  const monthNames = editContribuicaoModal.calendarMonths[language]
+  const monthNames = editContributionModal.calendarMonths[language]
   const currentMonthLabel = `${monthNames[currentMonth.getMonth()]} ${currentMonth.getFullYear()}`
   const infoTextColor = 'text-gray-500'
   const highlightTextColor = 'text-gray-800'
   const selectedDateLabel = selectedDate
     ? formatSelectedDate(selectedDate)
-    : t(editContribuicaoModal.calendarNoDateSelected)
+    : t(editContributionModal.calendarNoDateSelected)
 
   return (
     <div className={`rounded-lg shadow-lg p-4 border ${
@@ -121,7 +121,7 @@ function Calendar({ selectedDate, onDateSelect}: CalendarProps) {
             {currentMonthLabel}
           </p>
           <p className={`text-xs mt-2 ${infoTextColor}`}>
-            {t(editContribuicaoModal.calendarSelectedDateLabel)}: {selectedDateLabel}
+            {t(editContributionModal.calendarSelectedDateLabel)}: {selectedDateLabel}
           </p>
         </div>
         <div className="flex items-center gap-2 self-start">
@@ -300,7 +300,7 @@ export default function EditContributionModal({ isOpen, onClose, editItem, onDel
                   <div className="w-6 h-6 border-2 border-white rounded-full flex items-center justify-center">
                     <X className="w-4 h-4" />
                   </div>
-                  <span className="font-medium">{t(editContribuicaoModal.errorUpdating)}</span>
+                  <span className="font-medium">{t(editContributionModal.errorUpdating)}</span>
                 </motion.div>
               )}
             </AnimatePresence>
@@ -308,7 +308,7 @@ export default function EditContributionModal({ isOpen, onClose, editItem, onDel
             <div className="flex items-center justify-between mb-6">
               <h2 className={`text-lg font-semibold ${
                 'text-gray-800'
-              }`}>{t(editContribuicaoModal.title)}</h2>
+              }`}>{t(editContributionModal.title)}</h2>
               <button onClick={onClose} className={'text-gray-500 hover:text-gray-700'}>
                 <X className="w-5 h-5" />
               </button>
@@ -376,7 +376,7 @@ export default function EditContributionModal({ isOpen, onClose, editItem, onDel
                   }`}
                 >
                   <Save className="w-4 h-4" />
-                  {t(common.save)} {t(editContribuicaoModal.contributionLabel)}
+                  {t(common.save)} {t(editContributionModal.contributionLabel)}
                 </button>
               )}
 

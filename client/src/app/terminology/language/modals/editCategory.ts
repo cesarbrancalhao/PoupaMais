@@ -1,4 +1,4 @@
-export const editCategoriaModal = {
+export const editCategoryModal = {
   editCategoryTitle: {
     pt: 'Editar Categoria',
     en: 'Edit Category',

@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { expenseCategoryService } from '@/services/categories.service'
 import { incomeSourcesService } from '@/services/income-sources.service'
 import { useLanguage } from '@/app/terminology/LanguageContext'
-import { addCategoriaModal } from '@/app/terminology/language/modals/addCategoria'
+import { addCategoryModal } from '@/app/terminology/language/modals/addCategory'
 import { common } from '@/app/terminology/language/common'
 
 interface AddCategoryModalProps {
@@ -122,14 +122,14 @@ export default function AddCategoryModal({ isOpen, onClose, type }: AddCategoryM
                   <div className="w-6 h-6 border-2 border-white rounded-full flex items-center justify-center">
                     <X className="w-4 h-4" />
                   </div>
-                  <span className="font-medium">{t(addCategoriaModal.errorAdding)}</span>
+                  <span className="font-medium">{t(addCategoryModal.errorAdding)}</span>
                 </motion.div>
               )}
             </AnimatePresence>
 
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-lg font-semibold">
-                {type === 'categories' ? t(addCategoriaModal.addCategoryTitle) : t(addCategoriaModal.addSourceTitle)}
+                {type === 'categories' ? t(addCategoryModal.addCategoryTitle) : t(addCategoryModal.addSourceTitle)}
               </h2>
               <button
                 onClick={onClose}
@@ -147,7 +147,7 @@ export default function AddCategoryModal({ isOpen, onClose, type }: AddCategoryM
                 </label>
                 <input
                    type="text"
-                      placeholder={t(addCategoriaModal.namePlaceholder)}
+                      placeholder={t(addCategoryModal.namePlaceholder)}
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                   className={`
@@ -160,7 +160,7 @@ export default function AddCategoryModal({ isOpen, onClose, type }: AddCategoryM
 
               <div>
                 <label className="block text-sm font-medium mb-3">
-                  {t(addCategoriaModal.icon)}
+                  {t(addCategoryModal.icon)}
                 </label>
                 <div className="grid grid-cols-4 gap-3">
                   {availableIcons.map((iconObj) => {

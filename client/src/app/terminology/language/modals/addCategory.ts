@@ -1,4 +1,4 @@
-export const addCategoriaModal = {
+export const addCategoryModal = {
   addCategoryTitle: {
     pt: 'Adicionar Categoria',
     en: 'Add Category',

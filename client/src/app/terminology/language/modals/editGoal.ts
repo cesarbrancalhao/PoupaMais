@@ -1,4 +1,4 @@
-export const editMetaModal = {
+export const editGoalModal = {
   title: {
     pt: 'Alterar Meta',
     en: 'Edit Goal',

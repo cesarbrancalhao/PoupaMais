@@ -7,7 +7,7 @@ import { goalsService } from '@/services/goals.service'
 import { useAuth } from '@/contexts/AuthContext'
 import { formatCurrency, getCurrencySymbol } from '@/app/terminology/currency'
 import { useLanguage } from '@/app/terminology/LanguageContext'
-import { editMetaModal } from '@/app/terminology/language/modals/editMeta'
+import { editGoalModal } from '@/app/terminology/language/modals/editGoal'
 
 interface EditGoalModalProps {
   isOpen: boolean
@@ -47,18 +47,18 @@ function MonthYearPicker({ selectedDate, onDateSelect, minDate}: MonthYearPicker
   }, [selectedDate])
 
   const months = [
-    t(editMetaModal.january),
-    t(editMetaModal.february),
-    t(editMetaModal.march),
-    t(editMetaModal.april),
-    t(editMetaModal.may),
-    t(editMetaModal.june),
-    t(editMetaModal.july),
-    t(editMetaModal.august),
-    t(editMetaModal.september),
-    t(editMetaModal.october),
-    t(editMetaModal.november),
-    t(editMetaModal.december)
+    t(editGoalModal.january),
+    t(editGoalModal.february),
+    t(editGoalModal.march),
+    t(editGoalModal.april),
+    t(editGoalModal.may),
+    t(editGoalModal.june),
+    t(editGoalModal.july),
+    t(editGoalModal.august),
+    t(editGoalModal.september),
+    t(editGoalModal.october),
+    t(editGoalModal.november),
+    t(editGoalModal.december)
   ]
 
   const navigateYear = (direction: 'prev' | 'next') => {
@@ -90,9 +90,9 @@ function MonthYearPicker({ selectedDate, onDateSelect, minDate}: MonthYearPicker
   }
 
   const formatSelectedDate = (dateString: string) => {
-    if (!dateString) return t(editMetaModal.selectMonthYear)
+    if (!dateString) return t(editGoalModal.selectMonthYear)
     const parts = dateString.split('-')
-    if (parts.length !== 3) return t(editMetaModal.selectMonthYear)
+    if (parts.length !== 3) return t(editGoalModal.selectMonthYear)
     const [year, month] = parts
     const monthIndex = parseInt(month) - 1
     return `${months[monthIndex]} ${year}`
@@ -410,7 +410,7 @@ export default function EditGoalModal({ isOpen, onClose, editItem, onDelete }: E
                   <div className="w-6 h-6 border-2 border-white rounded-full flex items-center justify-center">
                     <X className="w-4 h-4" />
                   </div>
-                  <span className="font-medium">{t(editMetaModal.error)}</span>
+                  <span className="font-medium">{t(editGoalModal.error)}</span>
                 </motion.div>
               )}
             </AnimatePresence>
@@ -418,7 +418,7 @@ export default function EditGoalModal({ isOpen, onClose, editItem, onDelete }: E
             <div className="flex items-center justify-between mb-6">
               <h2 className={`text-lg font-semibold ${
                 'text-gray-800'
-              }`}>{t(editMetaModal.title)}</h2>
+              }`}>{t(editGoalModal.title)}</h2>
               <button onClick={onClose} className={'text-gray-500 hover:text-gray-700'}>
                 <X className="w-5 h-5" />
               </button>
@@ -428,10 +428,10 @@ export default function EditGoalModal({ isOpen, onClose, editItem, onDelete }: E
               <div>
                 <label className={`block text-sm font-medium mb-1 ${
                   'text-gray-800'
-                }`}>{t(editMetaModal.name)}</label>
+                }`}>{t(editGoalModal.name)}</label>
                 <input
                   type="text"
-                  placeholder={t(editMetaModal.namePlaceholder)}
+                  placeholder={t(editGoalModal.namePlaceholder)}
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   className={`w-full rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none ${
@@ -444,9 +444,9 @@ export default function EditGoalModal({ isOpen, onClose, editItem, onDelete }: E
               <div>
                 <label className={`block text-sm font-medium mb-1 ${
                   'text-gray-800'
-                }`}>{t(editMetaModal.description)}</label>
+                }`}>{t(editGoalModal.description)}</label>
                 <textarea
-                  placeholder={t(editMetaModal.descriptionPlaceholder)}
+                  placeholder={t(editGoalModal.descriptionPlaceholder)}
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   className={`w-full rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none resize-none ${
@@ -459,7 +459,7 @@ export default function EditGoalModal({ isOpen, onClose, editItem, onDelete }: E
               <div>
                 <label className={`block text-sm font-medium mb-1 ${
                   'text-gray-800'
-                }`}>{t(editMetaModal.totalValue)}</label>
+                }`}>{t(editGoalModal.totalValue)}</label>
                 <div className={`
                   flex items-center rounded-lg overflow-hidden
                   ${'bg-gray-50'}
@@ -487,7 +487,7 @@ export default function EditGoalModal({ isOpen, onClose, editItem, onDelete }: E
               <div>
                 <label className={`block text-sm font-medium mb-3 ${
                   'text-gray-800'
-                }`}>{t(editMetaModal.defineGoalBy)}</label>
+                }`}>{t(editGoalModal.defineGoalBy)}</label>
                 <div className="flex gap-4">
                   <label className="flex items-center gap-2 cursor-pointer">
                     <input
@@ -500,7 +500,7 @@ export default function EditGoalModal({ isOpen, onClose, editItem, onDelete }: E
                     />
                     <span className={`text-sm ${
                       'text-gray-700'
-                    }`}>{t(editMetaModal.monthlySavings)}</span>
+                    }`}>{t(editGoalModal.monthlySavings)}</span>
                   </label>
                   <label className="flex items-center gap-2 cursor-pointer">
                     <input
@@ -513,14 +513,14 @@ export default function EditGoalModal({ isOpen, onClose, editItem, onDelete }: E
                     />
                     <span className={`text-sm ${
                       'text-gray-700'
-                    }`}>{t(editMetaModal.deadline)}</span>
+                    }`}>{t(editGoalModal.deadline)}</span>
                   </label>
                 </div>
                 {goalType === 'monthly' && (() => {
                   const months = calculateMonthsNeeded()
                   return months !== null ? (
                     <p className="mt-3 text-sm font-bold text-blue-600">
-                      {t(editMetaModal.willNeedMonths)} {months} {months === 1 ? t(editMetaModal.monthsNeeded) : t(editMetaModal.monthsNeededPlural)} {t(editMetaModal.toReachGoal)}
+                      {t(editGoalModal.willNeedMonths)} {months} {months === 1 ? t(editGoalModal.monthsNeeded) : t(editGoalModal.monthsNeededPlural)} {t(editGoalModal.toReachGoal)}
                     </p>
                   ) : null
                 })()}
@@ -528,7 +528,7 @@ export default function EditGoalModal({ isOpen, onClose, editItem, onDelete }: E
                   const monthlySavings = calculateMonthlySavingsNeeded()
                   return monthlySavings !== null ? (
                     <p className="mt-3 text-sm font-bold text-blue-600">
-                      {t(editMetaModal.willNeedToSave)} {formatCurrency(monthlySavings, userCurrency)} {t(editMetaModal.perMonth)}
+                      {t(editGoalModal.willNeedToSave)} {formatCurrency(monthlySavings, userCurrency)} {t(editGoalModal.perMonth)}
                     </p>
                   ) : null
                 })()}
@@ -537,7 +537,7 @@ export default function EditGoalModal({ isOpen, onClose, editItem, onDelete }: E
               <div>
                 <label className={`block text-sm font-medium mb-1 ${
                   'text-gray-800'
-                }`}>{t(editMetaModal.startDate)}</label>
+                }`}>{t(editGoalModal.startDate)}</label>
                 <MonthYearPicker
                   selectedDate={startDate}
                   onDateSelect={setStartDate}
@@ -548,7 +548,7 @@ export default function EditGoalModal({ isOpen, onClose, editItem, onDelete }: E
                 <div>
                   <label className={`block text-sm font-medium mb-1 ${
                     'text-gray-800'
-                  }`}>{t(editMetaModal.monthlySavings)}</label>
+                  }`}>{t(editGoalModal.monthlySavings)}</label>
                   <div className={`
                     flex items-center rounded-lg overflow-hidden
                     ${'bg-gray-50'}
@@ -578,7 +578,7 @@ export default function EditGoalModal({ isOpen, onClose, editItem, onDelete }: E
                 <div>
                   <label className={`block text-sm font-medium mb-1 ${
                     'text-gray-800'
-                  }`}>{t(editMetaModal.deadline)}</label>
+                  }`}>{t(editGoalModal.deadline)}</label>
                   <MonthYearPicker
                     selectedDate={targetDate}
                     onDateSelect={setTargetDate}
@@ -595,7 +595,7 @@ export default function EditGoalModal({ isOpen, onClose, editItem, onDelete }: E
                   }`}
                 >
                   <Save className="w-4 h-4" />
-                  {t(editMetaModal.saveGoal)}
+                  {t(editGoalModal.saveGoal)}
                 </button>
               )}
 
@@ -611,7 +611,7 @@ export default function EditGoalModal({ isOpen, onClose, editItem, onDelete }: E
                         }`}
                       >
                         <X className="w-4 h-4" />
-                        {t(editMetaModal.cancel)}
+                        {t(editGoalModal.cancel)}
                       </button>
                       <button
                         type="button"
@@ -624,7 +624,7 @@ export default function EditGoalModal({ isOpen, onClose, editItem, onDelete }: E
                         }`}
                       >
                         <Trash className="w-4 h-4" />
-                        {t(editMetaModal.confirmDelete)}
+                        {t(editGoalModal.confirmDelete)}
                       </button>
                     </div>
                   ) : (
@@ -636,7 +636,7 @@ export default function EditGoalModal({ isOpen, onClose, editItem, onDelete }: E
                       }`}
                     >
                       <Trash className="w-4 h-4" />
-                      {t(editMetaModal.deleteGoal)}
+                      {t(editGoalModal.deleteGoal)}
                     </button>
                   )}
                 </>

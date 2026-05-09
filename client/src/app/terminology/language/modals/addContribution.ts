@@ -1,4 +1,4 @@
-export const addContribuicaoModal = {
+export const addContributionModal = {
   title: {
     pt: 'Adicionar Contribuição',
     en: 'Add Contribution',

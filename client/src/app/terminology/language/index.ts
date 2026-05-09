@@ -10,10 +10,10 @@ export * from './settings';
 
 export * from './modals/addDashboard';
 export * from './modals/editDashboard';
-export * from './modals/addMeta';
-export * from './modals/editMeta';
-export * from './modals/addContribuicao';
-export * from './modals/editContribuicao';
-export * from './modals/addCategoria';
-export * from './modals/editCategoria';
+export * from './modals/addGoal';
+export * from './modals/editGoal';
+export * from './modals/addContribution';
+export * from './modals/editContribution';
+export * from './modals/addCategory';
+export * from './modals/editCategory';
 export * from './modals/password';

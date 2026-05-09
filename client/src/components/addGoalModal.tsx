@@ -7,7 +7,7 @@ import { goalsService } from '@/services/goals.service'
 import { useAuth } from '@/contexts/AuthContext'
 import { formatCurrency, getCurrencySymbol } from '@/app/terminology/currency'
 import { useLanguage } from '@/app/terminology/LanguageContext'
-import { addMetaModal } from '@/app/terminology/language/modals/addMeta'
+import { addGoalModal } from '@/app/terminology/language/modals/addGoal'
 
 interface AddGoalModalProps {
   isOpen: boolean
@@ -36,7 +36,7 @@ function MonthYearPicker({ selectedDate, onDateSelect, minDate}: MonthYearPicker
     }
   }, [selectedDate])
 
-  const months = addMetaModal.months[language]
+  const months = addGoalModal.months[language]
 
   const navigateYear = (direction: 'prev' | 'next') => {
     setCurrentYear(prev => direction === 'prev' ? prev - 1 : prev + 1)
@@ -67,9 +67,9 @@ function MonthYearPicker({ selectedDate, onDateSelect, minDate}: MonthYearPicker
   }
 
   const formatSelectedDate = (dateString: string) => {
-    if (!dateString) return t(addMetaModal.selectMonthYear)
+    if (!dateString) return t(addGoalModal.selectMonthYear)
     const parts = dateString.split('-')
-    if (parts.length !== 3) return t(addMetaModal.selectMonthYear)
+    if (parts.length !== 3) return t(addGoalModal.selectMonthYear)
     const [year, month] = parts
     const monthIndex = parseInt(month) - 1
     return `${months[monthIndex]} ${year}`
@@ -359,7 +359,7 @@ export default function AddGoalModal({ isOpen, onClose }: AddGoalModalProps) {
                   <div className="w-6 h-6 border-2 border-white rounded-full flex items-center justify-center">
                     <X className="w-4 h-4" />
                   </div>
-                  <span className="font-medium">{t(addMetaModal.error)}</span>
+                  <span className="font-medium">{t(addGoalModal.error)}</span>
                 </motion.div>
               )}
             </AnimatePresence>
@@ -367,7 +367,7 @@ export default function AddGoalModal({ isOpen, onClose }: AddGoalModalProps) {
             <div className="flex items-center justify-between mb-6">
               <h2 className={`text-lg font-semibold ${
                 'text-gray-800'
-              }`}>{t(addMetaModal.title)}</h2>
+              }`}>{t(addGoalModal.title)}</h2>
               <button onClick={onClose} className={'text-gray-500 hover:text-gray-700'}>
                 <X className="w-5 h-5" />
               </button>
@@ -377,10 +377,10 @@ export default function AddGoalModal({ isOpen, onClose }: AddGoalModalProps) {
               <div>
                 <label className={`block text-sm font-medium mb-1 ${
                   'text-gray-800'
-                }`}>{t(addMetaModal.name)}</label>
+                }`}>{t(addGoalModal.name)}</label>
                 <input
                   type="text"
-                  placeholder={t(addMetaModal.namePlaceholder)}
+                  placeholder={t(addGoalModal.namePlaceholder)}
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   className={`w-full rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none ${
@@ -393,9 +393,9 @@ export default function AddGoalModal({ isOpen, onClose }: AddGoalModalProps) {
               <div>
                 <label className={`block text-sm font-medium mb-1 ${
                   'text-gray-800'
-                }`}>{t(addMetaModal.description)}</label>
+                }`}>{t(addGoalModal.description)}</label>
                 <textarea
-                  placeholder={t(addMetaModal.descriptionPlaceholder)}
+                  placeholder={t(addGoalModal.descriptionPlaceholder)}
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   className={`w-full rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none resize-none ${
@@ -408,7 +408,7 @@ export default function AddGoalModal({ isOpen, onClose }: AddGoalModalProps) {
               <div>
                 <label className={`block text-sm font-medium mb-1 ${
                   'text-gray-800'
-                }`}>{t(addMetaModal.totalValue)}</label>
+                }`}>{t(addGoalModal.totalValue)}</label>
                 <div className={`
                   flex items-center rounded-lg overflow-hidden
                   ${'bg-gray-50'}
@@ -436,7 +436,7 @@ export default function AddGoalModal({ isOpen, onClose }: AddGoalModalProps) {
               <div>
                 <label className={`block text-sm font-medium mb-3 ${
                   'text-gray-800'
-                }`}>{t(addMetaModal.defineGoalBy)}</label>
+                }`}>{t(addGoalModal.defineGoalBy)}</label>
                 <div className="flex gap-4">
                   <label className="flex items-center gap-2 cursor-pointer">
                     <input
@@ -449,7 +449,7 @@ export default function AddGoalModal({ isOpen, onClose }: AddGoalModalProps) {
                     />
                     <span className={`text-sm ${
                       'text-gray-700'
-                    }`}>{t(addMetaModal.monthlySavings)}</span>
+                    }`}>{t(addGoalModal.monthlySavings)}</span>
                   </label>
                   <label className="flex items-center gap-2 cursor-pointer">
                     <input
@@ -462,16 +462,16 @@ export default function AddGoalModal({ isOpen, onClose }: AddGoalModalProps) {
                     />
                     <span className={`text-sm ${
                       'text-gray-700'
-                    }`}>{t(addMetaModal.deadline)}</span>
+                    }`}>{t(addGoalModal.deadline)}</span>
                   </label>
                 </div>
                 {goalType === 'monthly' && (() => {
                   const months = calculateMonthsNeeded()
                   return months !== null ? (
                     <p className="mt-3 text-sm font-bold text-blue-600">
-                      {t(addMetaModal.monthsNeeded)
+                      {t(addGoalModal.monthsNeeded)
                         .replace('{months}', months.toString())
-                        .replace('{monthLabel}', months === 1 ? t(addMetaModal.monthSingular) : t(addMetaModal.monthPlural))}
+                        .replace('{monthLabel}', months === 1 ? t(addGoalModal.monthSingular) : t(addGoalModal.monthPlural))}
                     </p>
                   ) : null
                 })()}
@@ -479,7 +479,7 @@ export default function AddGoalModal({ isOpen, onClose }: AddGoalModalProps) {
                   const monthlySavings = calculateMonthlySavingsNeeded()
                   return monthlySavings !== null ? (
                     <p className="mt-3 text-sm font-bold text-blue-600">
-                      {t(addMetaModal.monthlySavingsNeeded).replace('{amount}', formatCurrency(monthlySavings, userCurrency))}
+                      {t(addGoalModal.monthlySavingsNeeded).replace('{amount}', formatCurrency(monthlySavings, userCurrency))}
                     </p>
                   ) : null
                 })()}
@@ -487,7 +487,7 @@ export default function AddGoalModal({ isOpen, onClose }: AddGoalModalProps) {
                 <div>
                   <label className={`block text-sm font-medium mt-3 mb-1 ${
                     'text-gray-800'
-                  }`}>{t(addMetaModal.monthlySavings)}</label>
+                  }`}>{t(addGoalModal.monthlySavings)}</label>
                   <div className={`
                     flex items-center rounded-lg overflow-hidden
                     ${'bg-gray-50'}
@@ -517,7 +517,7 @@ export default function AddGoalModal({ isOpen, onClose }: AddGoalModalProps) {
               <div>
                 <label className={`block text-sm font-medium mb-1 ${
                   'text-gray-800'
-                }`}>{t(addMetaModal.startDate)}</label>
+                }`}>{t(addGoalModal.startDate)}</label>
                 <MonthYearPicker
                   selectedDate={startDate}
                   onDateSelect={setStartDate}
@@ -528,7 +528,7 @@ export default function AddGoalModal({ isOpen, onClose }: AddGoalModalProps) {
                 <div>
                   <label className={`block text-sm font-medium mb-1 ${
                     'text-gray-800'
-                  }`}>{t(addMetaModal.endDate)}</label>
+                  }`}>{t(addGoalModal.endDate)}</label>
                   <MonthYearPicker
                     selectedDate={targetDate}
                     onDateSelect={setTargetDate}
@@ -544,7 +544,7 @@ export default function AddGoalModal({ isOpen, onClose }: AddGoalModalProps) {
                 }`}
               >
                 <Save className="w-4 h-4" />
-                {t(addMetaModal.saveGoal)}
+                {t(addGoalModal.saveGoal)}
               </button>
             </form>
           </motion.div>

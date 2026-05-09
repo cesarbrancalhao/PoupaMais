@@ -10,8 +10,8 @@ import { ExpenseCategory, IncomeSource } from '@/types'
 import { expenseCategoryService } from '@/services/categories.service'
 import { incomeSourcesService } from '@/services/income-sources.service'
 import { useLanguage } from '@/app/terminology/LanguageContext'
-import { editCategoriaModal } from '@/app/terminology/language/modals/editCategoria'
-import { addCategoriaModal } from '@/app/terminology/language/modals/addCategoria'
+import { editCategoryModal } from '@/app/terminology/language/modals/editCategory'
+import { addCategoryModal } from '@/app/terminology/language/modals/addCategory'
 import { common } from '@/app/terminology/language/common'
 
 interface EditCategoryModalProps {
@@ -118,14 +118,14 @@ export default function EditCategoryModal({
                   <div className="w-6 h-6 border-2 border-white rounded-full flex items-center justify-center">
                     <X className="w-4 h-4" />
                   </div>
-                  <span className="font-medium">{t(editCategoriaModal.errorUpdating)}</span>
+                  <span className="font-medium">{t(editCategoryModal.errorUpdating)}</span>
                 </motion.div>
               )}
             </AnimatePresence>
 
             <div className="flex items-center justify-between mb-6">
               <h2 className={`text-lg font-semibold ${textMain}`}>
-                {type === 'categories' ? t(editCategoriaModal.editCategoryTitle) : t(editCategoriaModal.editSourceTitle)}
+                {type === 'categories' ? t(editCategoryModal.editCategoryTitle) : t(editCategoryModal.editSourceTitle)}
               </h2>
               <button onClick={onClose} className={`${textSecondary} hover:opacity-80`}>
                 <X className="w-5 h-5" />
@@ -146,7 +146,7 @@ export default function EditCategoryModal({
               </div>
 
               <div>
-                <label className={`block text-sm font-medium mb-3 ${textMain}`}>{t(addCategoriaModal.icon)}</label>
+                <label className={`block text-sm font-medium mb-3 ${textMain}`}>{t(addCategoryModal.icon)}</label>
                 <div className="grid grid-cols-4 gap-3">
                   {availableIcons.map(iconObj => {
                     const IconComponent = iconObj.component

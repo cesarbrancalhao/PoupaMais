@@ -7,7 +7,7 @@ import { goalContributionService } from '@/services/goal-contribution.service'
 import { useAuth } from '@/contexts/AuthContext'
 import { getCurrencySymbol } from '@/app/terminology/currency'
 import { useLanguage } from '@/app/terminology/LanguageContext'
-import { addContribuicaoModal } from '@/app/terminology/language/modals/addContribuicao'
+import { addContributionModal } from '@/app/terminology/language/modals/addContribution'
 import { common } from '@/app/terminology/language/common'
 
 interface AddContributionModalProps {
@@ -97,13 +97,13 @@ function Calendar({ selectedDate, onDateSelect}: CalendarProps) {
 
   const days = getDaysInMonth(currentMonth)
 
-  const monthNames = addContribuicaoModal.calendarMonths[language]
+  const monthNames = addContributionModal.calendarMonths[language]
   const currentMonthLabel = `${monthNames[currentMonth.getMonth()]} ${currentMonth.getFullYear()}`
   const infoTextColor = 'text-gray-500'
   const highlightTextColor = 'text-gray-800'
   const selectedDateLabel = selectedDate
     ? formatSelectedDate(selectedDate)
-    : t(addContribuicaoModal.calendarNoDateSelected)
+    : t(addContributionModal.calendarNoDateSelected)
 
   return (
     <div className={`rounded-lg shadow-lg p-4 border ${
@@ -115,7 +115,7 @@ function Calendar({ selectedDate, onDateSelect}: CalendarProps) {
             {currentMonthLabel}
           </p>
           <p className={`text-xs mt-2 ${infoTextColor}`}>
-            {t(addContribuicaoModal.calendarSelectedDateLabel)}: {selectedDateLabel}
+            {t(addContributionModal.calendarSelectedDateLabel)}: {selectedDateLabel}
           </p>
         </div>
         <div className="flex items-center gap-2 self-start">
@@ -279,7 +279,7 @@ export default function AddContributionModal({ isOpen, onClose, goalId }: AddCon
                   <div className="w-6 h-6 border-2 border-white rounded-full flex items-center justify-center">
                     <X className="w-4 h-4" />
                   </div>
-                  <span className="font-medium">{t(addContribuicaoModal.errorAdding)}</span>
+                  <span className="font-medium">{t(addContributionModal.errorAdding)}</span>
                 </motion.div>
               )}
             </AnimatePresence>
@@ -287,7 +287,7 @@ export default function AddContributionModal({ isOpen, onClose, goalId }: AddCon
             <div className="flex items-center justify-between mb-6">
               <h2 className={`text-lg font-semibold ${
                 'text-gray-800'
-              }`}>{t(addContribuicaoModal.title)}</h2>
+              }`}>{t(addContributionModal.title)}</h2>
               <button onClick={onClose} className={'text-gray-500 hover:text-gray-700'}>
                 <X className="w-5 h-5" />
               </button>
@@ -297,7 +297,7 @@ export default function AddContributionModal({ isOpen, onClose, goalId }: AddCon
               <div>
                 <label className={`block text-sm font-medium mb-1 ${
                   'text-gray-800'
-                }`}>{t(addContribuicaoModal.value)}</label>
+                }`}>{t(addContributionModal.value)}</label>
                 <div className={`
                   flex items-center rounded-lg overflow-hidden
                   ${'bg-gray-50'}
@@ -325,7 +325,7 @@ export default function AddContributionModal({ isOpen, onClose, goalId }: AddCon
               <div>
                 <label className={`block text-sm font-medium mb-1 ${
                   'text-gray-800'
-                }`}>{t(addContribuicaoModal.date)}</label>
+                }`}>{t(addContributionModal.date)}</label>
                 <Calendar
                     selectedDate={date}
                     onDateSelect={setDate}
@@ -335,9 +335,9 @@ export default function AddContributionModal({ isOpen, onClose, goalId }: AddCon
               <div>
                 <label className={`block text-sm font-medium mb-1 ${
                   'text-gray-800'
-                }`}>{t(addContribuicaoModal.description)}</label>
+                }`}>{t(addContributionModal.description)}</label>
                 <textarea
-                    placeholder={t(addContribuicaoModal.descriptionPlaceholder)}
+                    placeholder={t(addContributionModal.descriptionPlaceholder)}
                     value={observation}
                     onChange={(e) => setObservation(e.target.value)}
                   className={`w-full rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none resize-none ${
@@ -354,7 +354,7 @@ export default function AddContributionModal({ isOpen, onClose, goalId }: AddCon
                 }`}
               >
                 <Save className="w-4 h-4" />
-                {t(common.save)} {t(addContribuicaoModal.contributionLabel)}
+                {t(common.save)} {t(addContributionModal.contributionLabel)}
               </button>
             </form>
           </motion.div>
