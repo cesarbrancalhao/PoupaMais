@@ -10,7 +10,7 @@ import ProtectedRoute from '@/components/ProtectedRoute'
 import BalanceChart from '@/components/BalanceChart'
 import DespesasChart from '@/components/DespesasChart'
 import ReceitasChart from '@/components/ReceitasChart'
-import { Home, Plug, Shirt, DollarSign, ShoppingCart, CreditCard, Settings, ArrowLeft, Utensils, Car, Heart, BookOpen, Briefcase, Gift, Apple, Gamepad2, Plus, TrendingUp, PieChart, ArrowUp, ArrowDown, Search } from 'lucide-react'
+import { Home, Plug, Shirt, DollarSign, ShoppingCart, CreditCard, Settings, ArrowLeft, Utensils, Car, Heart, BookOpen, Briefcase, Gift, Apple, Gamepad2, Plus, TrendingUp, PieChart, ArrowUp, ArrowDown, Search, PiggyBank, Plane, GraduationCap, PawPrint, Pill, Wrench, Wifi, Zap, Monitor, Baby, Banknote, Dumbbell, Music, Building2, Phone, Sparkles, Coffee, Train, Wallet } from 'lucide-react'
 import { Expense, Income, ExpenseCategory, IncomeSource, ExpenseExclusion, IncomeExclusion } from '@/types'
 import { expensesService, incomesService, expenseExclusionService, incomeExclusionService, expenseCategoryService, incomeSourcesService, ApiError } from '@/services'
 import { formatCurrency as formatMoney } from "@/app/terminology/currency";
@@ -245,6 +245,25 @@ export default function DashboardPage() {
       'Gift': Gift,
       'Apple': Apple,
       'Gamepad-2': Gamepad2,
+      'PiggyBank': PiggyBank,
+      'Plane': Plane,
+      'GraduationCap': GraduationCap,
+      'PawPrint': PawPrint,
+      'Pill': Pill,
+      'Wrench': Wrench,
+      'Wifi': Wifi,
+      'Zap': Zap,
+      'Monitor': Monitor,
+      'Baby': Baby,
+      'Banknote': Banknote,
+      'Dumbbell': Dumbbell,
+      'Music': Music,
+      'Building2': Building2,
+      'Phone': Phone,
+      'Sparkles': Sparkles,
+      'Coffee': Coffee,
+      'Train': Train,
+      'Wallet': Wallet,
     }
     const IconComponent = iconMap[iconName] || Home
     return IconComponent
