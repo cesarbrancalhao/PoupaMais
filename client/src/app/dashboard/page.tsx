@@ -1110,7 +1110,7 @@ export default function DashboardPage() {
         )}
       </main>
 
-      <AddExpenseModal isOpen={isModalOpen} onClose={closeModal} type={activeTab} />
+      <AddExpenseModal isOpen={isModalOpen} onClose={closeModal} type={activeTab} defaultMonth={selectedMonth} />
       
       {selectedItem && (
         <EditExpenseModal

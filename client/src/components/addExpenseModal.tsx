@@ -18,6 +18,7 @@ interface AddExpenseModalProps {
   isOpen: boolean
   onClose: () => void
   type: 'expenses' | 'incomes'
+  defaultMonth?: string
 }
 
 interface CalendarProps {
@@ -185,7 +186,7 @@ function Calendar({ selectedDate, onDateSelect }: CalendarProps) {
   )
 }
 
-export default function AddExpenseModal({ isOpen, onClose, type }: AddExpenseModalProps) {
+export default function AddExpenseModal({ isOpen, onClose, type, defaultMonth }: AddExpenseModalProps) {
   const { t } = useLanguage();
   const [name, setName] = useState('')
   const [category, setCategory] = useState('')
@@ -211,8 +212,14 @@ export default function AddExpenseModal({ isOpen, onClose, type }: AddExpenseMod
       setDueDate('')
       setDateError(false)
       setShowError(false)
+    } else if (defaultMonth) {
+      const [month, year] = defaultMonth.split('-')
+      const today = new Date()
+      const isCurrentMonth = parseInt(month) === today.getMonth() + 1 && parseInt(year) === today.getFullYear()
+      const day = isCurrentMonth ? String(today.getDate()).padStart(2, '0') : '01'
+      setDate(`${year}-${month}-${day}`)
     }
-  }, [isOpen])
+  }, [isOpen, defaultMonth])
 
   useEffect(() => {
     const fetchOptions = async () => {
