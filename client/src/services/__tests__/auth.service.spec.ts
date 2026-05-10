@@ -190,17 +190,13 @@ describe('AuthService', () => {
         language: 'portuguese',
         currency: 'real',
       };
-      const authResponse: AuthResponse = {
-        access_token: 'token',
-        user: maliciousUser,
-      };
-
       authService.setAuthDataFromVerification('verify-token', maliciousUser);
 
       const userCall = (Cookies.set as jest.Mock).mock.calls.find(
         (call: string[]) => call[0] === 'user',
       );
-      const storedUser = JSON.parse(userCall[1]);
+      expect(userCall).toBeDefined();
+      const storedUser = JSON.parse(userCall![1]);
       expect(storedUser.name).toBe('&lt;script&gt;alert(&quot;xss&quot;)&lt;&#x2F;script&gt;');
     });
   });

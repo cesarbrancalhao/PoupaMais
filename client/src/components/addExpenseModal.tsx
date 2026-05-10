@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
-import { X, ChevronLeft, ChevronRight, Save } from 'lucide-react'
+import { X, Save } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ExpenseCategory, IncomeSource } from '@/types'
 import { expenseCategoryService } from '@/services/categories.service'
@@ -13,177 +13,13 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useLanguage } from '@/app/terminology/LanguageContext';
 import { addDashboardModal } from '@/app/terminology/language/modals/addDashboard';
 import { common } from '@/app/terminology/language/common';
+import Calendar from '@/components/Calendar';
 
 interface AddExpenseModalProps {
   isOpen: boolean
   onClose: () => void
   type: 'expenses' | 'incomes'
   defaultMonth?: string
-}
-
-interface CalendarProps {
-  selectedDate: string
-  onDateSelect: (date: string) => void
-}
-
-function Calendar({ selectedDate, onDateSelect }: CalendarProps) {
-  const [currentMonth, setCurrentMonth] = useState(new Date())
-  const { language, t } = useLanguage()
-  
-  useEffect(() => {
-    if (selectedDate) {
-      const selectedDateParts = selectedDate.split('-')
-      if (selectedDateParts.length === 3) {
-        const selectedYear = parseInt(selectedDateParts[0], 10)
-        const selectedMonth = parseInt(selectedDateParts[1], 10) - 1
-        if (!isNaN(selectedYear) && !isNaN(selectedMonth)) {
-          setCurrentMonth(new Date(selectedYear, selectedMonth, 1))
-        }
-      }
-    }
-  }, [selectedDate])
-  
-  const dayNames = ['S', 'M', 'T', 'W', 'T', 'F', 'S']
-  
-  const getDaysInMonth = (date: Date) => {
-    const year = date.getFullYear()
-    const month = date.getMonth()
-    const firstDay = new Date(year, month, 1)
-    const lastDay = new Date(year, month + 1, 0)
-    const daysInMonth = lastDay.getDate()
-    const startingDayOfWeek = firstDay.getDay()
-    
-    const days = []
-    
-    for (let i = 0; i < startingDayOfWeek; i++) {
-      days.push(null)
-    }
-    
-    for (let day = 1; day <= daysInMonth; day++) {
-      days.push(day)
-    }
-    
-    return days
-  }
-  
-  const navigateMonth = (direction: 'prev' | 'next') => {
-    setCurrentMonth(prev => {
-      const newMonth = new Date(prev)
-      if (direction === 'prev') {
-        newMonth.setMonth(prev.getMonth() - 1)
-      } else {
-        newMonth.setMonth(prev.getMonth() + 1)
-      }
-      return newMonth
-    })
-  }
-  
-  const handleDateClick = (day: number) => {
-    const year = currentMonth.getFullYear()
-    const month = currentMonth.getMonth()
-    const dateString = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`
-    onDateSelect(dateString)
-  }
-  
-  const days = getDaysInMonth(currentMonth)
-  
-  const monthNames = addDashboardModal.calendarMonths[language]
-  const currentMonthLabel = `${monthNames[currentMonth.getMonth()]} ${currentMonth.getFullYear()}`
-  const infoTextColor = 'text-gray-500'
-  const highlightTextColor = 'text-gray-800'
-
-  const formatSelectedDate = (value: string) => {
-    const parts = value.split('-')
-    if (parts.length !== 3) return value
-    const [year, month, day] = parts
-    return `${day}/${month}/${year}`
-  }
-
-  const selectedDateLabel = selectedDate
-    ? formatSelectedDate(selectedDate)
-    : t(addDashboardModal.calendarNoDateSelected)
-
-  return (
-    <div
-      className={`
-        rounded-lg p-4 border shadow-lg transition-colors
-        ${'bg-white border-gray-200 text-gray-800'
-        }
-      `}
-    >
-      <div className="flex items-center justify-between mb-4 gap-4">
-        <div>
-          <p className={`text-lg font-semibold ${highlightTextColor}`}>
-            {currentMonthLabel}
-          </p>
-          <p className={`text-xs mt-2 ${infoTextColor}`}>
-            {t(addDashboardModal.calendarSelectedDateLabel)}: {selectedDateLabel}
-          </p>
-        </div>
-
-        <div className="flex items-center gap-2 self-start">
-          <button
-            type="button"
-            onClick={() => navigateMonth('prev')}
-            className={`
-              p-1 rounded transition
-              ${'text-gray-600 hover:bg-gray-100'}
-            `}
-          >
-            <ChevronLeft className="w-4 h-4" />
-          </button>
-
-          <button
-            type="button"
-            onClick={() => navigateMonth('next')}
-            className={`
-              p-1 rounded transition
-              ${'text-gray-600 hover:bg-gray-100'}
-            `}
-          >
-            <ChevronRight className="w-4 h-4" />
-          </button>
-        </div>
-      </div>
-      
-      <div className="grid grid-cols-7 gap-1 mb-2">
-        {dayNames.map((day, index) => (
-          <div key={index} className={`text-center text-sm font-medium ${
-            'text-gray-600'
-          }`}
-          >
-            {day}
-          </div>
-        ))}
-      </div>
-      
-      <div className="grid grid-cols-7 gap-1">
-        {days.map((day, index) => {
-          if (!day) {
-            return <div key={index} className="h-8"></div>
-          }
-          
-          const currentDateString = `${currentMonth.getFullYear()}-${String(currentMonth.getMonth() + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`
-          const isSelected = selectedDate === currentDateString
-          
-          return (
-            <button
-              key={index}
-              type="button"
-              onClick={() => handleDateClick(day)}
-              className={`h-8 w-8 flex items-center justify-center text-sm rounded-full transition-colors ${
-                isSelected
-                    ? 'bg-blue-600 text-white'
-                    : 'text-gray-700 hover:bg-gray-100'
-              }`}
-            >
-              {day}
-            </button>
-          )
-        })}
-      </div>
-    </div>
-  )
 }
 
 export default function AddExpenseModal({ isOpen, onClose, type, defaultMonth }: AddExpenseModalProps) {
@@ -448,6 +284,7 @@ export default function AddExpenseModal({ isOpen, onClose, type, defaultMonth }:
                 <Calendar
                   selectedDate={date}
                   onDateSelect={setDate}
+                  inline
                 />
                 {dateError && <p className="text-xs text-red-500 mt-1">{t(addDashboardModal.dateRequired)}</p>}
               </div>
@@ -458,6 +295,7 @@ export default function AddExpenseModal({ isOpen, onClose, type, defaultMonth }:
                   <Calendar
                     selectedDate={dueDate}
                     onDateSelect={setDueDate}
+                    inline
                   />
                 </div>
               )}

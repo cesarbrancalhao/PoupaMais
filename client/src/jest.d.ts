@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+// Mirrors upstream jest-mock generic constraints, which use `any`.
 declare const jest: import('@jest/globals').jest;
 
 declare namespace jest {

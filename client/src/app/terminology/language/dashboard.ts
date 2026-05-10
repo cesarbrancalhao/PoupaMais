@@ -124,12 +124,7 @@ export const dashboard = {
     en: 'Click on Add Income to start!',
     es: 'Haga clic en Agregar Ingreso para comenzar!',
   },
-
-  balanceEvolution: {
-    pt: 'Evolução do Saldo (7 meses)',
-    en: 'Balance Evolution (7 months)',
-    es: 'Evolución del Saldo (7 meses)',
-  },
+  
   expensesByCategory: {
     pt: 'Despesas por Categoria',
     en: 'Expenses by Category',

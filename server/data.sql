@@ -129,6 +129,10 @@ CREATE INDEX idx_income_exclusion_user_id ON income_exclusion(user_id);
 CREATE INDEX idx_goal_user_id ON goal(user_id);
 CREATE INDEX idx_goal_contribution_goal_id ON goal_contribution(goal_id);
 CREATE INDEX idx_goal_contribution_user_id ON goal_contribution(user_id);
+CREATE INDEX idx_expense_date ON expense(date);
+CREATE INDEX idx_income_date ON income(date);
+CREATE INDEX idx_expense_category_id ON expense(expense_category_id);
+CREATE INDEX idx_goal_contribution_date ON goal_contribution(date);
 
 CREATE OR REPLACE FUNCTION update_goal_current_value()
 RETURNS TRIGGER AS $$

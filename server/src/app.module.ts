@@ -11,6 +11,7 @@ import { ExpensesModule } from './expenses/expenses.module';
 import { IncomesModule } from './incomes/incomes.module';
 import { GoalsModule } from './goals/goals.module';
 import { GoalContributionModule } from './goal-contribution/goal-contribution.module';
+import { StatisticsModule } from './statistics/statistics.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { GoalContributionModule } from './goal-contribution/goal-contribution.mo
     IncomesModule,
     GoalsModule,
     GoalContributionModule,
+    StatisticsModule,
   ],
   providers: [
     {

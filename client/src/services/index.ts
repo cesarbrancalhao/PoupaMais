@@ -8,3 +8,4 @@ export * from './income-sources.service';
 export * from './goals.service';
 export * from './goal-contribution.service';
 export * from './auth.service';
+export * from './statistics.service';
