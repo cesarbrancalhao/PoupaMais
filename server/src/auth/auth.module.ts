@@ -9,6 +9,7 @@ import { AuthController } from './auth.controller';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { LocalStrategy } from './strategies/local.strategy';
 import { EmailModule } from '../email/email.module';
+import { EmailRateLimiterService } from '../common/rate-limit/email-rate-limiter.service';
 
 @Module({
   imports: [
@@ -26,7 +27,14 @@ import { EmailModule } from '../email/email.module';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, VerificationService, PasswordResetService, JwtStrategy, LocalStrategy],
+  providers: [
+    AuthService,
+    VerificationService,
+    PasswordResetService,
+    JwtStrategy,
+    LocalStrategy,
+    EmailRateLimiterService,
+  ],
   exports: [AuthService],
 })
 export class AuthModule {}

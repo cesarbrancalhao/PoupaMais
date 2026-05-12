@@ -1,4 +1,4 @@
-import { IsOptional, IsString, IsInt, Min, Max } from 'class-validator';
+import { IsOptional, IsString, IsInt, Min, Max, Matches } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 
@@ -36,13 +36,15 @@ export class StatisticsQueryDto {
   @IsString()
   compareTo?: 'prev-month' | 'prev-year';
 
-  @ApiPropertyOptional({ description: 'Filter by category IDs (comma-separated)' })
+  @ApiPropertyOptional({ description: 'Filter by category IDs (comma-separated positive integers)' })
   @IsOptional()
   @IsString()
+  @Matches(/^\d+(,\d+)*$/, { message: 'categories must be a comma-separated list of positive integers' })
   categories?: string;
 
-  @ApiPropertyOptional({ description: 'Filter by goal IDs (comma-separated)' })
+  @ApiPropertyOptional({ description: 'Filter by goal IDs (comma-separated positive integers)' })
   @IsOptional()
   @IsString()
+  @Matches(/^\d+(,\d+)*$/, { message: 'goals must be a comma-separated list of positive integers' })
   goals?: string;
 }

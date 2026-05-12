@@ -2,6 +2,11 @@
 
 import { useState } from "react";
 import { passwordRecoveryModal } from "@/app/terminology/language/modals/passwordRecovery";
+import {
+  PASSWORD_COMPLEXITY_MESSAGE,
+  PASSWORD_COMPLEXITY_REGEX,
+  PASSWORD_MIN_LENGTH,
+} from "@/utils/password";
 
 interface NewPasswordModalProps {
   isOpen: boolean;
@@ -32,8 +37,13 @@ export default function NewPasswordModal({
       return;
     }
 
-    if (newPassword.length < 8) {
+    if (newPassword.length < PASSWORD_MIN_LENGTH) {
       setError(t(passwordRecoveryModal.passwordTooShort));
+      return;
+    }
+
+    if (!PASSWORD_COMPLEXITY_REGEX.test(newPassword)) {
+      setError(PASSWORD_COMPLEXITY_MESSAGE);
       return;
     }
 

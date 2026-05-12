@@ -1,12 +1,15 @@
 import { IsString, IsNumber, IsDateString, IsOptional, Min } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { SanitizeText } from '../../common/sanitization/sanitize';
 
 export class CreateGoalDto {
   @ApiProperty({ example: 'Trip to Europe' })
+  @SanitizeText()
   @IsString()
   name: string;
 
   @ApiProperty({ example: 'Planning a trip to Europe', required: false })
+  @SanitizeText()
   @IsString()
   @IsOptional()
   description?: string;

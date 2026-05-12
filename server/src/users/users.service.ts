@@ -1,10 +1,14 @@
 import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { DatabaseService } from '../database/database.service';
+import { AuditLogService } from '../common/audit/audit-log.service';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
-  constructor(private databaseService: DatabaseService) {}
+  constructor(
+    private databaseService: DatabaseService,
+    private auditLog: AuditLogService,
+  ) {}
 
   async findById(id: number) {
     const result = await this.databaseService.query(
@@ -68,6 +72,12 @@ export class UsersService {
     const isPasswordValid = await bcrypt.compare(currentPassword, user.password);
 
     if (!isPasswordValid) {
+      this.auditLog.record({
+        event: 'password_changed',
+        userId,
+        outcome: 'failure',
+        reason: 'invalid_current_password',
+      });
       throw new UnauthorizedException('Current password is incorrect');
     }
 
@@ -77,6 +87,12 @@ export class UsersService {
       'UPDATE users SET password = $1 WHERE id = $2',
       [hashedPassword, userId],
     );
+
+    this.auditLog.record({
+      event: 'password_changed',
+      userId,
+      outcome: 'success',
+    });
 
     return { message: 'Password changed successfully' };
   }
@@ -93,6 +109,13 @@ export class UsersService {
       if (result.rowCount === 0) throw new NotFoundException('User not found');
 
       await client.query('COMMIT');
+
+      this.auditLog.record({
+        event: 'account_deleted',
+        userId,
+        outcome: 'success',
+      });
+
       return { message: 'Account deleted successfully' };
     } catch (error) {
       await client.query('ROLLBACK');

@@ -12,6 +12,8 @@ import { IncomesModule } from './incomes/incomes.module';
 import { GoalsModule } from './goals/goals.module';
 import { GoalContributionModule } from './goal-contribution/goal-contribution.module';
 import { StatisticsModule } from './statistics/statistics.module';
+import { AuditModule } from './common/audit/audit.module';
+import { CsrfGuard } from './auth/guards/csrf.guard';
 
 @Module({
   imports: [
@@ -23,6 +25,7 @@ import { StatisticsModule } from './statistics/statistics.module';
       ttl: 60000,
       limit: 100,
     }]),
+    AuditModule,
     DatabaseModule,
     AuthModule,
     UsersModule,
@@ -38,6 +41,10 @@ import { StatisticsModule } from './statistics/statistics.module';
     {
       provide: APP_GUARD,
       useClass: ThrottlerGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: CsrfGuard,
     },
   ],
 })

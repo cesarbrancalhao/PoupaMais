@@ -1,6 +1,7 @@
-import { Controller, Post, Body, UseGuards, Request } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { Controller, Post, Get, Body, UseGuards, Request, Res, HttpCode } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { Throttle } from '@nestjs/throttler';
+import type { Response, Request as ExpressRequest } from 'express';
 import { AuthService } from './auth.service';
 import { VerificationService } from './verification.service';
 import { PasswordResetService } from './password-reset.service';
@@ -11,6 +12,10 @@ import { RequestPasswordResetDto } from './dto/request-password-reset.dto';
 import { VerifyPasswordResetDto } from './dto/verify-password-reset.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
 import { LocalAuthGuard } from './guards/local-auth.guard';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { setAuthCookies, clearAuthCookies } from './cookies';
+import { SkipCsrf } from './guards/csrf.guard';
+import { AuditLogService } from '../common/audit/audit-log.service';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -19,8 +24,10 @@ export class AuthController {
     private authService: AuthService,
     private verificationService: VerificationService,
     private passwordResetService: PasswordResetService,
+    private auditLog: AuditLogService,
   ) {}
 
+  @SkipCsrf()
   @Throttle({ default: { limit: 5, ttl: 60000 } })
   @Post('register')
   @ApiOperation({ summary: 'Start registration - sends verification code by email' })
@@ -36,29 +43,68 @@ export class AuthController {
     return { message: 'Verification code sent to email' };
   }
 
+  @SkipCsrf()
   @Throttle({ default: { limit: 10, ttl: 60000 } })
   @Post('verify')
   @ApiOperation({ summary: 'Verify code and complete registration' })
   @ApiResponse({ status: 200, description: 'User verified and registered successfully' })
   @ApiResponse({ status: 400, description: 'Invalid or expired code' })
-  async verifyCode(@Body() verifyCodeDto: VerifyCodeDto) {
+  async verifyCode(
+    @Body() verifyCodeDto: VerifyCodeDto,
+    @Request() req: ExpressRequest,
+    @Res({ passthrough: true }) res: Response,
+  ) {
     const user = await this.verificationService.verifyCode(
       verifyCodeDto.email,
       verifyCodeDto.code,
     );
-    return this.authService.login(user);
+    const result = await this.authService.login(user);
+    const csrfToken = setAuthCookies(res, req, result.access_token);
+    return { ...result, csrf_token: csrfToken };
   }
 
+  @SkipCsrf()
   @Throttle({ default: { limit: 10, ttl: 60000 } })
   @UseGuards(LocalAuthGuard)
   @Post('login')
   @ApiOperation({ summary: 'User login' })
   @ApiResponse({ status: 200, description: 'Login successful' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
-  async login(@Body() loginDto: LoginDto, @Request() req) {
-    return this.authService.login(req.user);
+  async login(
+    @Body() loginDto: LoginDto,
+    @Request() req,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const result = await this.authService.login(req.user);
+    const csrfToken = setAuthCookies(res, req, result.access_token);
+    return { ...result, csrf_token: csrfToken };
   }
 
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @Get('me')
+  @ApiOperation({ summary: 'Get current authenticated user from session' })
+  @ApiResponse({ status: 200, description: 'Current user returned' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  async me(@Request() req) {
+    return this.authService.getUserById(req.user.userId);
+  }
+
+  @SkipCsrf()
+  @Post('logout')
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Clear authentication cookies' })
+  @ApiResponse({ status: 200, description: 'Logged out' })
+  logout(@Request() req: ExpressRequest, @Res({ passthrough: true }) res: Response) {
+    const cookies = (req as ExpressRequest & { cookies?: Record<string, string> }).cookies || {};
+    clearAuthCookies(res, req);
+    if (cookies.token) {
+      this.auditLog.record({ event: 'logout', outcome: 'success' });
+    }
+    return { message: 'Logged out' };
+  }
+
+  @SkipCsrf()
   @Throttle({ default: { limit: 3, ttl: 60000 } })
   @Post('request-password-reset')
   @ApiOperation({ summary: 'Request password reset - sends code by email' })
@@ -69,6 +115,7 @@ export class AuthController {
     return { message: 'Recovery code sent to email' };
   }
 
+  @SkipCsrf()
   @Throttle({ default: { limit: 10, ttl: 60000 } })
   @Post('verify-reset-code')
   @ApiOperation({ summary: 'Verify password reset code' })
@@ -82,6 +129,7 @@ export class AuthController {
     return { message: 'Code is valid' };
   }
 
+  @SkipCsrf()
   @Throttle({ default: { limit: 5, ttl: 60000 } })
   @Post('reset-password')
   @ApiOperation({ summary: 'Reset password with verification code' })

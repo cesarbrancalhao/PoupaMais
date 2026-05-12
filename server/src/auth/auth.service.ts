@@ -3,6 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { DatabaseService } from '../database/database.service';
 import { User } from '../common/interfaces/user.interface';
+import { AuditLogService } from '../common/audit/audit-log.service';
 
 type Language = 'portuguese' | 'english' | 'spanish';
 
@@ -59,7 +60,19 @@ export class AuthService {
   constructor(
     private databaseService: DatabaseService,
     private jwtService: JwtService,
+    private auditLog: AuditLogService,
   ) {}
+
+  async getUserById(userId: number) {
+    const result = await this.databaseService.query(
+      'SELECT id, name, email, language, currency, created_at FROM users WHERE id = $1',
+      [userId],
+    );
+    if (result.rows.length === 0) {
+      throw new UnauthorizedException('User not found');
+    }
+    return result.rows[0];
+  }
 
   async validateUser(email: string, password: string): Promise<Omit<User, 'password'> | null> {
     const result = await this.databaseService.query(
@@ -68,6 +81,12 @@ export class AuthService {
     );
 
     if (result.rows.length === 0) {
+      this.auditLog.record({
+        event: 'login_failure',
+        email,
+        outcome: 'failure',
+        reason: 'user_not_found',
+      });
       return null;
     }
 
@@ -75,6 +94,13 @@ export class AuthService {
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (!isPasswordValid) {
+      this.auditLog.record({
+        event: 'login_failure',
+        email,
+        userId: user.id,
+        outcome: 'failure',
+        reason: 'invalid_password',
+      });
       return null;
     }
 
@@ -84,8 +110,17 @@ export class AuthService {
 
   async login(user: Omit<User, 'password'>) {
     const payload = { email: user.email, sub: user.id };
+    const access_token = this.jwtService.sign(payload);
+
+    this.auditLog.record({
+      event: 'login_success',
+      email: user.email,
+      userId: user.id,
+      outcome: 'success',
+    });
+
     return {
-      access_token: this.jwtService.sign(payload),
+      access_token,
       user: {
         id: user.id,
         name: user.name,

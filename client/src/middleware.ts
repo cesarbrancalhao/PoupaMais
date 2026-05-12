@@ -25,11 +25,12 @@ function isTokenValid(token: string): boolean {
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const token = request.cookies.get('token')?.value;
+  const userCookie = request.cookies.get('user')?.value;
 
   const isPublicPath = publicPaths.some(path => pathname === path);
   const isProtectedPath = protectedPaths.some(path => pathname === path || pathname.startsWith(`${path}/`));
 
-  const isAuthenticated = token && isTokenValid(token);
+  const isAuthenticated = !!userCookie && !!token && isTokenValid(token);
 
   if (isProtectedPath && !isAuthenticated) {
     return NextResponse.redirect(new URL('/auth', request.url));

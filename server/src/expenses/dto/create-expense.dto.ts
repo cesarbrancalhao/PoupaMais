@@ -1,8 +1,10 @@
 import { IsString, IsNumber, IsBoolean, IsDateString, IsOptional, Min } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { SanitizeText } from '../../common/sanitization/sanitize';
 
 export class CreateExpenseDto {
   @ApiProperty({ example: 'Supermarket' })
+  @SanitizeText()
   @IsString()
   name: string;
 
