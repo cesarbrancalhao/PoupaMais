@@ -3,6 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { AuthService } from '../src/auth/auth.service';
 import { DatabaseService } from '../src/database/database.service';
+import { AuditLogService } from '../src/common/audit/audit-log.service';
 
 describe('AuthService', () => {
   let authService: AuthService;
@@ -34,11 +35,16 @@ describe('AuthService', () => {
       sign: jest.fn().mockReturnValue('mock.jwt.token'),
     };
 
+    const mockAuditLogService = {
+      record: jest.fn(),
+    };
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         AuthService,
         { provide: DatabaseService, useValue: mockDatabaseService },
         { provide: JwtService, useValue: mockJwtService },
+        { provide: AuditLogService, useValue: mockAuditLogService },
       ],
     }).compile();
 

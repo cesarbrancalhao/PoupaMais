@@ -2,6 +2,9 @@ import Cookies from 'js-cookie';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api/v1';
 
+const CSRF_COOKIE_NAME = 'csrf_token';
+const CSRF_HEADER_NAME = 'X-CSRF-Token';
+
 interface ApiError extends Error {
   status: number;
 }
@@ -13,12 +16,19 @@ class ApiService {
     this.baseURL = baseURL;
   }
 
-  private getAuthHeaders(): HeadersInit {
-    const token = Cookies.get('token');
-    return {
+  private buildHeaders(method: string): HeadersInit {
+    const headers: Record<string, string> = {
       'Content-Type': 'application/json',
-      ...(token && { 'Authorization': `Bearer ${token}` }),
     };
+
+    if (!['GET', 'HEAD', 'OPTIONS'].includes(method.toUpperCase())) {
+      const csrf = Cookies.get(CSRF_COOKIE_NAME);
+      if (csrf) {
+        headers[CSRF_HEADER_NAME] = csrf;
+      }
+    }
+
+    return headers;
   }
 
   private async handleError(response: Response): Promise<never> {
@@ -45,7 +55,8 @@ class ApiService {
   async get<T>(endpoint: string): Promise<T> {
     const response = await fetch(`${this.baseURL}${endpoint}`, {
       method: 'GET',
-      headers: this.getAuthHeaders(),
+      headers: this.buildHeaders('GET'),
+      credentials: 'include',
     });
 
     if (!response.ok) {
@@ -58,7 +69,8 @@ class ApiService {
   async post<T>(endpoint: string, data: unknown): Promise<T> {
     const response = await fetch(`${this.baseURL}${endpoint}`, {
       method: 'POST',
-      headers: this.getAuthHeaders(),
+      headers: this.buildHeaders('POST'),
+      credentials: 'include',
       body: JSON.stringify(data),
     });
 
@@ -72,7 +84,8 @@ class ApiService {
   async put<T>(endpoint: string, data: unknown): Promise<T> {
     const response = await fetch(`${this.baseURL}${endpoint}`, {
       method: 'PUT',
-      headers: this.getAuthHeaders(),
+      headers: this.buildHeaders('PUT'),
+      credentials: 'include',
       body: JSON.stringify(data),
     });
 
@@ -86,7 +99,8 @@ class ApiService {
   async delete<T>(endpoint: string): Promise<T> {
     const response = await fetch(`${this.baseURL}${endpoint}`, {
       method: 'DELETE',
-      headers: this.getAuthHeaders(),
+      headers: this.buildHeaders('DELETE'),
+      credentials: 'include',
     });
 
     if (!response.ok) {

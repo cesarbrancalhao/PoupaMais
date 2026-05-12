@@ -27,7 +27,7 @@ describe('Client-Server API Field Name Compatibility', () => {
       const dto = plainToInstance(RegisterDto, {
         name: 'John Doe',
         email: 'user@example.com',
-        password: 'password123',
+        password: 'Passw0rd!',
         language: 'english',
       });
       const errors = await validate(dto);
@@ -38,17 +38,27 @@ describe('Client-Server API Field Name Compatibility', () => {
       const dto = plainToInstance(RegisterDto, {
         name: 'John',
         email: 'user@example.com',
-        password: 'password123',
+        password: 'Passw0rd!',
       });
       const errors = await validate(dto);
       expect(errors).toHaveLength(0);
+    });
+
+    it('should reject weak password without complexity', async () => {
+      const dto = plainToInstance(RegisterDto, {
+        name: 'John',
+        email: 'user@example.com',
+        password: 'password123',
+      });
+      const errors = await validate(dto);
+      expect(errors.length).toBeGreaterThan(0);
     });
 
     it('should reject Portuguese field nome', async () => {
       const dto = plainToInstance(RegisterDto, {
         nome: 'Joao',
         email: 'user@example.com',
-        password: 'password123',
+        password: 'Passw0rd!',
       });
       const errors = await validate(dto);
       expect(errors).toHaveLength(1);
@@ -59,7 +69,7 @@ describe('Client-Server API Field Name Compatibility', () => {
     it('should accept English field names (email, password)', async () => {
       const dto = plainToInstance(LoginDto, {
         email: 'user@example.com',
-        password: 'password123',
+        password: 'Passw0rd!',
       });
       const errors = await validate(dto);
       expect(errors).toHaveLength(0);
@@ -112,7 +122,7 @@ describe('Client-Server API Field Name Compatibility', () => {
       const dto = plainToInstance(ResetPasswordDto, {
         email: 'user@example.com',
         code: 'ABC123',
-        newPassword: 'newpassword123',
+        newPassword: 'NewPassw0rd!',
       });
       const errors = await validate(dto);
       expect(errors).toHaveLength(0);
@@ -122,11 +132,21 @@ describe('Client-Server API Field Name Compatibility', () => {
       const dto = plainToInstance(ResetPasswordDto, {
         email: 'user@example.com',
         code: 'ABC123',
-        newPassword: 'short',
+        newPassword: 'Sh0rt!',
       });
       const errors = await validate(dto);
       expect(errors).toHaveLength(1);
       expect(errors[0].constraints?.minLength).toBeDefined();
+    });
+
+    it('should reject newPassword without complexity', async () => {
+      const dto = plainToInstance(ResetPasswordDto, {
+        email: 'user@example.com',
+        code: 'ABC123',
+        newPassword: 'alllowercase',
+      });
+      const errors = await validate(dto);
+      expect(errors.length).toBeGreaterThan(0);
     });
   });
 
@@ -182,11 +202,20 @@ describe('Client-Server API Field Name Compatibility', () => {
   describe('ChangePasswordDto', () => {
     it('should accept English field names (currentPassword, newPassword)', async () => {
       const dto = plainToInstance(ChangePasswordDto, {
-        currentPassword: '12345678',
-        newPassword: '87654321',
+        currentPassword: 'OldPassw0rd!',
+        newPassword: 'NewPassw0rd!',
       });
       const errors = await validate(dto);
       expect(errors).toHaveLength(0);
+    });
+
+    it('should reject newPassword without complexity', async () => {
+      const dto = plainToInstance(ChangePasswordDto, {
+        currentPassword: 'OldPassw0rd!',
+        newPassword: 'allllowercase',
+      });
+      const errors = await validate(dto);
+      expect(errors.length).toBeGreaterThan(0);
     });
   });
 });

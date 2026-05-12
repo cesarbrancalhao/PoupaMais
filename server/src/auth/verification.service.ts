@@ -1,8 +1,11 @@
 import { Injectable, BadRequestException, UnauthorizedException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
+import { randomInt } from 'crypto';
 import { DatabaseService } from '../database/database.service';
 import { EmailService } from '../email/email.service';
 import { User } from '../common/interfaces/user.interface';
+import { EmailRateLimiterService } from '../common/rate-limit/email-rate-limiter.service';
+import { AuditLogService } from '../common/audit/audit-log.service';
 
 type Language = 'portuguese' | 'english' | 'spanish';
 
@@ -11,18 +14,22 @@ export class VerificationService {
   constructor(
     private databaseService: DatabaseService,
     private emailService: EmailService,
+    private emailRateLimiter: EmailRateLimiterService,
+    private auditLog: AuditLogService,
   ) {}
 
   private generateOTP(): string {
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     let code = '';
     for (let i = 0; i < 6; i++) {
-      code += chars.charAt(Math.floor(Math.random() * chars.length));
+      code += chars.charAt(randomInt(0, chars.length));
     }
     return code;
   }
 
   async createVerification(name: string, email: string, password: string, language: Language): Promise<void> {
+    this.emailRateLimiter.enforce('verification', email);
+
     const existingUser = await this.databaseService.query(
       'SELECT id FROM users WHERE email = $1',
       [email],
@@ -47,6 +54,12 @@ export class VerificationService {
     );
 
     await this.emailService.sendVerificationEmail(email, code, name, language);
+
+    this.auditLog.record({
+      event: 'verification_code_sent',
+      email,
+      outcome: 'success',
+    });
   }
 
   async verifyCode(email: string, code: string): Promise<Omit<User, 'password'>> {
@@ -76,6 +89,12 @@ export class VerificationService {
         'UPDATE verification SET attempts = attempts + 1 WHERE id = $1',
         [verification.id],
       );
+      this.auditLog.record({
+        event: 'verification_code_failed',
+        email,
+        outcome: 'failure',
+        reason: 'invalid_code',
+      });
       throw new UnauthorizedException('Invalid code');
     }
 
@@ -157,6 +176,13 @@ export class VerificationService {
       await client.query('DELETE FROM verification WHERE id = $1', [verification.id]);
 
       await client.query('COMMIT');
+
+      this.auditLog.record({
+        event: 'registration_completed',
+        email: verification.email,
+        userId: newUser.id,
+        outcome: 'success',
+      });
 
       return newUser as Omit<User, 'password'>;
     } catch (error) {

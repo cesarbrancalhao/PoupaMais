@@ -1,25 +1,32 @@
 import { Injectable, BadRequestException, UnauthorizedException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
+import { randomInt } from 'crypto';
 import { DatabaseService } from '../database/database.service';
 import { EmailService } from '../email/email.service';
+import { EmailRateLimiterService } from '../common/rate-limit/email-rate-limiter.service';
+import { AuditLogService } from '../common/audit/audit-log.service';
 
 @Injectable()
 export class PasswordResetService {
   constructor(
     private databaseService: DatabaseService,
     private emailService: EmailService,
+    private emailRateLimiter: EmailRateLimiterService,
+    private auditLog: AuditLogService,
   ) {}
 
   private generateOTP(): string {
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     let code = '';
     for (let i = 0; i < 6; i++) {
-      code += chars.charAt(Math.floor(Math.random() * chars.length));
+      code += chars.charAt(randomInt(0, chars.length));
     }
     return code;
   }
 
   async requestPasswordReset(email: string): Promise<void> {
+    this.emailRateLimiter.enforce('password-reset', email);
+
     const userResult = await this.databaseService.query(
       'SELECT id, name FROM users WHERE email = $1',
       [email],
@@ -52,6 +59,13 @@ export class PasswordResetService {
     );
 
     await this.emailService.sendPasswordResetEmail(email, code, user.name, language);
+
+    this.auditLog.record({
+      event: 'password_reset_code_sent',
+      email,
+      userId: user.id,
+      outcome: 'success',
+    });
   }
 
   async verifyResetCode(email: string, code: string): Promise<boolean> {
@@ -81,6 +95,12 @@ export class PasswordResetService {
         'UPDATE password_reset SET attempts = attempts + 1 WHERE id = $1',
         [recovery.id],
       );
+      this.auditLog.record({
+        event: 'password_reset_code_failed',
+        email,
+        outcome: 'failure',
+        reason: 'invalid_code',
+      });
       throw new UnauthorizedException('Invalid code');
     }
 
@@ -111,5 +131,12 @@ export class PasswordResetService {
       'DELETE FROM password_reset WHERE id = $1',
       [recovery.id],
     );
+
+    this.auditLog.record({
+      event: 'password_reset_completed',
+      email,
+      userId: recovery.user_id,
+      outcome: 'success',
+    });
   }
 }

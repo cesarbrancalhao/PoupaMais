@@ -10,6 +10,8 @@ export class EmailService {
   constructor(private configService: ConfigService) {
     const smtpPort = this.configService.get<number>('SMTP_PORT');
     const smtpSecure = this.configService.get<string>('SMTP_SECURE') === 'true';
+    const rejectUnauthorized =
+      this.configService.get<string>('SMTP_TLS_REJECT_UNAUTHORIZED') !== 'false';
 
     this.transporter = nodemailer.createTransport({
       host: this.configService.get<string>('SMTP_HOST'),
@@ -20,7 +22,7 @@ export class EmailService {
         pass: this.configService.get<string>('SMTP_PASS'),
       },
       tls: {
-        rejectUnauthorized: false,
+        rejectUnauthorized,
       },
     });
   }

@@ -1,9 +1,14 @@
 import Cookies from 'js-cookie';
 import { apiService } from './api';
 import { LoginRequest, RegisterRequest, AuthResponse, User } from '../types/auth';
+import {
+  PASSWORD_COMPLEXITY_MESSAGE,
+  PASSWORD_COMPLEXITY_REGEX,
+  PASSWORD_MIN_LENGTH,
+} from '../utils/password';
 
-const TOKEN_KEY = 'token';
 const USER_KEY = 'user';
+const CSRF_COOKIE_NAME = 'csrf_token';
 
 class AuthService {
   async register(data: RegisterRequest): Promise<{ message: string }> {
@@ -20,8 +25,8 @@ class AuthService {
     }
   }
 
-  setAuthDataFromVerification(token: string, user: AuthResponse['user']): void {
-    this.setAuthData(token, user);
+  setAuthDataFromVerification(_token: string, user: AuthResponse['user']): void {
+    this.setUserCookie(user);
   }
 
   async login(data: LoginRequest): Promise<AuthResponse> {
@@ -30,7 +35,7 @@ class AuthService {
 
       const response = await apiService.post<AuthResponse>('/auth/login', data);
 
-      this.setAuthData(response.access_token, response.user);
+      this.setUserCookie(response.user);
 
       return response;
     } catch (error) {
@@ -38,13 +43,14 @@ class AuthService {
     }
   }
 
-  logout(): void {
-    Cookies.remove(TOKEN_KEY);
+  async logout(): Promise<void> {
+    try {
+      await apiService.post('/auth/logout', {});
+    } catch {
+      /* ignore network errors on logout */
+    }
     Cookies.remove(USER_KEY);
-  }
-
-  getToken(): string | null {
-    return Cookies.get(TOKEN_KEY) || null;
+    Cookies.remove(CSRF_COOKIE_NAME);
   }
 
   getUser(): User | null {
@@ -53,65 +59,39 @@ class AuthService {
       try {
         return JSON.parse(userStr) as User;
       } catch {
-        this.logout();
+        Cookies.remove(USER_KEY);
         return null;
       }
     }
     return null;
   }
 
-  isAuthenticated(): boolean {
-    const token = this.getToken();
-    if (!token) return false;
-
+  async refreshUser(): Promise<User | null> {
     try {
-      const payload = this.parseJwt(token);
-      if (payload.exp) {
-        const isExpired = Date.now() >= payload.exp * 1000;
-        if (isExpired) {
-          this.logout();
-          return false;
-        }
-      }
-      return true;
+      const user = await apiService.get<User>('/auth/me');
+      this.setUserCookie(user);
+      return user;
     } catch {
-      this.logout();
-      return false;
+      Cookies.remove(USER_KEY);
+      Cookies.remove(CSRF_COOKIE_NAME);
+      return null;
     }
   }
 
-  private setAuthData(token: string, user: User): void {
-    const sanitizedUser = this.sanitizeUser(user);
+  isAuthenticated(): boolean {
+    return !!this.getUser();
+  }
 
-    Cookies.set(TOKEN_KEY, token, {
-      expires: 7,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      path: '/'
-    });
+  private setUserCookie(user: User): void {
+    const sanitizedUser = this.sanitizeUser(user);
+    const secure = process.env.NODE_ENV === 'production';
 
     Cookies.set(USER_KEY, JSON.stringify(sanitizedUser), {
       expires: 7,
-      secure: process.env.NODE_ENV === 'production',
+      secure,
       sameSite: 'strict',
-      path: '/'
+      path: '/',
     });
-  }
-
-  private parseJwt(token: string): { exp?: number; [key: string]: unknown } {
-    try {
-      const base64Url = token.split('.')[1];
-      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-      const jsonPayload = decodeURIComponent(
-        atob(base64)
-          .split('')
-          .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
-          .join('')
-      );
-      return JSON.parse(jsonPayload);
-    } catch {
-      throw new Error('Invalid token format');
-    }
   }
 
   private sanitizeUser(user: User): User {
@@ -142,8 +122,11 @@ class AuthService {
   }
 
   private validatePassword(password: string): void {
-    if (!password || password.length < 6) {
-      throw new Error('Password must be at least 6 characters');
+    if (!password || password.length < PASSWORD_MIN_LENGTH) {
+      throw new Error(`Password must be at least ${PASSWORD_MIN_LENGTH} characters`);
+    }
+    if (!PASSWORD_COMPLEXITY_REGEX.test(password)) {
+      throw new Error(PASSWORD_COMPLEXITY_MESSAGE);
     }
   }
 

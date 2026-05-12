@@ -1,8 +1,10 @@
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe, Logger } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import helmet from 'helmet';
 import { AppModule } from './app.module';
 import { AllExceptionsFilter } from './common/filters/http-exception.filter';
+import cookieParser = require('cookie-parser');
 
 async function bootstrap() {
   const logger = new Logger('Bootstrap');
@@ -14,6 +16,9 @@ async function bootstrap() {
   });
 
   const app = await NestFactory.create(AppModule);
+
+  app.use(helmet());
+  app.use(cookieParser(process.env.COOKIE_SECRET));
 
   app.enableCors({
     origin: process.env.CORS_ORIGIN || 'http://localhost:3000',

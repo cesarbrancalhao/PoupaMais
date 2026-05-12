@@ -10,6 +10,11 @@ export class DatabaseService implements OnModuleInit, OnModuleDestroy {
   constructor(private configService: ConfigService) {}
 
   async onModuleInit() {
+    const sslEnabled = this.configService.get<string>('DB_SSL') === 'true';
+    const sslRejectUnauthorized =
+      this.configService.get<string>('DB_SSL_REJECT_UNAUTHORIZED') !== 'false';
+    const sslCa = this.configService.get<string>('DB_SSL_CA');
+
     this.pool = new Pool({
       host: this.configService.get<string>('DB_HOST'),
       port: this.configService.get<number>('DB_PORT'),
@@ -19,6 +24,12 @@ export class DatabaseService implements OnModuleInit, OnModuleDestroy {
       max: 20,
       idleTimeoutMillis: 30000,
       connectionTimeoutMillis: 2000,
+      ...(sslEnabled && {
+        ssl: {
+          rejectUnauthorized: sslRejectUnauthorized,
+          ...(sslCa && { ca: sslCa }),
+        },
+      }),
     });
 
     try {

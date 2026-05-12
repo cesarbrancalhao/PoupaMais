@@ -13,7 +13,7 @@ interface AuthContextType {
   loading: boolean;
   login: (data: LoginRequest) => Promise<void>;
   register: (data: RegisterRequest) => Promise<void>;
-  logout: () => void;
+  logout: () => Promise<void>;
   isAuthenticated: boolean;
 }
 
@@ -51,10 +51,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       } catch (err) {
         if (!isMounted || abortController.signal.aborted) return;
-        
+
         const error = err as ApiError;
         if (error && (error.status === 401 || error.status === 403 || error.status === 404)) {
-          authService.logout();
+          await authService.logout();
           setUser(null);
         } else {
           console.error("Error initializing auth:", err);
@@ -94,8 +94,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const logout = () => {
-    authService.logout();
+  const logout = async () => {
+    await authService.logout();
     setUser(null);
     router.push('/auth');
   };

@@ -14,30 +14,8 @@ describe('ApiService', () => {
   });
 
   describe('get', () => {
-    it('should make a GET request with auth headers', async () => {
-      (Cookies.get as jest.Mock).mockReturnValue('test-token');
-      (global.fetch as jest.Mock).mockResolvedValue({
-        ok: true,
-        json: async () => ({ data: 'test' }),
-      });
-
-      const result = await apiService.get('/test');
-
-      expect(global.fetch).toHaveBeenCalledWith(
-        expect.stringContaining('/test'),
-        {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: 'Bearer test-token',
-          },
-        },
-      );
-      expect(result).toEqual({ data: 'test' });
-    });
-
-    it('should make a GET request without auth header when no token', async () => {
-      (Cookies.get as jest.Mock).mockReturnValue(null);
+    it('should make a GET request with credentials and no CSRF header', async () => {
+      (Cookies.get as jest.Mock).mockReturnValue('csrf-abc');
       (global.fetch as jest.Mock).mockResolvedValue({
         ok: true,
         json: async () => ({ data: 'test' }),
@@ -52,6 +30,7 @@ describe('ApiService', () => {
           headers: {
             'Content-Type': 'application/json',
           },
+          credentials: 'include',
         },
       );
       expect(result).toEqual({ data: 'test' });
@@ -80,7 +59,7 @@ describe('ApiService', () => {
         },
       });
 
-      await expect(apiService.get('/error')).rejects.toThrow('Erro 500: Internal Server Error');
+      await expect(apiService.get('/error')).rejects.toThrow('Error 500: Internal Server Error');
     });
 
     it('should join array error messages', async () => {
@@ -96,8 +75,10 @@ describe('ApiService', () => {
   });
 
   describe('post', () => {
-    it('should make a POST request with body', async () => {
-      (Cookies.get as jest.Mock).mockReturnValue('token');
+    it('should make a POST request with body, credentials, and CSRF header', async () => {
+      (Cookies.get as jest.Mock).mockImplementation((key: string) =>
+        key === 'csrf_token' ? 'csrf-token-value' : null,
+      );
       (global.fetch as jest.Mock).mockResolvedValue({
         ok: true,
         json: async () => ({ id: 1, name: 'created' }),
@@ -109,17 +90,34 @@ describe('ApiService', () => {
         expect.stringContaining('/create'),
         {
           method: 'POST',
-          headers: expect.objectContaining({ 'Content-Type': 'application/json' }),
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-Token': 'csrf-token-value',
+          },
+          credentials: 'include',
           body: JSON.stringify({ name: 'test' }),
         },
       );
       expect(result).toEqual({ id: 1, name: 'created' });
     });
+
+    it('should omit CSRF header when cookie is missing', async () => {
+      (Cookies.get as jest.Mock).mockReturnValue(undefined);
+      (global.fetch as jest.Mock).mockResolvedValue({
+        ok: true,
+        json: async () => ({}),
+      });
+
+      await apiService.post('/x', {});
+
+      const lastCall = (global.fetch as jest.Mock).mock.calls.pop();
+      expect(lastCall?.[1].headers).toEqual({ 'Content-Type': 'application/json' });
+    });
   });
 
   describe('put', () => {
     it('should make a PUT request', async () => {
-      (Cookies.get as jest.Mock).mockReturnValue('token');
+      (Cookies.get as jest.Mock).mockReturnValue('csrf');
       (global.fetch as jest.Mock).mockResolvedValue({
         ok: true,
         json: async () => ({ id: 1, updated: true }),
@@ -129,7 +127,7 @@ describe('ApiService', () => {
 
       expect(global.fetch).toHaveBeenCalledWith(
         expect.stringContaining('/update/1'),
-        expect.objectContaining({ method: 'PUT' }),
+        expect.objectContaining({ method: 'PUT', credentials: 'include' }),
       );
       expect(result).toEqual({ id: 1, updated: true });
     });
@@ -137,7 +135,7 @@ describe('ApiService', () => {
 
   describe('delete', () => {
     it('should make a DELETE request', async () => {
-      (Cookies.get as jest.Mock).mockReturnValue('token');
+      (Cookies.get as jest.Mock).mockReturnValue('csrf');
       (global.fetch as jest.Mock).mockResolvedValue({
         ok: true,
         json: async () => ({ deleted: true }),
@@ -147,7 +145,7 @@ describe('ApiService', () => {
 
       expect(global.fetch).toHaveBeenCalledWith(
         expect.stringContaining('/delete/1'),
-        expect.objectContaining({ method: 'DELETE' }),
+        expect.objectContaining({ method: 'DELETE', credentials: 'include' }),
       );
       expect(result).toEqual({ deleted: true });
     });

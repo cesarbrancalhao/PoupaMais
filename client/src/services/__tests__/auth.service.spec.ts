@@ -26,9 +26,6 @@ const mockUser: User = {
   currency: 'real',
 };
 
-const validJwtPayload = btoa(JSON.stringify({ exp: Math.floor(Date.now() / 1000) + 3600, sub: 1 }));
-const validJwtToken = `header.${validJwtPayload}.signature`;
-
 describe('AuthService', () => {
   beforeEach(() => {
     jest.clearAllMocks();
@@ -41,14 +38,14 @@ describe('AuthService', () => {
       const result = await authService.register({
         name: 'Test User',
         email: 'test@example.com',
-        password: 'password123',
+        password: 'Passw0rd!',
       });
 
       expect(result).toEqual({ message: 'User registered' });
       expect(apiService.post).toHaveBeenCalledWith('/auth/register', {
         name: 'Test User',
         email: 'test@example.com',
-        password: 'password123',
+        password: 'Passw0rd!',
       });
     });
 
@@ -57,7 +54,7 @@ describe('AuthService', () => {
         authService.register({
           name: 'Test',
           email: 'invalid-email',
-          password: 'password123',
+          password: 'Passw0rd!',
         }),
       ).rejects.toThrow('Invalid email');
     });
@@ -67,9 +64,19 @@ describe('AuthService', () => {
         authService.register({
           name: 'Test',
           email: 'test@example.com',
-          password: '12345',
+          password: 'Aa1!',
         }),
-      ).rejects.toThrow('Password must be at least 6 characters');
+      ).rejects.toThrow('Password must be at least 8 characters');
+    });
+
+    it('should throw on password missing complexity', async () => {
+      await expect(
+        authService.register({
+          name: 'Test',
+          email: 'test@example.com',
+          password: 'password123',
+        }),
+      ).rejects.toThrow(/uppercase|lowercase|digit|special/);
     });
 
     it('should throw on short name', async () => {
@@ -77,14 +84,14 @@ describe('AuthService', () => {
         authService.register({
           name: 'A',
           email: 'test@example.com',
-          password: 'password123',
+          password: 'Passw0rd!',
         }),
       ).rejects.toThrow('Name must be at least 2 characters');
     });
   });
 
   describe('login', () => {
-    it('should login and store auth data', async () => {
+    it('should login and store user cookie', async () => {
       const authResponse: AuthResponse = {
         access_token: 'test-token',
         user: mockUser,
@@ -93,35 +100,32 @@ describe('AuthService', () => {
 
       const result = await authService.login({
         email: 'test@example.com',
-        password: 'password123',
+        password: 'Passw0rd!',
       });
 
       expect(result).toEqual(authResponse);
-      expect(Cookies.set).toHaveBeenCalledTimes(2);
-      expect(Cookies.set).toHaveBeenCalledWith('token', 'test-token', expect.any(Object));
+      expect(Cookies.set).toHaveBeenCalledWith('user', expect.any(String), expect.any(Object));
+      expect(Cookies.set).not.toHaveBeenCalledWith('token', expect.anything(), expect.anything());
     });
   });
 
   describe('logout', () => {
-    it('should remove token and user cookies', () => {
-      authService.logout();
+    it('should call server logout and remove client cookies', async () => {
+      (apiService.post as jest.Mock).mockResolvedValue({ message: 'Logged out' });
 
-      expect(Cookies.remove).toHaveBeenCalledWith('token');
+      await authService.logout();
+
+      expect(apiService.post).toHaveBeenCalledWith('/auth/logout', {});
       expect(Cookies.remove).toHaveBeenCalledWith('user');
-    });
-  });
-
-  describe('getToken', () => {
-    it('should return token from cookies', () => {
-      (Cookies.get as jest.Mock).mockReturnValue('my-token');
-
-      expect(authService.getToken()).toBe('my-token');
+      expect(Cookies.remove).toHaveBeenCalledWith('csrf_token');
     });
 
-    it('should return null when no token', () => {
-      (Cookies.get as jest.Mock).mockReturnValue(undefined);
+    it('should still clear cookies if server call fails', async () => {
+      (apiService.post as jest.Mock).mockRejectedValue(new Error('network'));
 
-      expect(authService.getToken()).toBeNull();
+      await authService.logout();
+
+      expect(Cookies.remove).toHaveBeenCalledWith('user');
     });
   });
 
@@ -137,47 +141,61 @@ describe('AuthService', () => {
       expect(user).toEqual(mockUser);
     });
 
-    it('should return null and logout on invalid JSON', () => {
+    it('should return null and remove cookie on invalid JSON', () => {
       (Cookies.get as jest.Mock).mockReturnValue('invalid-json');
 
       const user = authService.getUser();
 
       expect(user).toBeNull();
-      expect(Cookies.remove).toHaveBeenCalledWith('token');
       expect(Cookies.remove).toHaveBeenCalledWith('user');
     });
   });
 
   describe('isAuthenticated', () => {
-    it('should return true for valid non-expired token', () => {
-      (Cookies.get as jest.Mock).mockReturnValue(validJwtToken);
+    it('should return true when user cookie exists', () => {
+      (Cookies.get as jest.Mock).mockImplementation((key: string) => {
+        if (key === 'user') return JSON.stringify(mockUser);
+        return null;
+      });
 
       expect(authService.isAuthenticated()).toBe(true);
     });
 
-    it('should return false when no token', () => {
+    it('should return false when no user cookie', () => {
       (Cookies.get as jest.Mock).mockReturnValue(undefined);
 
       expect(authService.isAuthenticated()).toBe(false);
     });
+  });
 
-    it('should return false and logout for expired token', () => {
-      const expiredPayload = btoa(JSON.stringify({ exp: 1, sub: 1 }));
-      const expiredToken = `header.${expiredPayload}.signature`;
+  describe('refreshUser', () => {
+    it('should refresh user from /auth/me endpoint', async () => {
+      (apiService.get as jest.Mock).mockResolvedValue(mockUser);
 
-      (Cookies.get as jest.Mock).mockReturnValue(expiredToken);
+      const user = await authService.refreshUser();
 
-      expect(authService.isAuthenticated()).toBe(false);
-      expect(Cookies.remove).toHaveBeenCalled();
+      expect(apiService.get).toHaveBeenCalledWith('/auth/me');
+      expect(user).toEqual(mockUser);
+      expect(Cookies.set).toHaveBeenCalledWith('user', expect.any(String), expect.any(Object));
+    });
+
+    it('should return null and clear cookies if /auth/me fails', async () => {
+      (apiService.get as jest.Mock).mockRejectedValue(new Error('Unauthorized'));
+
+      const user = await authService.refreshUser();
+
+      expect(user).toBeNull();
+      expect(Cookies.remove).toHaveBeenCalledWith('user');
+      expect(Cookies.remove).toHaveBeenCalledWith('csrf_token');
     });
   });
 
   describe('setAuthDataFromVerification', () => {
-    it('should set auth data from verification', () => {
-      authService.setAuthDataFromVerification('verify-token', mockUser);
+    it('should set user cookie (token is set server-side as httpOnly)', () => {
+      authService.setAuthDataFromVerification('ignored', mockUser);
 
-      expect(Cookies.set).toHaveBeenCalledWith('token', 'verify-token', expect.any(Object));
       expect(Cookies.set).toHaveBeenCalledWith('user', expect.any(String), expect.any(Object));
+      expect(Cookies.set).not.toHaveBeenCalledWith('token', expect.anything(), expect.anything());
     });
   });
 

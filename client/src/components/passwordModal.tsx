@@ -4,6 +4,11 @@ import { useState } from "react";
 import { useLanguage } from "@/app/terminology/LanguageContext";
 import { passwordModal } from "@/app/terminology/language/modals/password";
 import { usersService } from "@/services/users.service";
+import {
+  PASSWORD_COMPLEXITY_MESSAGE,
+  PASSWORD_COMPLEXITY_REGEX,
+  PASSWORD_MIN_LENGTH,
+} from "@/utils/password";
 
 interface PasswordModalProps {
   isOpen: boolean;
@@ -34,8 +39,13 @@ export default function PasswordModal({ isOpen, onClose }: PasswordModalProps) {
     e.preventDefault();
     setError("");
 
-    if (newPassword.length < 8) {
-      setError(t(passwordModal.passwordTooShort || "Password must be at least 8 characters"));
+    if (newPassword.length < PASSWORD_MIN_LENGTH) {
+      setError(t(passwordModal.passwordTooShort || `Password must be at least ${PASSWORD_MIN_LENGTH} characters`));
+      return;
+    }
+
+    if (!PASSWORD_COMPLEXITY_REGEX.test(newPassword)) {
+      setError(PASSWORD_COMPLEXITY_MESSAGE);
       return;
     }
 
