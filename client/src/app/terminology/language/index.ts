@@ -7,6 +7,7 @@ export * from './dashboard';
 export * from './goals';
 export * from './analysis';
 export * from './settings';
+export * from './reports';
 
 export * from './modals/addDashboard';
 export * from './modals/editDashboard';
