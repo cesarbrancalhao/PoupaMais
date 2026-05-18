@@ -1,4 +1,5 @@
 import { Transform } from 'class-transformer';
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 import sanitizeHtml = require('sanitize-html');
 
 const STRICT_OPTIONS: sanitizeHtml.IOptions = {

@@ -4,12 +4,13 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import helmet from 'helmet';
 import { AppModule } from './app.module';
 import { AllExceptionsFilter } from './common/filters/http-exception.filter';
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 import cookieParser = require('cookie-parser');
 
 async function bootstrap() {
   const logger = new Logger('Bootstrap');
   const requiredEnvs = ['JWT_SECRET', 'DB_HOST', 'DB_PASSWORD'];
-  requiredEnvs.forEach(variable => {
+  requiredEnvs.forEach((variable) => {
     if (!process.env[variable]) {
       throw new Error(`Environment variable ${variable} is not defined`);
     }
@@ -47,7 +48,7 @@ async function bootstrap() {
   SwaggerModule.setup('api/docs', app, document);
 
   const port = process.env.PORT || 3000;
-  
+
   try {
     await app.listen(port);
     logger.log(`Application running at: http://localhost:${port}`);

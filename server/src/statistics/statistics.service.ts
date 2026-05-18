@@ -18,17 +18,11 @@ export class StatisticsService {
 
   async getKpi(userId: number, query: StatisticsQueryDto) {
     const { start, end } = this.defaultDateRange(query);
-    const categoryIds = query.categories
-      ? query.categories.split(',').map(Number)
-      : null;
-    const goalIds = query.goals
-      ? query.goals.split(',').map(Number)
-      : null;
+    const categoryIds = query.categories ? query.categories.split(',').map(Number) : null;
+    const goalIds = query.goals ? query.goals.split(',').map(Number) : null;
 
     const expenseFilter =
-      categoryIds && categoryIds.length > 0
-        ? `AND e.expense_category_id = ANY(${4}::int[])`
-        : '';
+      categoryIds && categoryIds.length > 0 ? `AND e.expense_category_id = ANY(${4}::int[])` : '';
     const params: any[] = [userId, start, end];
     if (categoryIds && categoryIds.length > 0) params.push(categoryIds);
 
@@ -164,24 +158,19 @@ export class StatisticsService {
     );
 
     const row = result.rows[0];
-    const goalStatsRaw = Array.isArray(row.goal_stats) ? row.goal_stats : JSON.parse(row.goal_stats);
+    const goalStatsRaw = Array.isArray(row.goal_stats)
+      ? row.goal_stats
+      : JSON.parse(row.goal_stats);
     const goalStats = goalStatsRaw[0] || {};
 
-    const totalMonthlyGoalAllocation =
-      Number(goalStats.total_monthly_savings) || 0;
+    const totalMonthlyGoalAllocation = Number(goalStats.total_monthly_savings) || 0;
     const avgMonthlyIncome = Number(row.avg_monthly_income) || 0;
-    const avgExpenses =
-      Number(row.total_expenses) /
-      Math.max(1, Number(row.months_with_expenses));
+    const avgExpenses = Number(row.total_expenses) / Math.max(1, Number(row.months_with_expenses));
 
     const savingsRate =
-      avgMonthlyIncome > 0
-        ? ((avgMonthlyIncome - avgExpenses) / avgMonthlyIncome) * 100
-        : 0;
+      avgMonthlyIncome > 0 ? ((avgMonthlyIncome - avgExpenses) / avgMonthlyIncome) * 100 : 0;
     const goalAllocationRate =
-      avgMonthlyIncome > 0
-        ? (totalMonthlyGoalAllocation / avgMonthlyIncome) * 100
-        : 0;
+      avgMonthlyIncome > 0 ? (totalMonthlyGoalAllocation / avgMonthlyIncome) * 100 : 0;
 
     const expectedAllocation =
       totalMonthlyGoalAllocation * Math.max(1, Number(row.months_with_data));
@@ -201,7 +190,9 @@ export class StatisticsService {
       savingsRate: Math.round(savingsRate * 10) / 10,
       goalAllocationRate: Math.round(goalAllocationRate * 10) / 10,
       goalAchievementRate: Math.round(goalAchievementRate * 10) / 10,
-      topCategories: Array.isArray(row.top_categories) ? row.top_categories : JSON.parse(row.top_categories),
+      topCategories: Array.isArray(row.top_categories)
+        ? row.top_categories
+        : JSON.parse(row.top_categories),
       goalStats: {
         totalGoals: Number(goalStats.total_goals) || 0,
         totalTarget: Number(goalStats.total_target) || 0,
@@ -286,8 +277,7 @@ export class StatisticsService {
     const window = 3;
     for (let i = 0; i < data.length; i++) {
       const slice = data.slice(Math.max(0, i - window + 1), i + 1);
-      const avg =
-        slice.reduce((sum, d) => sum + d.balance, 0) / slice.length;
+      const avg = slice.reduce((sum, d) => sum + d.balance, 0) / slice.length;
       movingAvg.push(Math.round(avg * 100) / 100);
     }
 
@@ -425,10 +415,7 @@ export class StatisticsService {
     return {
       data: data.map((d) => ({
         ...d,
-        percentage:
-          grandTotal > 0
-            ? Math.round((d.total / grandTotal) * 1000) / 10
-            : 0,
+        percentage: grandTotal > 0 ? Math.round((d.total / grandTotal) * 1000) / 10 : 0,
       })),
       grandTotal,
       timeRange: { start, end },
@@ -476,19 +463,13 @@ export class StatisticsService {
       [userId, start, end],
     );
 
-    const categories = [
-      ...new Set(result.rows.map((r) => r.category)),
-    ];
-    const months = [
-      ...new Set(result.rows.map((r) => r.month)),
-    ];
+    const categories = [...new Set(result.rows.map((r) => r.category))];
+    const months = [...new Set(result.rows.map((r) => r.month))];
 
     const series = categories.map((cat) => ({
       category: cat,
       data: months.map((m) => {
-        const row = result.rows.find(
-          (r) => r.month === m && r.category === cat,
-        );
+        const row = result.rows.find((r) => r.month === m && r.category === cat);
         return row ? Number(row.total) : 0;
       }),
     }));
@@ -597,10 +578,7 @@ export class StatisticsService {
       count: Number(r.count),
     }));
 
-    const maxTotal = data.reduce(
-      (max, d) => Math.max(max, d.total),
-      0,
-    );
+    const maxTotal = data.reduce((max, d) => Math.max(max, d.total), 0);
 
     return {
       data: data.map((d) => ({
@@ -680,9 +658,7 @@ export class StatisticsService {
     const totalTarget = data.reduce((sum, g) => sum + g.target, 0);
     const totalCurrent = data.reduce((sum, g) => sum + g.current, 0);
     const overallProgress =
-      totalTarget > 0
-        ? Math.round((totalCurrent / totalTarget) * 1000) / 10
-        : 0;
+      totalTarget > 0 ? Math.round((totalCurrent / totalTarget) * 1000) / 10 : 0;
 
     return { goals: data, overallProgress, totalTarget, totalCurrent };
   }
@@ -707,12 +683,7 @@ export class StatisticsService {
     const prevStart = compareStart.toISOString().split('T')[0];
     const prevEnd = compareEnd.toISOString().split('T')[0];
 
-    async function getPeriodTotals(
-      s: string,
-      e: string,
-      db: any,
-      uid: number,
-    ) {
+    async function getPeriodTotals(s: string, e: string, db: any, uid: number) {
       const r = await db.query(
         `
         WITH months AS (
@@ -790,15 +761,11 @@ export class StatisticsService {
 
     const incomeDelta =
       previous.totalIncomes > 0
-        ? ((current.totalIncomes - previous.totalIncomes) /
-            previous.totalIncomes) *
-          100
+        ? ((current.totalIncomes - previous.totalIncomes) / previous.totalIncomes) * 100
         : 0;
     const expenseDelta =
       previous.totalExpenses > 0
-        ? ((current.totalExpenses - previous.totalExpenses) /
-            previous.totalExpenses) *
-          100
+        ? ((current.totalExpenses - previous.totalExpenses) / previous.totalExpenses) * 100
         : 0;
 
     const months = this.defaultDateRange(query);
@@ -876,12 +843,8 @@ export class StatisticsService {
       const xSum = last6.reduce((s, _, i) => s + i + 1, 0);
       const ySum = last6.reduce((s, d) => s + d.balance, 0);
       const xySum = last6.reduce((s, d, i) => s + (i + 1) * d.balance, 0);
-      const x2Sum = last6.reduce(
-        (s, _, i) => s + (i + 1) * (i + 1),
-        0,
-      );
-      const slope =
-        (6 * xySum - xSum * ySum) / (6 * x2Sum - xSum * xSum);
+      const x2Sum = last6.reduce((s, _, i) => s + (i + 1) * (i + 1), 0);
+      const slope = (6 * xySum - xSum * ySum) / (6 * x2Sum - xSum * xSum);
       const intercept = (ySum - slope * xSum) / 6;
 
       predictiveData = Array.from({ length: 3 }, (_, i) => {
@@ -905,9 +868,7 @@ export class StatisticsService {
         balanceDelta:
           previous.netBalance !== 0
             ? Math.round(
-                ((current.netBalance - previous.netBalance) /
-                  Math.abs(previous.netBalance)) *
-                  1000,
+                ((current.netBalance - previous.netBalance) / Math.abs(previous.netBalance)) * 1000,
               ) / 10
             : 0,
       },
@@ -999,14 +960,12 @@ export class StatisticsService {
       name: r.name,
       value: Number(r.value),
       startDate: new Date(r.start_date).toISOString().split('T')[0],
-      endDate: r.due_date
-        ? new Date(r.due_date).toISOString().split('T')[0]
-        : null,
+      endDate: r.due_date ? new Date(r.due_date).toISOString().split('T')[0] : null,
       category: r.category,
       nextDue: (() => {
         const now = new Date();
         const startDate = new Date(r.start_date);
-        let next = new Date(now.getFullYear(), now.getMonth(), startDate.getDate());
+        const next = new Date(now.getFullYear(), now.getMonth(), startDate.getDate());
         if (next < now) next.setMonth(next.getMonth() + 1);
         if (r.due_date && next > new Date(r.due_date)) return null;
         return next.toISOString().split('T')[0];

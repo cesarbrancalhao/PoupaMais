@@ -14,7 +14,10 @@ export class ExpensesService {
     try {
       await client.query('BEGIN');
 
-      if (createExpenseDto.expense_category_id !== undefined && createExpenseDto.expense_category_id !== null) {
+      if (
+        createExpenseDto.expense_category_id !== undefined &&
+        createExpenseDto.expense_category_id !== null
+      ) {
         const categoryExists = await client.query(
           'SELECT * FROM expense_category WHERE id = $1 AND user_id = $2',
           [createExpenseDto.expense_category_id, userId],
@@ -48,7 +51,11 @@ export class ExpensesService {
     }
   }
 
-  async findAll(userId: number, page: number = 1, limit: number = 20): Promise<PaginationResponse<any>> {
+  async findAll(
+    userId: number,
+    page: number = 1,
+    limit: number = 20,
+  ): Promise<PaginationResponse<any>> {
     const maxLimit = Math.min(limit, 2000);
     const offset = (page - 1) * maxLimit;
 
@@ -57,10 +64,7 @@ export class ExpensesService {
         'SELECT * FROM expense WHERE user_id = $1 ORDER BY date DESC LIMIT $2 OFFSET $3',
         [userId, maxLimit, offset],
       ),
-      this.databaseService.query(
-        'SELECT COUNT(*) FROM expense WHERE user_id = $1',
-        [userId],
-      ),
+      this.databaseService.query('SELECT COUNT(*) FROM expense WHERE user_id = $1', [userId]),
     ]);
 
     const total = parseInt(countResult.rows[0].count);
@@ -92,7 +96,10 @@ export class ExpensesService {
     try {
       await client.query('BEGIN');
 
-      if (updateExpenseDto.expense_category_id !== undefined && updateExpenseDto.expense_category_id !== null) {
+      if (
+        updateExpenseDto.expense_category_id !== undefined &&
+        updateExpenseDto.expense_category_id !== null
+      ) {
         const categoryExists = await client.query(
           'SELECT * FROM expense_category WHERE id = $1 AND user_id = $2',
           [updateExpenseDto.expense_category_id, userId],
@@ -130,7 +137,10 @@ export class ExpensesService {
       }
 
       if (fields.length === 0) {
-        const existing = await client.query('SELECT * FROM expense WHERE id = $1 AND user_id = $2', [id, userId]);
+        const existing = await client.query(
+          'SELECT * FROM expense WHERE id = $1 AND user_id = $2',
+          [id, userId],
+        );
         if (existing.rows.length === 0) throw new NotFoundException('Expense not found');
         await client.query('COMMIT');
         return existing.rows[0];
@@ -162,7 +172,11 @@ export class ExpensesService {
     return { message: 'Expense deleted successfully' };
   }
 
-  async createExclusion(expenseId: number, userId: number, createExclusionDto: CreateExpenseExclusionDto) {
+  async createExclusion(
+    expenseId: number,
+    userId: number,
+    createExclusionDto: CreateExpenseExclusionDto,
+  ) {
     const client = await this.databaseService.getClient();
     try {
       await client.query('BEGIN');

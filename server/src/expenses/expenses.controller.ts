@@ -1,4 +1,15 @@
-import { Controller, Get, Post, Put, Delete, Body, Param, UseGuards, Request, Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Put,
+  Delete,
+  Body,
+  Param,
+  UseGuards,
+  Request,
+  Query,
+} from '@nestjs/common';
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { ExpensesService } from './expenses.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -21,7 +32,11 @@ export class ExpensesController {
 
   @Get()
   findAll(@Request() req, @Query() paginationQuery: PaginationQueryDto) {
-    return this.expensesService.findAll(req.user.userId, paginationQuery.page, paginationQuery.limit);
+    return this.expensesService.findAll(
+      req.user.userId,
+      paginationQuery.page,
+      paginationQuery.limit,
+    );
   }
 
   @Get(':id')
@@ -40,7 +55,11 @@ export class ExpensesController {
   }
 
   @Post(':id/exclusions')
-  createExclusion(@Param('id') id: string, @Request() req, @Body() createExclusionDto: CreateExpenseExclusionDto) {
+  createExclusion(
+    @Param('id') id: string,
+    @Request() req,
+    @Body() createExclusionDto: CreateExpenseExclusionDto,
+  ) {
     return this.expensesService.createExclusion(+id, req.user.userId, createExclusionDto);
   }
 

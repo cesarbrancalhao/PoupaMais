@@ -1,4 +1,15 @@
-import { Controller, Get, Post, Put, Delete, Body, Param, UseGuards, Request, Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Put,
+  Delete,
+  Body,
+  Param,
+  UseGuards,
+  Request,
+  Query,
+} from '@nestjs/common';
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { IncomesService } from './incomes.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -40,7 +51,11 @@ export class IncomesController {
   }
 
   @Post(':id/exclusions')
-  createExclusion(@Param('id') id: string, @Request() req, @Body() createExclusionDto: CreateIncomeExclusionDto) {
+  createExclusion(
+    @Param('id') id: string,
+    @Request() req,
+    @Body() createExclusionDto: CreateIncomeExclusionDto,
+  ) {
     return this.service.createExclusion(+id, req.user.userId, createExclusionDto);
   }
 

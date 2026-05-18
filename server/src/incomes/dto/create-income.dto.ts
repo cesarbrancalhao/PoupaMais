@@ -8,7 +8,7 @@ export class CreateIncomeDto {
   @IsString()
   name: string;
 
-  @ApiProperty({ example: 2500.00 })
+  @ApiProperty({ example: 2500.0 })
   @IsNumber()
   @Min(0.01)
   value: number;

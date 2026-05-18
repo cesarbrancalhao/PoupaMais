@@ -59,10 +59,9 @@ export class UsersService {
   }
 
   async changePassword(userId: number, currentPassword: string, newPassword: string) {
-    const result = await this.databaseService.query(
-      'SELECT password FROM users WHERE id = $1',
-      [userId],
-    );
+    const result = await this.databaseService.query('SELECT password FROM users WHERE id = $1', [
+      userId,
+    ]);
 
     if (result.rows.length === 0) {
       throw new NotFoundException('User not found');
@@ -83,10 +82,10 @@ export class UsersService {
 
     const hashedPassword = await bcrypt.hash(newPassword, 10);
 
-    await this.databaseService.query(
-      'UPDATE users SET password = $1 WHERE id = $2',
-      [hashedPassword, userId],
-    );
+    await this.databaseService.query('UPDATE users SET password = $1 WHERE id = $2', [
+      hashedPassword,
+      userId,
+    ]);
 
     this.auditLog.record({
       event: 'password_changed',
@@ -102,10 +101,7 @@ export class UsersService {
     try {
       await client.query('BEGIN');
 
-      const result = await client.query(
-        'DELETE FROM users WHERE id = $1',
-        [userId],
-      );
+      const result = await client.query('DELETE FROM users WHERE id = $1', [userId]);
       if (result.rowCount === 0) throw new NotFoundException('User not found');
 
       await client.query('COMMIT');

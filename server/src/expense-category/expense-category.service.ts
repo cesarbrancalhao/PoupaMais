@@ -41,17 +41,17 @@ export class ExpenseCategoryService {
 
   async remove(id: number, userId: number) {
     await this.findOne(id, userId);
-    
+
     await this.databaseService.query(
       'UPDATE expense SET expense_category_id = NULL WHERE expense_category_id = $1 AND user_id = $2',
       [id, userId],
     );
-    
+
     const result = await this.databaseService.query(
       'DELETE FROM expense_category WHERE id = $1 AND user_id = $2',
       [id, userId],
     );
-    
+
     if (result.rowCount === 0) throw new NotFoundException('Expense category not found');
     return { message: 'Expense category deleted successfully' };
   }

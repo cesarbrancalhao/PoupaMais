@@ -18,7 +18,9 @@ export class ResetPasswordDto {
 
   @ApiProperty({ example: 'NewPassw0rd!', description: 'New user password' })
   @IsString()
-  @MinLength(PASSWORD_MIN_LENGTH, { message: `Password must be at least ${PASSWORD_MIN_LENGTH} characters` })
+  @MinLength(PASSWORD_MIN_LENGTH, {
+    message: `Password must be at least ${PASSWORD_MIN_LENGTH} characters`,
+  })
   @Matches(PASSWORD_COMPLEXITY_REGEX, { message: PASSWORD_COMPLEXITY_MESSAGE })
   newPassword: string;
 }

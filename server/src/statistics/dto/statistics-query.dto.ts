@@ -36,10 +36,14 @@ export class StatisticsQueryDto {
   @IsString()
   compareTo?: 'prev-month' | 'prev-year';
 
-  @ApiPropertyOptional({ description: 'Filter by category IDs (comma-separated positive integers)' })
+  @ApiPropertyOptional({
+    description: 'Filter by category IDs (comma-separated positive integers)',
+  })
   @IsOptional()
   @IsString()
-  @Matches(/^\d+(,\d+)*$/, { message: 'categories must be a comma-separated list of positive integers' })
+  @Matches(/^\d+(,\d+)*$/, {
+    message: 'categories must be a comma-separated list of positive integers',
+  })
   categories?: string;
 
   @ApiPropertyOptional({ description: 'Filter by goal IDs (comma-separated positive integers)' })

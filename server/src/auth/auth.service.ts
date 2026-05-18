@@ -75,10 +75,9 @@ export class AuthService {
   }
 
   async validateUser(email: string, password: string): Promise<Omit<User, 'password'> | null> {
-    const result = await this.databaseService.query(
-      'SELECT * FROM users WHERE email = $1',
-      [email],
-    );
+    const result = await this.databaseService.query('SELECT * FROM users WHERE email = $1', [
+      email,
+    ]);
 
     if (result.rows.length === 0) {
       this.auditLog.record({
@@ -104,7 +103,7 @@ export class AuthService {
       return null;
     }
 
-    const { password: _, ...userWithoutPassword } = user;
+    const { password: _password, ...userWithoutPassword } = user;
     return userWithoutPassword;
   }
 
@@ -132,10 +131,9 @@ export class AuthService {
   }
 
   async register(name: string, email: string, password: string, language: Language = 'portuguese') {
-    const existingUser = await this.databaseService.query(
-      'SELECT id FROM users WHERE email = $1',
-      [email],
-    );
+    const existingUser = await this.databaseService.query('SELECT id FROM users WHERE email = $1', [
+      email,
+    ]);
 
     if (existingUser.rows.length > 0) {
       throw new UnauthorizedException('Email already registered');
@@ -154,7 +152,8 @@ export class AuthService {
 
       const newUser = result.rows[0];
 
-      const categories = defaultCategoriesByLanguage[language] || defaultCategoriesByLanguage.portuguese;
+      const categories =
+        defaultCategoriesByLanguage[language] || defaultCategoriesByLanguage.portuguese;
       for (const category of categories) {
         await client.query(
           'INSERT INTO expense_category (name, icon, user_id) VALUES ($1, $2, $3)',
@@ -164,20 +163,20 @@ export class AuthService {
 
       const sources = defaultSourcesByLanguage[language] || defaultSourcesByLanguage.portuguese;
       for (const source of sources) {
-        await client.query(
-          'INSERT INTO income_source (name, icon, user_id) VALUES ($1, $2, $3)',
-          [source.name, source.icon, newUser.id],
-        );
+        await client.query('INSERT INTO income_source (name, icon, user_id) VALUES ($1, $2, $3)', [
+          source.name,
+          source.icon,
+          newUser.id,
+        ]);
       }
 
       await client.query('COMMIT');
 
       return this.login(newUser);
-    } catch (error) {
+    } catch {
       await client.query('ROLLBACK');
       throw new UnauthorizedException('There was an error registering the user');
-    }
-    finally {
+    } finally {
       await client.release();
     }
   }

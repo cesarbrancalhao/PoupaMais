@@ -22,10 +22,12 @@ import { CsrfGuard } from './auth/guards/csrf.guard';
       isGlobal: true,
       envFilePath: '.env',
     }),
-    ThrottlerModule.forRoot([{
-      ttl: 60000,
-      limit: 100,
-    }]),
+    ThrottlerModule.forRoot([
+      {
+        ttl: 60000,
+        limit: 100,
+      },
+    ]),
     AuditModule,
     DatabaseModule,
     AuthModule,

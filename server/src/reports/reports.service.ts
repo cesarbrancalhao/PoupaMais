@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { DatabaseService } from '../database/database.service';
 import { ExportQueryDto } from './dto/export-query.dto';
-import { ImportDto, ImportRowDto } from './dto/import.dto';
+import { ImportDto } from './dto/import.dto';
 
 @Injectable()
 export class ReportsService {
@@ -20,7 +20,8 @@ export class ReportsService {
       [userId],
     );
 
-    let expenseQuery = 'SELECT id, name, value, recurring, date, due_date, expense_category_id FROM expense WHERE user_id = $1';
+    let expenseQuery =
+      'SELECT id, name, value, recurring, date, due_date, expense_category_id FROM expense WHERE user_id = $1';
     const expenseParams: any[] = [userId];
     let paramIdx = 2;
 
@@ -35,7 +36,10 @@ export class ReportsService {
       paramIdx++;
     }
     if (categories) {
-      const catIds = categories.split(',').map(Number).filter((n) => !isNaN(n));
+      const catIds = categories
+        .split(',')
+        .map(Number)
+        .filter((n) => !isNaN(n));
       if (catIds.length > 0) {
         expenseQuery += ` AND expense_category_id IN (${catIds.map((_, i) => `$${paramIdx + i}`).join(',')})`;
         expenseParams.push(...catIds);
@@ -45,7 +49,8 @@ export class ReportsService {
     expenseQuery += ' ORDER BY date, id';
     const expenses = await this.databaseService.query(expenseQuery, expenseParams);
 
-    let incomeQuery = 'SELECT id, name, value, recurring, date, due_date, income_source_id FROM income WHERE user_id = $1';
+    let incomeQuery =
+      'SELECT id, name, value, recurring, date, due_date, income_source_id FROM income WHERE user_id = $1';
     const incomeParams: any[] = [userId];
     paramIdx = 2;
 
@@ -60,7 +65,10 @@ export class ReportsService {
       paramIdx++;
     }
     if (sources) {
-      const srcIds = sources.split(',').map(Number).filter((n) => !isNaN(n));
+      const srcIds = sources
+        .split(',')
+        .map(Number)
+        .filter((n) => !isNaN(n));
       if (srcIds.length > 0) {
         incomeQuery += ` AND income_source_id IN (${srcIds.map((_, i) => `$${paramIdx + i}`).join(',')})`;
         incomeParams.push(...srcIds);
@@ -260,7 +268,13 @@ export class ReportsService {
         }
         await this.databaseService.query(
           'INSERT INTO goal_contribution (goal_id, value, date, observation, user_id) VALUES ($1, $2, $3, $4, $5)',
-          [goalId, row.value, row.date || new Date().toISOString().split('T')[0], row.observation || null, userId],
+          [
+            goalId,
+            row.value,
+            row.date || new Date().toISOString().split('T')[0],
+            row.observation || null,
+            userId,
+          ],
         );
         results.push(`Goal contribution for "${row.goal_name}" imported`);
       } catch (err: unknown) {

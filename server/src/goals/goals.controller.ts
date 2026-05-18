@@ -1,4 +1,16 @@
-import { Controller, Get, Post, Put, Delete, Body, Param, UseGuards, Request, Query, BadRequestException } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Put,
+  Delete,
+  Body,
+  Param,
+  UseGuards,
+  Request,
+  Query,
+  BadRequestException,
+} from '@nestjs/common';
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { GoalsService } from './goals.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -14,7 +26,8 @@ export class GoalsController {
   constructor(private service: GoalsService) {}
 
   private getUserId(req: any): number {
-    const userId = typeof req.user.userId === 'string' ? parseInt(req.user.userId, 10) : req.user.userId;
+    const userId =
+      typeof req.user.userId === 'string' ? parseInt(req.user.userId, 10) : req.user.userId;
     if (isNaN(userId) || userId <= 0) {
       throw new BadRequestException('Invalid user ID');
     }

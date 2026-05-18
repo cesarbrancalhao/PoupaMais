@@ -1,9 +1,20 @@
-import { IsArray, IsNotEmpty, ValidateNested, IsString, IsNumber, IsBoolean, IsOptional } from 'class-validator';
+import {
+  IsArray,
+  IsNotEmpty,
+  ValidateNested,
+  IsString,
+  IsNumber,
+  IsBoolean,
+  IsOptional,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class ImportRowDto {
-  @ApiProperty({ description: 'Record type: expense_category, income_source, expense, income, goal, goal_contribution, expense_exclusion, income_exclusion' })
+  @ApiProperty({
+    description:
+      'Record type: expense_category, income_source, expense, income, goal, goal_contribution, expense_exclusion, income_exclusion',
+  })
   @IsString()
   @IsNotEmpty()
   type: string;

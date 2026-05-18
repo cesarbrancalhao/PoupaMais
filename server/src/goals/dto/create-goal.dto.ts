@@ -14,12 +14,12 @@ export class CreateGoalDto {
   @IsOptional()
   description?: string;
 
-  @ApiProperty({ example: 5000.00 })
+  @ApiProperty({ example: 5000.0 })
   @IsNumber()
   @Min(0.01)
   value: number;
 
-  @ApiProperty({ example: 500.00, required: false })
+  @ApiProperty({ example: 500.0, required: false })
   @IsNumber()
   @IsOptional()
   @Min(0)
