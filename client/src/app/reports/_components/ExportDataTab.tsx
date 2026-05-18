@@ -6,11 +6,21 @@ import { useLanguage } from '@/app/terminology/LanguageContext'
 import { reports } from '@/app/terminology/language/reports'
 import { common } from '@/app/terminology/language/common'
 import { reportsService, ReportsExportData } from '@/services/reports.service'
+import Calendar from '@/components/Calendar'
+
+function getToday(): string {
+  return new Date().toISOString().split('T')[0]
+}
+
+function getFirstOfMonth(): string {
+  const now = new Date()
+  return new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0]
+}
 
 export default function ExportDataTab() {
   const { t } = useLanguage()
-  const [startDate, setStartDate] = useState('')
-  const [endDate, setEndDate] = useState('')
+  const [startDate, setStartDate] = useState(getFirstOfMonth())
+  const [endDate, setEndDate] = useState(getToday())
   const [exporting, setExporting] = useState(false)
 
   const generateCSV = (data: ReportsExportData): string => {
@@ -107,29 +117,24 @@ export default function ExportDataTab() {
     <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
       <p className="text-sm text-gray-500 mb-6">{t(reports.exportDataDesc)}</p>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            {t(reports.startDate)}
-          </label>
-          <input
-            type="date"
-            value={startDate}
-            onChange={(e) => setStartDate(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            {t(reports.endDate)}
-          </label>
-          <input
-            type="date"
-            value={endDate}
-            onChange={(e) => setEndDate(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-          />
-        </div>
+      <div className="flex flex-wrap items-center gap-2 mb-6">
+        <label className="text-sm font-medium text-gray-700">
+          {t(reports.startDate)}
+        </label>
+        <Calendar
+          selectedDate={startDate}
+          onDateSelect={setStartDate}
+          compact
+        />
+        <span className="text-sm text-gray-400">—</span>
+        <label className="text-sm font-medium text-gray-700">
+          {t(reports.endDate)}
+        </label>
+        <Calendar
+          selectedDate={endDate}
+          onDateSelect={setEndDate}
+          compact
+        />
       </div>
 
       <div className="flex flex-wrap gap-3">
