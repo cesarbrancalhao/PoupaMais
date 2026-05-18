@@ -28,7 +28,10 @@ export class AllExceptionsFilter implements ExceptionFilter {
           : (exceptionResponse as any).message || message;
     }
 
-    this.logger.error(`Exception caught [${status}]:`, exception instanceof Error ? exception.stack : exception);
+    this.logger.error(
+      `Exception caught [${status}]:`,
+      exception instanceof Error ? exception.stack : exception,
+    );
 
     response.status(status).json({
       statusCode: status,

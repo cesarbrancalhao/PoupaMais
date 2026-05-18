@@ -41,17 +41,17 @@ export class IncomeSourceService {
 
   async remove(id: number, userId: number) {
     await this.findOne(id, userId);
-    
+
     await this.databaseService.query(
       'UPDATE income SET income_source_id = NULL WHERE income_source_id = $1 AND user_id = $2',
       [id, userId],
     );
-    
+
     const result = await this.databaseService.query(
       'DELETE FROM income_source WHERE id = $1 AND user_id = $2',
       [id, userId],
     );
-    
+
     if (result.rowCount === 0) throw new NotFoundException('Income source not found');
     return { message: 'Income source deleted successfully' };
   }

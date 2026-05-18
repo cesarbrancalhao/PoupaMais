@@ -1,4 +1,15 @@
-import { Controller, Get, Post, Put, Delete, Body, Param, UseGuards, Request, Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Put,
+  Delete,
+  Body,
+  Param,
+  UseGuards,
+  Request,
+  Query,
+} from '@nestjs/common';
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { GoalContributionService } from './goal-contribution.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -24,8 +35,17 @@ export class GoalContributionController {
   }
 
   @Get('goal/:goalId')
-  findAllByGoal(@Param('goalId') goalId: string, @Request() req, @Query() paginationQuery: PaginationQueryDto) {
-    return this.service.findAllByGoal(+goalId, req.user.userId, paginationQuery.page, paginationQuery.limit);
+  findAllByGoal(
+    @Param('goalId') goalId: string,
+    @Request() req,
+    @Query() paginationQuery: PaginationQueryDto,
+  ) {
+    return this.service.findAllByGoal(
+      +goalId,
+      req.user.userId,
+      paginationQuery.page,
+      paginationQuery.limit,
+    );
   }
 
   @Get(':id')

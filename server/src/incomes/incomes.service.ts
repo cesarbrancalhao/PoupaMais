@@ -48,7 +48,11 @@ export class IncomesService {
     }
   }
 
-  async findAll(userId: number, page: number = 1, limit: number = 20): Promise<PaginationResponse<any>> {
+  async findAll(
+    userId: number,
+    page: number = 1,
+    limit: number = 20,
+  ): Promise<PaginationResponse<any>> {
     const maxLimit = Math.min(limit, 2000);
     const offset = (page - 1) * maxLimit;
 
@@ -57,10 +61,7 @@ export class IncomesService {
         'SELECT * FROM income WHERE user_id = $1 ORDER BY date DESC LIMIT $2 OFFSET $3',
         [userId, maxLimit, offset],
       ),
-      this.databaseService.query(
-        'SELECT COUNT(*) FROM income WHERE user_id = $1',
-        [userId],
-      ),
+      this.databaseService.query('SELECT COUNT(*) FROM income WHERE user_id = $1', [userId]),
     ]);
 
     const total = parseInt(countResult.rows[0].count);
@@ -128,7 +129,10 @@ export class IncomesService {
       }
 
       if (fields.length === 0) {
-        const existing = await client.query('SELECT * FROM income WHERE id = $1 AND user_id = $2', [id, userId]);
+        const existing = await client.query('SELECT * FROM income WHERE id = $1 AND user_id = $2', [
+          id,
+          userId,
+        ]);
         if (existing.rows.length === 0) throw new NotFoundException('Income not found');
         await client.query('COMMIT');
         return existing.rows[0];
@@ -160,11 +164,15 @@ export class IncomesService {
     return { message: 'Income deleted successfully' };
   }
 
-  async createExclusion(incomeId: number, userId: number, createExclusionDto: CreateIncomeExclusionDto) {
+  async createExclusion(
+    incomeId: number,
+    userId: number,
+    createExclusionDto: CreateIncomeExclusionDto,
+  ) {
     const client = await this.databaseService.getClient();
     try {
       await client.query('BEGIN');
-      
+
       const incomeExists = await client.query(
         'SELECT * FROM income WHERE id = $1 AND user_id = $2',
         [incomeId, userId],

@@ -12,6 +12,7 @@ import { IncomesModule } from './incomes/incomes.module';
 import { GoalsModule } from './goals/goals.module';
 import { GoalContributionModule } from './goal-contribution/goal-contribution.module';
 import { StatisticsModule } from './statistics/statistics.module';
+import { ReportsModule } from './reports/reports.module';
 import { AuditModule } from './common/audit/audit.module';
 import { CsrfGuard } from './auth/guards/csrf.guard';
 
@@ -21,10 +22,12 @@ import { CsrfGuard } from './auth/guards/csrf.guard';
       isGlobal: true,
       envFilePath: '.env',
     }),
-    ThrottlerModule.forRoot([{
-      ttl: 60000,
-      limit: 100,
-    }]),
+    ThrottlerModule.forRoot([
+      {
+        ttl: 60000,
+        limit: 100,
+      },
+    ]),
     AuditModule,
     DatabaseModule,
     AuthModule,
@@ -36,6 +39,7 @@ import { CsrfGuard } from './auth/guards/csrf.guard';
     GoalsModule,
     GoalContributionModule,
     StatisticsModule,
+    ReportsModule,
   ],
   providers: [
     {

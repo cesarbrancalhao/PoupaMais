@@ -27,13 +27,17 @@ export class VerificationService {
     return code;
   }
 
-  async createVerification(name: string, email: string, password: string, language: Language): Promise<void> {
+  async createVerification(
+    name: string,
+    email: string,
+    password: string,
+    language: Language,
+  ): Promise<void> {
     this.emailRateLimiter.enforce('verification', email);
 
-    const existingUser = await this.databaseService.query(
-      'SELECT id FROM users WHERE email = $1',
-      [email],
-    );
+    const existingUser = await this.databaseService.query('SELECT id FROM users WHERE email = $1', [
+      email,
+    ]);
 
     if (existingUser.rows.length > 0) {
       throw new BadRequestException('Email already registered');
@@ -43,10 +47,7 @@ export class VerificationService {
     const code = this.generateOTP();
     const expiresAt = new Date(Date.now() + 15 * 60 * 1000);
 
-    await this.databaseService.query(
-      'DELETE FROM verification WHERE email = $1',
-      [email],
-    );
+    await this.databaseService.query('DELETE FROM verification WHERE email = $1', [email]);
 
     await this.databaseService.query(
       'INSERT INTO verification (name, email, password, language, code, expires_at) VALUES ($1, $2, $3, $4, $5, $6)',
@@ -63,10 +64,9 @@ export class VerificationService {
   }
 
   async verifyCode(email: string, code: string): Promise<Omit<User, 'password'>> {
-    const result = await this.databaseService.query(
-      'SELECT * FROM verification WHERE email = $1',
-      [email],
-    );
+    const result = await this.databaseService.query('SELECT * FROM verification WHERE email = $1', [
+      email,
+    ]);
 
     if (result.rows.length === 0) {
       throw new BadRequestException('Verification not found');
@@ -136,7 +136,9 @@ export class VerificationService {
         ],
       };
 
-      const categories = defaultCategoriesByLanguage[verification.language] || defaultCategoriesByLanguage.portuguese;
+      const categories =
+        defaultCategoriesByLanguage[verification.language] ||
+        defaultCategoriesByLanguage.portuguese;
       for (const category of categories) {
         await client.query(
           'INSERT INTO expense_category (name, icon, user_id) VALUES ($1, $2, $3)',
@@ -165,12 +167,14 @@ export class VerificationService {
         ],
       };
 
-      const sources = defaultSourcesByLanguage[verification.language] || defaultSourcesByLanguage.portuguese;
+      const sources =
+        defaultSourcesByLanguage[verification.language] || defaultSourcesByLanguage.portuguese;
       for (const source of sources) {
-        await client.query(
-          'INSERT INTO income_source (name, icon, user_id) VALUES ($1, $2, $3)',
-          [source.name, source.icon, newUser.id],
-        );
+        await client.query('INSERT INTO income_source (name, icon, user_id) VALUES ($1, $2, $3)', [
+          source.name,
+          source.icon,
+          newUser.id,
+        ]);
       }
 
       await client.query('DELETE FROM verification WHERE id = $1', [verification.id]);
@@ -185,7 +189,7 @@ export class VerificationService {
       });
 
       return newUser as Omit<User, 'password'>;
-    } catch (error) {
+    } catch {
       await client.query('ROLLBACK');
       throw new BadRequestException('Error creating user');
     } finally {

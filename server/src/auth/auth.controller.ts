@@ -54,10 +54,7 @@ export class AuthController {
     @Request() req: ExpressRequest,
     @Res({ passthrough: true }) res: Response,
   ) {
-    const user = await this.verificationService.verifyCode(
-      verifyCodeDto.email,
-      verifyCodeDto.code,
-    );
+    const user = await this.verificationService.verifyCode(verifyCodeDto.email, verifyCodeDto.code);
     const result = await this.authService.login(user);
     const csrfToken = setAuthCookies(res, req, result.access_token);
     return { ...result, csrf_token: csrfToken };

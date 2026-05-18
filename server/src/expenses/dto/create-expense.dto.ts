@@ -8,7 +8,7 @@ export class CreateExpenseDto {
   @IsString()
   name: string;
 
-  @ApiProperty({ example: 150.50 })
+  @ApiProperty({ example: 150.5 })
   @IsNumber()
   @Min(0.01)
   value: number;

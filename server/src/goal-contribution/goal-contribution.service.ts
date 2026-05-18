@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { DatabaseService } from '../database/database.service';
 import { CreateGoalContributionDto } from './dto/create-goal-contribution.dto';
 import { UpdateGoalContributionDto } from './dto/update-goal-contribution.dto';
@@ -13,10 +13,10 @@ export class GoalContributionService {
     try {
       await client.query('BEGIN');
 
-      const goalResult = await client.query(
-        'SELECT id FROM goal WHERE id = $1 AND user_id = $2',
-        [data.goal_id, userId],
-      );
+      const goalResult = await client.query('SELECT id FROM goal WHERE id = $1 AND user_id = $2', [
+        data.goal_id,
+        userId,
+      ]);
       if (goalResult.rows.length === 0) {
         throw new NotFoundException('Goal not found');
       }
@@ -37,7 +37,11 @@ export class GoalContributionService {
     }
   }
 
-  async findAll(userId: number, page: number = 1, limit: number = 20): Promise<PaginationResponse<any>> {
+  async findAll(
+    userId: number,
+    page: number = 1,
+    limit: number = 20,
+  ): Promise<PaginationResponse<any>> {
     const maxLimit = Math.min(limit, 2000);
     const offset = (page - 1) * maxLimit;
 
@@ -51,10 +55,9 @@ export class GoalContributionService {
          LIMIT $2 OFFSET $3`,
         [userId, maxLimit, offset],
       ),
-      this.databaseService.query(
-        'SELECT COUNT(*) FROM goal_contribution WHERE user_id = $1',
-        [userId],
-      ),
+      this.databaseService.query('SELECT COUNT(*) FROM goal_contribution WHERE user_id = $1', [
+        userId,
+      ]),
     ]);
 
     const total = parseInt(countResult.rows[0].count);
@@ -70,7 +73,12 @@ export class GoalContributionService {
     };
   }
 
-  async findAllByGoal(goalId: number, userId: number, page: number = 1, limit: number = 20): Promise<PaginationResponse<any>> {
+  async findAllByGoal(
+    goalId: number,
+    userId: number,
+    page: number = 1,
+    limit: number = 20,
+  ): Promise<PaginationResponse<any>> {
     const goalResult = await this.databaseService.query(
       'SELECT id FROM goal WHERE id = $1 AND user_id = $2',
       [goalId, userId],

@@ -48,10 +48,7 @@ export class PasswordResetService {
     const code = this.generateOTP();
     const expiresAt = new Date(Date.now() + 15 * 60 * 1000);
 
-    await this.databaseService.query(
-      'DELETE FROM password_reset WHERE email = $1',
-      [email],
-    );
+    await this.databaseService.query('DELETE FROM password_reset WHERE email = $1', [email]);
 
     await this.databaseService.query(
       'INSERT INTO password_reset (email, code, expires_at, user_id) VALUES ($1, $2, $3, $4)',
@@ -122,15 +119,12 @@ export class PasswordResetService {
     const recovery = result.rows[0];
     const hashedPassword = await bcrypt.hash(newPassword, 10);
 
-    await this.databaseService.query(
-      'UPDATE users SET password = $1 WHERE id = $2',
-      [hashedPassword, recovery.user_id],
-    );
+    await this.databaseService.query('UPDATE users SET password = $1 WHERE id = $2', [
+      hashedPassword,
+      recovery.user_id,
+    ]);
 
-    await this.databaseService.query(
-      'DELETE FROM password_reset WHERE id = $1',
-      [recovery.id],
-    );
+    await this.databaseService.query('DELETE FROM password_reset WHERE id = $1', [recovery.id]);
 
     this.auditLog.record({
       event: 'password_reset_completed',

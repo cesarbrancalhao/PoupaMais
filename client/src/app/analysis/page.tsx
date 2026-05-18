@@ -1,6 +1,7 @@
 'use client'
 
-import { useState, useMemo, useCallback } from 'react'
+import { useState, useMemo, useCallback, useEffect } from 'react'
+import { useSearchParams } from 'next/navigation'
 import Sidebar from '@/components/sidebar'
 import ProtectedRoute from '@/components/ProtectedRoute'
 import { useLanguage } from '@/app/terminology/LanguageContext'
@@ -70,6 +71,9 @@ function computeDateRange(filters: FilterState): { start: string; end: string } 
 
 export default function AnalysisPage() {
   const { t } = useLanguage()
+  const searchParams = useSearchParams()
+  const exportMode = searchParams.get('export') === '1'
+  const exportSections = searchParams.get('sections') || ''
 
   const [filters, setFilters] = useState<FilterState>(getDefaultFilters)
 
@@ -93,6 +97,82 @@ export default function AnalysisPage() {
     setFilters(newFilters)
   }, [])
 
+  useEffect(() => {
+    if (!exportMode) return
+
+    const maxAttempts = 10
+    let attempts = 0
+
+    const tryExport = () => {
+      attempts++
+      const sectionsToExport = exportSections ? exportSections.split(',') : []
+
+      const sectionMap: Record<string, string> = {
+        averages: 'analysis-averages',
+        balanceSavings: 'analysis-balanceSavings',
+        goals: 'analysis-goals',
+        expenses: 'analysis-expenses',
+        transactions: 'analysis-transactions',
+        comparative: 'analysis-comparative',
+      }
+
+      const targets = sectionsToExport.length > 0 ? sectionsToExport : Object.keys(sectionMap)
+
+      const images: { title: string; dataUrl: string }[] = []
+
+      for (const key of targets) {
+        const elId = sectionMap[key]
+        if (!elId) continue
+        const sectionEl = document.getElementById(elId)
+        if (!sectionEl) continue
+
+        const canvases = sectionEl.querySelectorAll('canvas')
+        if (canvases.length > 0) {
+          for (let i = 0; i < canvases.length; i++) {
+            try {
+              const dataUrl = canvases[i].toDataURL('image/png')
+              const h3 = sectionEl.querySelector('h3')
+              images.push({ title: h3?.textContent || key, dataUrl })
+            } catch { /* skip tainted */ }
+          }
+        }
+      }
+
+      if (images.length > 0) {
+        const imagesHtml = images
+          .map(
+            (img) =>
+              '<div style="margin-bottom:30px;page-break-inside:avoid">' +
+              '<h3 style="font-family:Arial,sans-serif;color:#333;margin-bottom:10px">' +
+              img.title +
+              '</h3>' +
+              '<img src="' +
+              img.dataUrl +
+              '" style="max-width:100%;border:1px solid #e5e7eb;border-radius:8px" />' +
+              '</div>'
+          )
+          .join('')
+
+        const w = window.open('', '_blank')
+        if (w) {
+          w.document.write(
+            '<!DOCTYPE html><html><head><title>PoupaMais</title>' +
+            '<style>body{padding:40px;font-family:Arial,sans-serif}h1{font-size:24px;color:#1f2937;margin-bottom:30px}@media print{body{padding:20px}}</style>' +
+            '</head><body><h1>PoupaMais</h1>' +
+            imagesHtml +
+            '<script>window.onload=function(){window.print()}</' + 'script>' +
+            '</body></html>'
+          )
+          w.document.close()
+        }
+      } else if (attempts < maxAttempts) {
+        setTimeout(tryExport, 1500)
+      }
+    }
+
+    setTimeout(tryExport, 2000)
+  }, [exportMode, exportSections])
+
   return (
     <ProtectedRoute>
       <div className="flex min-h-screen bg-gray-50">
@@ -114,14 +194,14 @@ export default function AnalysisPage() {
           </div>
 
           <div className="space-y-6">
-            <KPISummary params={statisticsParams} />
-            <AveragesSection params={statisticsParams} />
-            <ExpenseHeatmapSection params={statisticsParams} />
-            <BalanceSavingsSection params={statisticsParams} />
-            <GoalsSection params={statisticsParams} />
-            <ExpensesSection params={statisticsParams} />
-            <TransactionsAnomalies params={statisticsParams} />
-            <ComparativeTrend params={statisticsParams} />
+            <div id="analysis-kpi"><KPISummary params={statisticsParams} /></div>
+            <div id="analysis-averages"><AveragesSection params={statisticsParams} /></div>
+            <div id="analysis-heatmap"><ExpenseHeatmapSection params={statisticsParams} /></div>
+            <div id="analysis-balanceSavings"><BalanceSavingsSection params={statisticsParams} /></div>
+            <div id="analysis-goals"><GoalsSection params={statisticsParams} /></div>
+            <div id="analysis-expenses"><ExpensesSection params={statisticsParams} /></div>
+            <div id="analysis-transactions"><TransactionsAnomalies params={statisticsParams} /></div>
+            <div id="analysis-comparative"><ComparativeTrend params={statisticsParams} /></div>
           </div>
         </main>
       </div>

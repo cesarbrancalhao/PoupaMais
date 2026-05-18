@@ -13,10 +13,7 @@ export class GoalsService {
     try {
       await client.query('BEGIN');
 
-      const userCheck = await client.query(
-        'SELECT id FROM users WHERE id = $1',
-        [userId],
-      );
+      const userCheck = await client.query('SELECT id FROM users WHERE id = $1', [userId]);
       if (userCheck.rows.length === 0) {
         throw new BadRequestException(`User with ID ${userId} does not exist`);
       }
@@ -31,7 +28,7 @@ export class GoalsService {
           data.monthly_savings || 0,
           data.start_date || new Date(),
           data.target_date || null,
-          userId
+          userId,
         ],
       );
 
@@ -45,7 +42,11 @@ export class GoalsService {
     }
   }
 
-  async findAll(userId: number, page: number = 1, limit: number = 20): Promise<PaginationResponse<any>> {
+  async findAll(
+    userId: number,
+    page: number = 1,
+    limit: number = 20,
+  ): Promise<PaginationResponse<any>> {
     const maxLimit = Math.min(limit, 2000);
     const offset = (page - 1) * maxLimit;
 
@@ -54,10 +55,7 @@ export class GoalsService {
         'SELECT * FROM goal WHERE user_id = $1 ORDER BY created_at DESC LIMIT $2 OFFSET $3',
         [userId, maxLimit, offset],
       ),
-      this.databaseService.query(
-        'SELECT COUNT(*) FROM goal WHERE user_id = $1',
-        [userId],
-      ),
+      this.databaseService.query('SELECT COUNT(*) FROM goal WHERE user_id = $1', [userId]),
     ]);
 
     const total = parseInt(countResult.rows[0].count);
@@ -96,7 +94,16 @@ export class GoalsService {
              start_date = COALESCE($5, start_date),
              target_date = COALESCE($6, target_date)
          WHERE id = $7 AND user_id = $8 RETURNING *`,
-        [data.name, data.description, data.value, data.monthly_savings, data.start_date, data.target_date, id, userId],
+        [
+          data.name,
+          data.description,
+          data.value,
+          data.monthly_savings,
+          data.start_date,
+          data.target_date,
+          id,
+          userId,
+        ],
       );
       if (result.rows.length === 0) throw new NotFoundException('Goal not found');
 

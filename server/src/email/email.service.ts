@@ -27,7 +27,12 @@ export class EmailService {
     });
   }
 
-  async sendVerificationEmail(email: string, code: string, name: string, language: 'portuguese' | 'english' | 'spanish'): Promise<void> {
+  async sendVerificationEmail(
+    email: string,
+    code: string,
+    name: string,
+    language: 'portuguese' | 'english' | 'spanish',
+  ): Promise<void> {
     const translations = {
       portuguese: {
         subject: 'Código de Verificação - PoupaMais',
@@ -100,14 +105,21 @@ export class EmailService {
     await this.transporter.sendMail(mailOptions);
   }
 
-  async sendPasswordResetEmail(email: string, code: string, name: string, language: 'portuguese' | 'english' | 'spanish'): Promise<void> {
+  async sendPasswordResetEmail(
+    email: string,
+    code: string,
+    name: string,
+    language: 'portuguese' | 'english' | 'spanish',
+  ): Promise<void> {
     const translations = {
       portuguese: {
         subject: 'Recuperação de Senha - PoupaMais',
         greeting: 'Olá',
-        message: 'Você solicitou a recuperação de senha. Use o código abaixo para redefinir sua senha:',
+        message:
+          'Você solicitou a recuperação de senha. Use o código abaixo para redefinir sua senha:',
         expires: 'Este código expira em 15 minutos.',
-        ignore: 'Se você não solicitou a recuperação de senha, ignore este email e sua senha permanecerá inalterada.',
+        ignore:
+          'Se você não solicitou a recuperação de senha, ignore este email e sua senha permanecerá inalterada.',
         thanks: 'Obrigado por usar PoupaMais!',
         security: 'Por segurança, nunca compartilhe este código com ninguém.',
       },
@@ -116,16 +128,19 @@ export class EmailService {
         greeting: 'Hello',
         message: 'You requested a password recovery. Use the code below to reset your password:',
         expires: 'This code expires in 15 minutes.',
-        ignore: 'If you did not request a password recovery, please ignore this email and your password will remain unchanged.',
+        ignore:
+          'If you did not request a password recovery, please ignore this email and your password will remain unchanged.',
         thanks: 'Thank you for using PoupaMais!',
         security: 'For security, never share this code with anyone.',
       },
       spanish: {
         subject: 'Recuperación de Contraseña - PoupaMais',
         greeting: 'Hola',
-        message: 'Solicitó la recuperación de contraseña. Use el código a continuación para restablecer su contraseña:',
+        message:
+          'Solicitó la recuperación de contraseña. Use el código a continuación para restablecer su contraseña:',
         expires: 'Este código expira en 15 minutos.',
-        ignore: 'Si no solicitó la recuperación de contraseña, ignore este correo electrónico y su contraseña permanecerá sin cambios.',
+        ignore:
+          'Si no solicitó la recuperación de contraseña, ignore este correo electrónico y su contraseña permanecerá sin cambios.',
         thanks: '¡Gracias por usar PoupaMais!',
         security: 'Por seguridad, nunca comparta este código con nadie.',
       },
