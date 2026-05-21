@@ -116,6 +116,35 @@ CREATE TABLE goal_contribution (
     user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE
 );
 
+CREATE TABLE wishlist_type (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(70) NOT NULL,
+    icon VARCHAR(50) NOT NULL DEFAULT 'Tag',
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE wishlist_saga (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(70) NOT NULL,
+    icon VARCHAR(50) NOT NULL DEFAULT 'BookOpen',
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE wishlist (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    price DECIMAL(11,2) NOT NULL CHECK (price > 0),
+    checked BOOLEAN NOT NULL DEFAULT FALSE,
+    priority VARCHAR(10) NOT NULL DEFAULT 'medium' CHECK (priority IN ('low', 'medium', 'high')),
+    quarter VARCHAR(2) NOT NULL DEFAULT 'Q1' CHECK (quarter IN ('Q1', 'Q2', 'Q3', 'Q4')),
+    wishlist_type_id INT REFERENCES wishlist_type(id) ON DELETE SET NULL,
+    saga_id INT REFERENCES wishlist_saga(id) ON DELETE SET NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE
+);
+
 CREATE INDEX idx_verification_email ON verification(email);
 CREATE INDEX idx_password_reset_email ON password_reset(email);
 CREATE INDEX idx_expense_category_user_id ON expense_category(user_id);
@@ -133,6 +162,11 @@ CREATE INDEX idx_expense_date ON expense(date);
 CREATE INDEX idx_income_date ON income(date);
 CREATE INDEX idx_expense_category_id ON expense(expense_category_id);
 CREATE INDEX idx_goal_contribution_date ON goal_contribution(date);
+CREATE INDEX idx_wishlist_type_user_id ON wishlist_type(user_id);
+CREATE INDEX idx_wishlist_saga_user_id ON wishlist_saga(user_id);
+CREATE INDEX idx_wishlist_user_id ON wishlist(user_id);
+CREATE INDEX idx_wishlist_type_id ON wishlist(wishlist_type_id);
+CREATE INDEX idx_wishlist_saga_id ON wishlist(saga_id);
 
 CREATE OR REPLACE FUNCTION update_goal_current_value()
 RETURNS TRIGGER AS $$

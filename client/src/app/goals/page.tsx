@@ -591,7 +591,7 @@ export default function GoalsPage() {
                               </div>
                               <div className="text-right ml-4">
                                 <p className={`text-sm ${'text-gray-500'}`}>
-                                  {formatCurrency(Number(goal.monthly_savings) || 0)}/{t(goalsTerms.months)}
+                                  {formatCurrency(Number(goal.monthly_savings) || 0)}/{t(goalsTerms.month)}
                                 </p>
                               </div>
                             </div>

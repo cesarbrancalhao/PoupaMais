@@ -10,3 +10,6 @@ export * from './goal-contribution.service';
 export * from './auth.service';
 export * from './statistics.service';
 export * from './reports.service';
+export * from './wishlist-types.service';
+export * from './wishlist-sagas.service';
+export * from './wishlist.service';

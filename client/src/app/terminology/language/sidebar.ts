@@ -14,6 +14,11 @@ export const sidebar = {
     en: 'Analysis',
     es: 'Análisis',
   },
+  wishlist: {
+    pt: 'Lista de Desejos',
+    en: 'Wishlist',
+    es: 'Lista de Deseos',
+  },
   settings: {
     pt: 'Configurações',
     en: 'Settings',
