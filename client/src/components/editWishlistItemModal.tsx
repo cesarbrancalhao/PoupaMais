@@ -12,6 +12,7 @@ import { editWishlistItemModal } from '@/app/terminology/language/modals/editWis
 import { addWishlistItemModal } from '@/app/terminology/language/modals/addWishlistItem'
 import { common } from '@/app/terminology/language/common'
 import { wishlist } from '@/app/terminology/language/wishlist'
+import { generateQuarterOptions } from '@/lib/quarters'
 
 interface EditWishlistItemModalProps {
   isOpen: boolean
@@ -23,7 +24,7 @@ interface EditWishlistItemModalProps {
 }
 
 const PRIORITIES = ['low', 'medium', 'high'] as const
-const QUARTERS = ['Q1', 'Q2', 'Q3', 'Q4'] as const
+const QUARTERS = generateQuarterOptions()
 
 export default function EditWishlistItemModal({
   isOpen, onClose, item, types, sagas, onDelete
@@ -68,12 +69,7 @@ export default function EditWishlistItemModal({
     return t(addWishlistItemModal.medium)
   }
 
-  const quarterLabel = (q: string) => {
-    if (q === 'Q1') return t(addWishlistItemModal.q1)
-    if (q === 'Q2') return t(addWishlistItemModal.q2)
-    if (q === 'Q3') return t(addWishlistItemModal.q3)
-    return t(addWishlistItemModal.q4)
-  }
+  const quarterLabel = (q: string) => q
 
   const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const raw = e.target.value.replace(/\D/g, '')

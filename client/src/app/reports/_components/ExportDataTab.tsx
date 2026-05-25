@@ -25,7 +25,7 @@ export default function ExportDataTab() {
 
   const generateCSV = (data: ReportsExportData): string => {
     const rows: string[] = []
-    const headers = 'type,name,icon,value,recurring,date,due_date,category_name,source_name,description,current_value,monthly_savings,start_date,target_date,goal_name,observation,entity_name,entity_type,exclusion_date'
+    const headers = 'type,name,icon,value,recurring,date,due_date,category_name,source_name,description,current_value,monthly_savings,start_date,target_date,goal_name,observation,entity_name,entity_type,exclusion_date,checked,priority,quarter,type_name,saga_name'
     rows.push(headers)
 
     const esc = (v: unknown) => {
@@ -61,7 +61,18 @@ export default function ExportDataTab() {
       rows.push(`expense_exclusion,,,,,,${esc(ee.exclusion_date)},,,,,,,,,,${esc(ee.expense_name)},expense,${esc(ee.exclusion_date)}`)
     }
     for (const ie of data.incomeExclusions) {
-      rows.push(`income_exclusion,,,,,,${esc(ie.exclusion_date)},,,,,,,,,,${esc(ie.income_name)},income,${esc(ie.exclusion_date)}`)
+      rows.push(`income_exclusion,,,,,,${esc(ie.exclusion_date)},,,,,,,,,,${esc(ie.income_name)},income,${esc(ie.exclusion_date)},,,,,`)
+    }
+    for (const wt of data.wishlistTypes) {
+      rows.push(`wishlist_type,${esc(wt.name)},${esc(wt.icon)},,,,,,,,,,,,,,,,,,,,`)
+    }
+    for (const ws of data.wishlistSagas) {
+      rows.push(`wishlist_saga,${esc(ws.name)},${esc(ws.icon)},,,,,,,,,,,,,,,,,,,,`)
+    }
+    for (const w of data.wishlists) {
+      const typeName = data.wishlistTypes.find((t) => t.id === w.wishlist_type_id)?.name || ''
+      const sagaName = data.wishlistSagas.find((s) => s.id === w.saga_id)?.name || ''
+      rows.push(`wishlist,${esc(w.name)},,${w.price},${w.checked},${esc(w.created_at)},,,,,,,,,,,,,${esc(w.checked)},${esc(w.priority)},${esc(w.quarter)},${esc(typeName)},${esc(sagaName)}`)
     }
 
     return rows.join('\n')

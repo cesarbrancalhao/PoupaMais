@@ -98,6 +98,21 @@ export class ReportsService {
       [userId],
     );
 
+    const wishlistTypes = await this.databaseService.query(
+      'SELECT id, name, icon FROM wishlist_type WHERE user_id = $1 ORDER BY id',
+      [userId],
+    );
+
+    const wishlistSagas = await this.databaseService.query(
+      'SELECT id, name, icon FROM wishlist_saga WHERE user_id = $1 ORDER BY id',
+      [userId],
+    );
+
+    const wishlists = await this.databaseService.query(
+      'SELECT w.id, w.name, w.price, w.checked, w.priority, w.quarter, w.wishlist_type_id, w.saga_id, w.created_at, wt.name as type_name, ws.name as saga_name FROM wishlist w LEFT JOIN wishlist_type wt ON wt.id = w.wishlist_type_id LEFT JOIN wishlist_saga ws ON ws.id = w.saga_id WHERE w.user_id = $1 ORDER BY w.id',
+      [userId],
+    );
+
     return {
       expenseCategories: expenseCategories.rows,
       incomeSources: incomeSources.rows,
@@ -107,6 +122,9 @@ export class ReportsService {
       goalContributions: goalContributions.rows,
       expenseExclusions: expenseExclusions.rows,
       incomeExclusions: incomeExclusions.rows,
+      wishlistTypes: wishlistTypes.rows,
+      wishlistSagas: wishlistSagas.rows,
+      wishlists: wishlists.rows,
     };
   }
 
@@ -338,6 +356,107 @@ export class ReportsService {
       } catch (err: unknown) {
         const msg = err instanceof Error ? err.message : 'Unknown error';
         results.push(`Error importing income exclusion: ${msg}`);
+      }
+    }
+
+    const wishlistTypeMap = new Map<string, number>();
+    const wishlistSagaMap = new Map<string, number>();
+
+    const wishlistTypeRows = rows.filter((r) => r.type === 'wishlist_type');
+    for (const row of wishlistTypeRows) {
+      try {
+        const existing = await this.databaseService.query(
+          'SELECT id FROM wishlist_type WHERE user_id = $1 AND name = $2',
+          [userId, row.name],
+        );
+        if (existing.rows.length > 0) {
+          wishlistTypeMap.set(row.name!, existing.rows[0].id);
+          results.push(`Wishlist type "${row.name}" already exists, skipped`);
+          continue;
+        }
+        const result = await this.databaseService.query(
+          'INSERT INTO wishlist_type (name, icon, user_id) VALUES ($1, $2, $3) RETURNING id',
+          [row.name, row.icon || 'Tag', userId],
+        );
+        wishlistTypeMap.set(row.name!, result.rows[0].id);
+        results.push(`Wishlist type "${row.name}" imported`);
+      } catch (err: unknown) {
+        const msg = err instanceof Error ? err.message : 'Unknown error';
+        results.push(`Error importing wishlist type "${row.name}": ${msg}`);
+      }
+    }
+
+    const wishlistSagaRows = rows.filter((r) => r.type === 'wishlist_saga');
+    for (const row of wishlistSagaRows) {
+      try {
+        const existing = await this.databaseService.query(
+          'SELECT id FROM wishlist_saga WHERE user_id = $1 AND name = $2',
+          [userId, row.name],
+        );
+        if (existing.rows.length > 0) {
+          wishlistSagaMap.set(row.name!, existing.rows[0].id);
+          results.push(`Wishlist saga "${row.name}" already exists, skipped`);
+          continue;
+        }
+        const result = await this.databaseService.query(
+          'INSERT INTO wishlist_saga (name, icon, user_id) VALUES ($1, $2, $3) RETURNING id',
+          [row.name, row.icon || 'BookOpen', userId],
+        );
+        wishlistSagaMap.set(row.name!, result.rows[0].id);
+        results.push(`Wishlist saga "${row.name}" imported`);
+      } catch (err: unknown) {
+        const msg = err instanceof Error ? err.message : 'Unknown error';
+        results.push(`Error importing wishlist saga "${row.name}": ${msg}`);
+      }
+    }
+
+    const wishlistRows = rows.filter((r) => r.type === 'wishlist');
+    const now = new Date();
+    const defaultQuarter = `${now.getFullYear().toString().slice(-2)}Q${Math.floor(now.getMonth() / 3) + 1}`;
+    for (const row of wishlistRows) {
+      try {
+        let typeId = null;
+        if (row.type_name && wishlistTypeMap.has(row.type_name)) {
+          typeId = wishlistTypeMap.get(row.type_name);
+        }
+        if (!typeId && row.type_name) {
+          const found = await this.databaseService.query(
+            'SELECT id FROM wishlist_type WHERE user_id = $1 AND name = $2 LIMIT 1',
+            [userId, row.type_name],
+          );
+          if (found.rows.length > 0) typeId = found.rows[0].id;
+        }
+
+        let sagaId = null;
+        if (row.saga_name && wishlistSagaMap.has(row.saga_name)) {
+          sagaId = wishlistSagaMap.get(row.saga_name);
+        }
+        if (!sagaId && row.saga_name) {
+          const found = await this.databaseService.query(
+            'SELECT id FROM wishlist_saga WHERE user_id = $1 AND name = $2 LIMIT 1',
+            [userId, row.saga_name],
+          );
+          if (found.rows.length > 0) sagaId = found.rows[0].id;
+        }
+
+        await this.databaseService.query(
+          'INSERT INTO wishlist (name, price, checked, priority, quarter, wishlist_type_id, saga_id, created_at, user_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)',
+          [
+            row.name,
+            row.value || 0,
+            row.checked || false,
+            row.priority || 'medium',
+            row.quarter || defaultQuarter,
+            typeId,
+            sagaId,
+            row.date || new Date().toISOString(),
+            userId,
+          ],
+        );
+        results.push(`Wishlist item "${row.name}" imported`);
+      } catch (err: unknown) {
+        const msg = err instanceof Error ? err.message : 'Unknown error';
+        results.push(`Error importing wishlist item "${row.name}": ${msg}`);
       }
     }
 

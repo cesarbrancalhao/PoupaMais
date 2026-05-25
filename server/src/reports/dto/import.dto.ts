@@ -108,6 +108,31 @@ export class ImportRowDto {
   @IsOptional()
   @IsString()
   exclusion_date?: string;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsBoolean()
+  checked?: boolean;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsString()
+  priority?: string;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsString()
+  quarter?: string;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsString()
+  type_name?: string;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsString()
+  saga_name?: string;
 }
 
 export class ImportDto {

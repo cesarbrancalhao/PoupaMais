@@ -16,6 +16,7 @@ import { useLanguage } from '@/app/terminology/LanguageContext';
 import { wishlist } from '@/app/terminology/language/wishlist';
 import { common } from '@/app/terminology/language/common';
 import { dashboard } from '@/app/terminology/language/dashboard';
+import { generateQuarterOptions } from '@/lib/quarters';
 
 const availableIcons = [
   { name: 'Home', component: Home },
@@ -58,7 +59,7 @@ function getIconComponent(iconName: string) {
 }
 
 const PRIORITIES = ['low', 'medium', 'high'] as const
-const QUARTERS = ['Q1', 'Q2', 'Q3', 'Q4'] as const
+const QUARTERS = generateQuarterOptions()
 
 export default function WishlistPage() {
   const { t } = useLanguage()
@@ -80,7 +81,7 @@ export default function WishlistPage() {
 
   const [currentPage, setCurrentPage] = useState(1)
   const ITEMS_PER_PAGE = 10
-  const [sortColumn, setSortColumn] = useState<'name' | 'price' | 'created_at'>('created_at')
+  const [sortColumn, setSortColumn] = useState<'name' | 'price' | 'priority' | 'quarter' | 'saga' | 'created_at'>('quarter')
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc')
   const [searchTerm, setSearchTerm] = useState('')
   const [minPrice, setMinPrice] = useState('')
@@ -143,15 +144,28 @@ export default function WishlistPage() {
     })
   }, [items, searchTerm, minPrice, maxPrice, filterChecked, filterPriority, filterType, filterSaga, filterQuarter])
 
+  const priorityOrder: Record<string, number> = { low: 0, medium: 1, high: 2 }
+
   const sortedItems = useMemo(() => {
     return [...filteredItems].sort((a, b) => {
       let comparison = 0
       if (sortColumn === 'name') comparison = a.name.localeCompare(b.name)
       else if (sortColumn === 'price') comparison = a.price - b.price
+      else if (sortColumn === 'priority') comparison = (priorityOrder[a.priority] ?? 1) - (priorityOrder[b.priority] ?? 1)
+      else if (sortColumn === 'quarter') {
+        const [yearA, quarterA] = [parseInt(a.quarter.slice(0, 2)), parseInt(a.quarter.slice(3))]
+        const [yearB, quarterB] = [parseInt(b.quarter.slice(0, 2)), parseInt(b.quarter.slice(3))]
+        comparison = yearA - yearB || quarterA - quarterB
+      }
+      else if (sortColumn === 'saga') {
+        const sagaA = (sagas.find(s => s.id === a.saga_id)?.name || '')
+        const sagaB = (sagas.find(s => s.id === b.saga_id)?.name || '')
+        comparison = sagaA.localeCompare(sagaB)
+      }
       else if (sortColumn === 'created_at') comparison = new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
       return sortDirection === 'asc' ? comparison : -comparison
     })
-  }, [filteredItems, sortColumn, sortDirection])
+  }, [filteredItems, sortColumn, sortDirection, sagas])
 
   const totalPages = Math.ceil(sortedItems.length / ITEMS_PER_PAGE)
   const paginatedItems = sortedItems.slice(
@@ -216,12 +230,7 @@ export default function WishlistPage() {
     return t(wishlist.medium)
   }
 
-  const quarterLabel = (q: string) => {
-    if (q === 'Q1') return t(wishlist.q1)
-    if (q === 'Q2') return t(wishlist.q2)
-    if (q === 'Q3') return t(wishlist.q3)
-    return t(wishlist.q4)
-  }
+  const quarterLabel = (q: string) => q
 
   const getTypeName = (typeId?: number) => {
     if (!typeId) return ''
@@ -507,10 +516,25 @@ export default function WishlistPage() {
                             >
                               {t(wishlist.price)} {sortColumn === 'price' && (sortDirection === 'asc' ? '↑' : '↓')}
                             </th>
-                            <th className="py-3 font-medium text-left">{t(wishlist.priority)}</th>
-                            <th className="py-3 font-medium text-left">{t(wishlist.quarter)}</th>
+                            <th
+                              className="py-3 font-medium text-left cursor-pointer hover:text-gray-700"
+                              onClick={() => toggleSort('priority')}
+                            >
+                              {t(wishlist.priority)} {sortColumn === 'priority' && (sortDirection === 'asc' ? '↑' : '↓')}
+                            </th>
+                            <th
+                              className="py-3 font-medium text-left cursor-pointer hover:text-gray-700"
+                              onClick={() => toggleSort('quarter')}
+                            >
+                              {t(wishlist.quarter)} {sortColumn === 'quarter' && (sortDirection === 'asc' ? '↑' : '↓')}
+                            </th>
                             <th className="py-3 font-medium text-left">{t(wishlist.type)}</th>
-                            <th className="py-3 font-medium text-left">{t(wishlist.saga)}</th>
+                            <th
+                              className="py-3 font-medium text-left cursor-pointer hover:text-gray-700"
+                              onClick={() => toggleSort('saga')}
+                            >
+                              {t(wishlist.saga)} {sortColumn === 'saga' && (sortDirection === 'asc' ? '↑' : '↓')}
+                            </th>
                             <th className="py-3 font-medium text-center">{t(wishlist.checked)}</th>
                           </tr>
                         </thead>

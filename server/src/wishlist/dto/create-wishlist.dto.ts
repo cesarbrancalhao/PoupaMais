@@ -1,4 +1,4 @@
-import { IsString, IsNumber, IsBoolean, IsOptional, IsIn, Min } from 'class-validator';
+import { IsString, IsNumber, IsBoolean, IsOptional, IsIn, Min, Matches } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { SanitizeText } from '../../common/sanitization/sanitize';
 
@@ -24,10 +24,10 @@ export class CreateWishlistDto {
   @IsIn(['low', 'medium', 'high'])
   priority?: string;
 
-  @ApiProperty({ example: 'Q1', required: false, enum: ['Q1', 'Q2', 'Q3', 'Q4'] })
+  @ApiProperty({ example: '25Q1', required: false })
   @IsOptional()
   @IsString()
-  @IsIn(['Q1', 'Q2', 'Q3', 'Q4'])
+  @Matches(/^\d{2}Q[1-4]$/)
   quarter?: string;
 
   @ApiProperty({ example: 1, required: false })

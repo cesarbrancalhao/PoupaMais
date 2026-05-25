@@ -11,6 +11,7 @@ import { useLanguage } from '@/app/terminology/LanguageContext'
 import { addWishlistItemModal } from '@/app/terminology/language/modals/addWishlistItem'
 import { common } from '@/app/terminology/language/common'
 import { wishlist } from '@/app/terminology/language/wishlist'
+import { generateQuarterOptions, getCurrentYearQuarter } from '@/lib/quarters'
 
 interface AddWishlistItemModalProps {
   isOpen: boolean
@@ -20,14 +21,14 @@ interface AddWishlistItemModalProps {
 }
 
 const PRIORITIES = ['low', 'medium', 'high'] as const
-const QUARTERS = ['Q1', 'Q2', 'Q3', 'Q4'] as const
+const QUARTERS = generateQuarterOptions()
 
 export default function AddWishlistItemModal({ isOpen, onClose, types, sagas }: AddWishlistItemModalProps) {
   const [name, setName] = useState('')
   const [price, setPrice] = useState('')
   const [checked, setChecked] = useState(false)
   const [priority, setPriority] = useState('medium')
-  const [quarter, setQuarter] = useState('Q1')
+  const [quarter, setQuarter] = useState(getCurrentYearQuarter())
   const [typeId, setTypeId] = useState('')
   const [sagaId, setSagaId] = useState('')
   const [showError, setShowError] = useState(false)
@@ -42,7 +43,7 @@ export default function AddWishlistItemModal({ isOpen, onClose, types, sagas }: 
       setPrice('')
       setChecked(false)
       setPriority('medium')
-      setQuarter('Q1')
+      setQuarter(getCurrentYearQuarter())
       setTypeId('')
       setSagaId('')
       setShowError(false)
@@ -55,12 +56,7 @@ export default function AddWishlistItemModal({ isOpen, onClose, types, sagas }: 
     return t(addWishlistItemModal.medium)
   }
 
-  const quarterLabel = (q: string) => {
-    if (q === 'Q1') return t(addWishlistItemModal.q1)
-    if (q === 'Q2') return t(addWishlistItemModal.q2)
-    if (q === 'Q3') return t(addWishlistItemModal.q3)
-    return t(addWishlistItemModal.q4)
-  }
+  const quarterLabel = (q: string) => q
 
   const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const raw = e.target.value.replace(/\D/g, '')

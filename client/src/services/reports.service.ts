@@ -16,6 +16,9 @@ export interface ReportsExportData {
   goalContributions: Array<{ id: number; goal_id: number; value: number; date: string; observation: string | null; goal_name: string }>;
   expenseExclusions: Array<{ id: number; expense_id: number; exclusion_date: string; expense_name: string }>;
   incomeExclusions: Array<{ id: number; income_id: number; exclusion_date: string; income_name: string }>;
+  wishlistTypes: Array<{ id: number; name: string; icon: string }>;
+  wishlistSagas: Array<{ id: number; name: string; icon: string }>;
+  wishlists: Array<{ id: number; name: string; price: number; checked: boolean; priority: string; quarter: string; wishlist_type_id: number | null; saga_id: number | null; created_at: string; type_name: string | null; saga_name: string | null }>;
 }
 
 export interface ImportRow {
@@ -38,6 +41,11 @@ export interface ImportRow {
   entity_name?: string;
   entity_type?: string;
   exclusion_date?: string;
+  checked?: boolean;
+  priority?: string;
+  quarter?: string;
+  type_name?: string;
+  saga_name?: string;
 }
 
 export interface ImportResult {

@@ -8,6 +8,13 @@ import { PaginationResponse } from '../common/dto/pagination.dto';
 export class WishlistService {
   constructor(private databaseService: DatabaseService) {}
 
+  private getDefaultQuarter(): string {
+    const now = new Date()
+    const yy = now.getFullYear().toString().slice(-2)
+    const q = Math.floor(now.getMonth() / 3) + 1
+    return `${yy}Q${q}`
+  }
+
   async create(userId: number, data: CreateWishlistDto) {
     const client = await this.databaseService.getClient();
     try {
@@ -26,7 +33,7 @@ export class WishlistService {
           data.price,
           data.checked ?? false,
           data.priority || 'medium',
-          data.quarter || 'Q1',
+          data.quarter || this.getDefaultQuarter(),
           data.wishlist_type_id || null,
           data.saga_id || null,
           userId,

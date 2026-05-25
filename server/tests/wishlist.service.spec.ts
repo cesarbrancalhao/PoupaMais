@@ -13,7 +13,7 @@ describe('WishlistService', () => {
     price: 1500.0,
     checked: false,
     priority: 'medium',
-    quarter: 'Q1',
+    quarter: '25Q1',
     wishlist_type_id: null,
     saga_id: null,
     created_at: new Date('2025-01-01'),

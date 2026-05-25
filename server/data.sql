@@ -138,7 +138,7 @@ CREATE TABLE wishlist (
     price DECIMAL(11,2) NOT NULL CHECK (price > 0),
     checked BOOLEAN NOT NULL DEFAULT FALSE,
     priority VARCHAR(10) NOT NULL DEFAULT 'medium' CHECK (priority IN ('low', 'medium', 'high')),
-    quarter VARCHAR(2) NOT NULL DEFAULT 'Q1' CHECK (quarter IN ('Q1', 'Q2', 'Q3', 'Q4')),
+    quarter VARCHAR(5) NOT NULL,
     wishlist_type_id INT REFERENCES wishlist_type(id) ON DELETE SET NULL,
     saga_id INT REFERENCES wishlist_saga(id) ON DELETE SET NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
