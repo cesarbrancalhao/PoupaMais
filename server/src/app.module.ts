@@ -13,6 +13,9 @@ import { GoalsModule } from './goals/goals.module';
 import { GoalContributionModule } from './goal-contribution/goal-contribution.module';
 import { StatisticsModule } from './statistics/statistics.module';
 import { ReportsModule } from './reports/reports.module';
+import { WishlistTypeModule } from './wishlist-type/wishlist-type.module';
+import { WishlistSagaModule } from './wishlist-saga/wishlist-saga.module';
+import { WishlistModule } from './wishlist/wishlist.module';
 import { AuditModule } from './common/audit/audit.module';
 import { CsrfGuard } from './auth/guards/csrf.guard';
 
@@ -40,6 +43,9 @@ import { CsrfGuard } from './auth/guards/csrf.guard';
     GoalContributionModule,
     StatisticsModule,
     ReportsModule,
+    WishlistTypeModule,
+    WishlistSagaModule,
+    WishlistModule,
   ],
   providers: [
     {

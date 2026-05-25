@@ -26,6 +26,21 @@ export const dashboard = {
     en: 'Configure Sources',
     es: 'Configurar Fuentes',
   },
+  configureWishlistTypesOrSagas: {
+    pt: 'Configurar Tipos e Sagas',
+    en: 'Configure Types or Sagas',
+    es: 'Configurar Tipos y Sagas',
+  },
+  configureWishlistTypes: {
+    pt: 'Configurar Tipos',
+    en: 'Configure Types',
+    es: 'Configurar Tipos',
+  },
+  configureWishlistSagas: {
+    pt: 'Configurar Sagas',
+    en: 'Configure Sagas',
+    es: 'Configurar Sagas',
+  },
   backToView: {
     pt: 'Voltar para Visualização',
     en: 'Back to View',

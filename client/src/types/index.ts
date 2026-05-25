@@ -7,3 +7,6 @@ export * from './income-source';
 export * from './goal';
 export * from './goal-contribution';
 export * from './auth';
+export * from './wishlist-type';
+export * from './wishlist-saga';
+export * from './wishlist';

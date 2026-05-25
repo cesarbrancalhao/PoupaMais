@@ -52,6 +52,9 @@ echo "Dumping data for ${EMAIL} (ID: ${USER_ID})..."
         "user_id:income_exclusion"
         "user_id:goal"
         "user_id:goal_contribution"
+        "user_id:wishlist_type"
+        "user_id:wishlist_saga"
+        "user_id:wishlist"
     )
 
     for entry in "${TABLES[@]}"; do

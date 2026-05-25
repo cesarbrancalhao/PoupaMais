@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 const publicPaths = ['/', '/auth', '/login', '/register', '/recover', '/verify'];
-const protectedPaths = ['/dashboard', '/goals', '/analysis', '/settings', '/reports'];
+const protectedPaths = ['/dashboard', '/goals', '/analysis', '/wishlist', '/settings', '/reports'];
 
 function isTokenValid(token: string): boolean {
   try {

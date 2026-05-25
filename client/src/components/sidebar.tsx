@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
-import { Goal, LineChart, Settings, SquareStack, LogOut, Menu, FileText } from 'lucide-react'
+import { Goal, LineChart, Settings, SquareStack, LogOut, Menu, FileText, Heart } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
 import { useLanguage } from '@/app/terminology/LanguageContext'
 import { sidebar } from '@/app/terminology/language/sidebar'
@@ -32,6 +32,7 @@ export default function Sidebar() {
     { name: t(sidebar.dashboard), href: '/dashboard', icon: <SquareStack className="w-5 h-5" /> },
     { name: t(sidebar.goals), href: '/goals', icon: <Goal className="w-5 h-5" /> },
     { name: t(sidebar.analysis), href: '/analysis', icon: <LineChart className="w-5 h-5" /> },
+    { name: t(sidebar.wishlist), href: '/wishlist', icon: <Heart className="w-5 h-5" /> },
     { name: t(reports.sidebar), href: '/reports', icon: <FileText className="w-5 h-5" /> },
     { name: t(sidebar.settings), href: '/settings', icon: <Settings className="w-5 h-5" /> }
   ]

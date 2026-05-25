@@ -135,6 +135,11 @@ export const goals = {
     en: 'Insufficient data',
     es: 'Datos insuficientes',
   },
+  month: {
+    pt: 'mes',
+    en: 'month',
+    es: 'mes',
+  },
   months: {
     pt: 'meses',
     en: 'months',

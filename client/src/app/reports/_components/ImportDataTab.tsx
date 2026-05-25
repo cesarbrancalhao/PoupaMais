@@ -28,7 +28,7 @@ export default function ImportDataTab() {
         const val = values[idx] || ''
         if (h === 'value' || h === 'current_value' || h === 'monthly_savings') {
           row[h] = val ? Number(val) : undefined
-        } else if (h === 'recurring') {
+        } else if (h === 'recurring' || h === 'checked') {
           row[h] = val === 'true' ? true : false
         } else {
           row[h] = val || undefined
