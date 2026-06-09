@@ -1,12 +1,10 @@
 export const verificationModal = {
-  // Título
   title: {
     pt: 'Verificar Email',
     en: 'Verify Email',
     es: 'Verificar Correo Electrónico',
   },
 
-  // Mensagens
   description: {
     pt: 'Digite o código de 6 dígitos que enviamos para',
     en: 'Enter the 6-digit code we sent to',
@@ -18,7 +16,6 @@ export const verificationModal = {
     es: 'Ingrese el código',
   },
 
-  // Botões
   verify: {
     pt: 'Verificar',
     en: 'Verify',
@@ -35,7 +32,6 @@ export const verificationModal = {
     es: 'Reenviar código',
   },
 
-  // Mensagens de erro
   invalidCode: {
     pt: 'Código inválido',
     en: 'Invalid code',
@@ -57,7 +53,6 @@ export const verificationModal = {
     es: 'El código es obligatorio',
   },
 
-  // Mensagens de sucesso
   verified: {
     pt: 'Email verificado com sucesso!',
     en: 'Email verified successfully!',
@@ -69,7 +64,6 @@ export const verificationModal = {
     es: '¡Nuevo código enviado!',
   },
 
-  // Instruções
   checkSpam: {
     pt: 'Não recebeu o código? Verifique sua pasta de spam.',
     en: 'Didn\'t receive the code? Check your spam folder.',

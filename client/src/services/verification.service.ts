@@ -29,7 +29,7 @@ class VerificationService {
     if (error instanceof Error) {
       return error;
     }
-    return new Error('Erro ao verificar código. Tente novamente');
+    return new Error('Error verifying code. Please try again');
   }
 }
 

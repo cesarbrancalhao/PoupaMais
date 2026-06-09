@@ -1,4 +1,4 @@
-import { Moeda } from "@/types/auth";
+import { Currency } from "@/types/auth";
 
 interface CurrencyInfo {
     locale: string;
@@ -7,14 +7,14 @@ interface CurrencyInfo {
     position: "before" | "after";
 }
   
-const currencyMap: Record<Moeda, CurrencyInfo> = {
+const currencyMap: Record<Currency, CurrencyInfo> = {
     real: {
         locale: "pt-BR",
         currency: "BRL",
         symbol: "R$",
         position: "before"
     },
-    dolar: {
+    dollar: {
         locale: "en-US",
         currency: "USD",
         symbol: "$",
@@ -29,23 +29,22 @@ const currencyMap: Record<Moeda, CurrencyInfo> = {
 };
   
 
-export function formatCurrency(value: number, moeda?: Moeda) {
-  const safeMoeda = moeda ?? "real"; 
-  const config = currencyMap[safeMoeda];
+export function formatCurrency(value: number, currency?: Currency) {
+  const safeCurrency = currency ?? "real"; 
+  const config = currencyMap[safeCurrency];
 
-  // RN15 - A alteração da moeda não afetará os valores salvos, apenas irá alterar o símbolo de moeda exibida na interface junto aos valores.
   return new Intl.NumberFormat("pt-BR", {
     style: "currency",
     currency: config.currency,
   }).format(value);
 }
 
-export function getCurrencySymbol(moeda?: Moeda) {
-  return currencyMap[moeda ?? "real"].symbol;
+export function getCurrencySymbol(currency?: Currency) {
+  return currencyMap[currency ?? "real"].symbol;
 }
 
-export function getCurrencyPlaceholder(moeda: Moeda) {
-    const cfg = currencyMap[moeda];
+export function getCurrencyPlaceholder(currency: Currency) {
+    const cfg = currencyMap[currency];
   
     if (cfg.position === "before") {
       return `${cfg.symbol} 0,00`;
@@ -54,4 +53,3 @@ export function getCurrencyPlaceholder(moeda: Moeda) {
     return `0,00 ${cfg.symbol}`;
   }
   
-

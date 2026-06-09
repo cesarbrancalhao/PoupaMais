@@ -1,12 +1,10 @@
 export const dashboard = {
-  // Título
   title: {
     pt: 'Painel',
     en: 'Dashboard',
     es: 'Panel',
   },
 
-  // Abas
   expensesTab: {
     pt: 'Despesas',
     en: 'Expenses',
@@ -18,7 +16,6 @@ export const dashboard = {
     es: 'Ingresos',
   },
 
-  // Visualização de configuração
   configureCategories: {
     pt: 'Configurar Categorias',
     en: 'Configure Categories',
@@ -29,20 +26,33 @@ export const dashboard = {
     en: 'Configure Sources',
     es: 'Configurar Fuentes',
   },
+  configureWishlistTypesOrSagas: {
+    pt: 'Configurar Tipos e Sagas',
+    en: 'Configure Types or Sagas',
+    es: 'Configurar Tipos y Sagas',
+  },
+  configureWishlistTypes: {
+    pt: 'Configurar Tipos',
+    en: 'Configure Types',
+    es: 'Configurar Tipos',
+  },
+  configureWishlistSagas: {
+    pt: 'Configurar Sagas',
+    en: 'Configure Sagas',
+    es: 'Configurar Sagas',
+  },
   backToView: {
     pt: 'Voltar para Visualização',
     en: 'Back to View',
     es: 'Volver a la Vista',
   },
 
-  // Seletor de mês
   selectMonth: {
     pt: 'Selecione o mês',
     en: 'Select month',
     es: 'Seleccione el mes',
   },
 
-  // Meses
   january: {
     pt: 'Janeiro',
     en: 'January',
@@ -104,7 +114,6 @@ export const dashboard = {
     es: 'Diciembre',
   },
 
-  // Cards
   totalExpenses: {
     pt: 'Total de Despesas',
     en: 'Total Expenses',
@@ -130,13 +139,7 @@ export const dashboard = {
     en: 'Click on Add Income to start!',
     es: 'Haga clic en Agregar Ingreso para comenzar!',
   },
-
-  // Gráficos
-  balanceEvolution: {
-    pt: 'Evolução do Saldo (7 meses)',
-    en: 'Balance Evolution (7 months)',
-    es: 'Evolución del Saldo (7 meses)',
-  },
+  
   expensesByCategory: {
     pt: 'Despesas por Categoria',
     en: 'Expenses by Category',
@@ -148,7 +151,6 @@ export const dashboard = {
     es: 'Ingresos por Fuente',
   },
 
-  // Tabela de transações recentes
   lastExpenses: {
     pt: 'Últimas despesas',
     en: 'Last expenses',
@@ -195,7 +197,6 @@ export const dashboard = {
     es: 'Acciones',
   },
 
-  // Tabelas vazias
   noExpenses: {
     pt: 'Nenhuma despesa registrada ainda',
     en: 'No expenses registered yet',
@@ -227,7 +228,6 @@ export const dashboard = {
     es: 'No hay fuentes registradas aún',
   },
 
-  // Botões
   addExpense: {
     pt: 'Adicionar Despesa',
     en: 'Add Expense',
@@ -249,7 +249,6 @@ export const dashboard = {
     es: 'Agregar Fuente',
   },
 
-  // Mensagens de status
   loadingExpenses: {
     pt: 'Carregando despesas...',
     en: 'Loading expenses...',

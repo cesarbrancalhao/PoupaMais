@@ -3,22 +3,19 @@
 import { useState } from 'react'
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
-import { Goal, LineChart, Settings, SquareStack, LogOut, Menu } from 'lucide-react'
+import { Goal, LineChart, Settings, SquareStack, LogOut, Menu, FileText, Heart } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
-import { useTheme } from '@/contexts/ThemeContext'
 import { useLanguage } from '@/app/terminology/LanguageContext'
 import { sidebar } from '@/app/terminology/language/sidebar'
 import { common } from '@/app/terminology/language/common'
+import { reports } from '@/app/terminology/language/reports'
 
 export default function Sidebar() {
   const pathname = usePathname()
   const [isOpen, setIsOpen] = useState(false)
   const [showLogoutModal, setShowLogoutModal] = useState(false)
   const { user, logout } = useAuth()
-  const { theme } = useTheme()
   const { t } = useLanguage()
-
-  const isDark = theme === "escuro"
 
   const handleLogout = () => setShowLogoutModal(true)
   const confirmLogout = () => {
@@ -27,25 +24,23 @@ export default function Sidebar() {
   }
   const cancelLogout = () => setShowLogoutModal(false)
 
-  const initials = user?.nome
-    ? user.nome.split(' ').map(word => word[0]).join('').toUpperCase()
+  const initials = user?.name
+    ? user.name.split(' ').map(word => word[0]).join('').toUpperCase()
     : 'JS'
 
   const links = [
     { name: t(sidebar.dashboard), href: '/dashboard', icon: <SquareStack className="w-5 h-5" /> },
-    { name: t(sidebar.goals), href: '/metas', icon: <Goal className="w-5 h-5" /> },
-    { name: t(sidebar.analysis), href: '/analise', icon: <LineChart className="w-5 h-5" /> },
-    { name: t(sidebar.settings), href: '/configuracoes', icon: <Settings className="w-5 h-5" /> }
+    { name: t(sidebar.goals), href: '/goals', icon: <Goal className="w-5 h-5" /> },
+    { name: t(sidebar.analysis), href: '/analysis', icon: <LineChart className="w-5 h-5" /> },
+    { name: t(sidebar.wishlist), href: '/wishlist', icon: <Heart className="w-5 h-5" /> },
+    { name: t(reports.sidebar), href: '/reports', icon: <FileText className="w-5 h-5" /> },
+    { name: t(sidebar.settings), href: '/settings', icon: <Settings className="w-5 h-5" /> }
   ]
 
   return (
     <>
-      {/* RF17 - O sistema deverá ter uma barra lateral que permite a navegação entre todas as telas. */}
-      {/* RN26 - A barra lateral de navegação será um componente React vertical fixado à esquerda na aplicação. */}
       <button
-        className={`md:hidden fixed top-4 left-4 z-50 p-2 rounded-md shadow transition
-          ${isDark ? "bg-[var(--bg-card)] text-[var(--text-main)]" : "bg-white text-gray-800"}
-        `}
+        className="md:hidden fixed top-4 left-4 z-50 p-2 rounded-md shadow transition bg-white text-gray-800"
         onClick={() => setIsOpen(!isOpen)}
       >
         <Menu className="w-6 h-6" />
@@ -56,7 +51,7 @@ export default function Sidebar() {
           fixed top-0 left-0 h-screen w-64 flex flex-col justify-between
           transform transition-transform duration-300 z-40 overflow-y-auto
           ${isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
-          ${isDark ? "bg-[var(--bg-card)] text-[var(--text-main)]" : "bg-white text-gray-800"}
+          bg-white text-gray-800
         `}
       >
 
@@ -67,17 +62,15 @@ export default function Sidebar() {
             </div>
 
             <div className="flex-1">
-              <p className="text-sm font-medium">{user?.nome || 'Carregando...'}</p>
+              <p className="text-sm font-medium">{user?.name || 'Loading...'}</p>
             </div>
 
             <button
               onClick={handleLogout}
-              className={`p-1 rounded transition 
-                ${isDark ? "hover:bg-white/10" : "hover:bg-gray-100"}
-              `}
+              className="p-1 rounded transition hover:bg-gray-100"
               title={t(sidebar.logout)}
             >
-              <LogOut className={`w-4 h-4 ${isDark ? "text-gray-300" : "text-gray-500"}`} />
+              <LogOut className="w-4 h-4 text-gray-500" />
             </button>
           </div>
 
@@ -91,12 +84,8 @@ export default function Sidebar() {
                   href={link.href}
                   className={`flex items-center gap-3 px-6 py-3 text-sm transition-colors 
                     ${active
-                      ? isDark
-                        ? "text-white bg-gradient-to-r from-blue-900/50 to-transparent"
-                        : "text-gray-800 bg-gradient-to-r from-blue-100 to-white"
-                      : isDark
-                        ? "text-gray-300 hover:bg-white/10"
-                        : "text-gray-600 hover:bg-gray-50"
+                      ? "text-gray-800 bg-gradient-to-r from-blue-100 to-white"
+                      : "text-gray-600 hover:bg-gray-50"
                     }
                   `}
                   onClick={() => setIsOpen(false)}
@@ -113,11 +102,7 @@ export default function Sidebar() {
       {showLogoutModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div
-            className={`
-              max-w-sm w-full mx-4 p-6 rounded-lg shadow-lg
-              transition
-              ${isDark ? "bg-[var(--bg-card)] text-[var(--text-main)]" : "bg-white text-gray-800"}
-            `}
+            className="max-w-sm w-full mx-4 p-6 rounded-lg shadow-lg transition bg-white text-gray-800"
           >
             <h3 className="text-lg font-semibold mb-2">{t(sidebar.logoutConfirmTitle)}</h3>
             <p className="text-sm opacity-80 mb-6">{t(sidebar.logoutConfirmMessage)}</p>
@@ -125,19 +110,13 @@ export default function Sidebar() {
             <div className="flex gap-3 justify-end">
               <button
                 onClick={cancelLogout}
-                className={`
-                  px-4 py-2 rounded-lg text-sm font-medium transition
-                  ${isDark ? "bg-white/10 text-gray-200 hover:bg-white/20" : "bg-gray-100 text-gray-700 hover:bg-gray-200"}
-                `}
+                className="px-4 py-2 rounded-lg text-sm font-medium transition bg-gray-100 text-gray-700 hover:bg-gray-200"
               >
                 {t(common.cancel)}
               </button>
               <button
                 onClick={confirmLogout}
-                className={`
-                  px-4 py-2 rounded-lg text-sm font-medium text-white transition
-                  ${isDark ? "bg-indigo-700 hover:bg-indigo-800" : "bg-indigo-600 hover:bg-indigo-700"}
-                `}
+                className="px-4 py-2 rounded-lg text-sm font-medium text-white transition bg-indigo-600 hover:bg-indigo-700"
               >
                 {t(sidebar.logout)}
               </button>

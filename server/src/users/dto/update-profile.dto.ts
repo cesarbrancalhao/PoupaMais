@@ -1,13 +1,15 @@
 import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { SanitizeText } from '../../common/sanitization/sanitize';
 
 export class UpdateProfileDto {
-  @ApiProperty({ example: 'Usuario da Silva' })
+  @ApiProperty({ example: 'John Doe' })
+  @SanitizeText()
   @IsString()
   @IsNotEmpty()
-  nome: string;
+  name: string;
 
-  @ApiProperty({ example: 'usuario@example.com' })
+  @ApiProperty({ example: 'user@example.com' })
   @IsEmail()
   @IsNotEmpty()
   email: string;

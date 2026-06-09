@@ -12,6 +12,7 @@
 */*/yarn-debug.log*
 */*/yarn-error.log*
 */*/lerna-debug.log*
+dump/
 
 # dotenv environment variable files
 */*.env
@@ -24,8 +25,8 @@
 */*.temp
 */*.tmp
 
-#server tests
-/server/tests/
-/server/coverage/
+# TypeScript build info
+*.tsbuildinfo
 
-/yg
+# server coverage
+/server/coverage/

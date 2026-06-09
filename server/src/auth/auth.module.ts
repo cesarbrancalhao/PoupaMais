@@ -9,6 +9,7 @@ import { AuthController } from './auth.controller';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { LocalStrategy } from './strategies/local.strategy';
 import { EmailModule } from '../email/email.module';
+import { EmailRateLimiterService } from '../common/rate-limit/email-rate-limiter.service';
 
 @Module({
   imports: [
@@ -19,7 +20,6 @@ import { EmailModule } from '../email/email.module';
       useFactory: async (configService: ConfigService) => ({
         secret: configService.get<string>('JWT_SECRET'),
         signOptions: {
-          // RN23 - A sessão JWT dura 7 dias por padrão, podendo ser definida nas variáveis de ambiente.
           expiresIn: configService.get<string>('JWT_EXPIRATION') || '7d',
         },
       }),
@@ -27,7 +27,14 @@ import { EmailModule } from '../email/email.module';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, VerificationService, PasswordResetService, JwtStrategy, LocalStrategy],
+  providers: [
+    AuthService,
+    VerificationService,
+    PasswordResetService,
+    JwtStrategy,
+    LocalStrategy,
+    EmailRateLimiterService,
+  ],
   exports: [AuthService],
 })
 export class AuthModule {}

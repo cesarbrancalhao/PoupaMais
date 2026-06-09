@@ -10,6 +10,8 @@ export class EmailService {
   constructor(private configService: ConfigService) {
     const smtpPort = this.configService.get<number>('SMTP_PORT');
     const smtpSecure = this.configService.get<string>('SMTP_SECURE') === 'true';
+    const rejectUnauthorized =
+      this.configService.get<string>('SMTP_TLS_REJECT_UNAUTHORIZED') !== 'false';
 
     this.transporter = nodemailer.createTransport({
       host: this.configService.get<string>('SMTP_HOST'),
@@ -20,14 +22,19 @@ export class EmailService {
         pass: this.configService.get<string>('SMTP_PASS'),
       },
       tls: {
-        rejectUnauthorized: false,
+        rejectUnauthorized,
       },
     });
   }
 
-  async sendVerificationEmail(email: string, code: string, nome: string, idioma: 'portugues' | 'ingles' | 'espanhol'): Promise<void> {
+  async sendVerificationEmail(
+    email: string,
+    code: string,
+    name: string,
+    language: 'portuguese' | 'english' | 'spanish',
+  ): Promise<void> {
     const translations = {
-      portugues: {
+      portuguese: {
         subject: 'Código de Verificação - PoupaMais',
         greeting: 'Olá',
         message: 'Seu código de verificação é:',
@@ -35,7 +42,7 @@ export class EmailService {
         ignore: 'Se você não solicitou este código, ignore este email.',
         thanks: 'Obrigado por usar PoupaMais!',
       },
-      ingles: {
+      english: {
         subject: 'Verification Code - PoupaMais',
         greeting: 'Hello',
         message: 'Your verification code is:',
@@ -43,7 +50,7 @@ export class EmailService {
         ignore: 'If you did not request this code, please ignore this email.',
         thanks: 'Thank you for using PoupaMais!',
       },
-      espanhol: {
+      spanish: {
         subject: 'Código de Verificación - PoupaMais',
         greeting: 'Hola',
         message: 'Su código de verificación es:',
@@ -53,7 +60,7 @@ export class EmailService {
       },
     };
 
-    const t = translations[idioma] || translations.portugues;
+    const t = translations[language] || translations.portuguese;
 
     const mailOptions = {
       from: this.configService.get<string>('SMTP_FROM'),
@@ -79,7 +86,7 @@ export class EmailService {
             <div class="header">
               <h1 style="color: #4F46E5;">PoupaMais</h1>
             </div>
-            <p>${t.greeting} <strong>${nome}</strong>,</p>
+            <p>${t.greeting} <strong>${name}</strong>,</p>
             <p>${t.message}</p>
             <div class="code-box">
               <div class="code">${code}</div>
@@ -98,38 +105,48 @@ export class EmailService {
     await this.transporter.sendMail(mailOptions);
   }
 
-  async sendPasswordResetEmail(email: string, code: string, nome: string, idioma: 'portugues' | 'ingles' | 'espanhol'): Promise<void> {
+  async sendPasswordResetEmail(
+    email: string,
+    code: string,
+    name: string,
+    language: 'portuguese' | 'english' | 'spanish',
+  ): Promise<void> {
     const translations = {
-      portugues: {
+      portuguese: {
         subject: 'Recuperação de Senha - PoupaMais',
         greeting: 'Olá',
-        message: 'Você solicitou a recuperação de senha. Use o código abaixo para redefinir sua senha:',
+        message:
+          'Você solicitou a recuperação de senha. Use o código abaixo para redefinir sua senha:',
         expires: 'Este código expira em 15 minutos.',
-        ignore: 'Se você não solicitou a recuperação de senha, ignore este email e sua senha permanecerá inalterada.',
+        ignore:
+          'Se você não solicitou a recuperação de senha, ignore este email e sua senha permanecerá inalterada.',
         thanks: 'Obrigado por usar PoupaMais!',
         security: 'Por segurança, nunca compartilhe este código com ninguém.',
       },
-      ingles: {
+      english: {
         subject: 'Password Recovery - PoupaMais',
         greeting: 'Hello',
         message: 'You requested a password recovery. Use the code below to reset your password:',
         expires: 'This code expires in 15 minutes.',
-        ignore: 'If you did not request a password recovery, please ignore this email and your password will remain unchanged.',
+        ignore:
+          'If you did not request a password recovery, please ignore this email and your password will remain unchanged.',
         thanks: 'Thank you for using PoupaMais!',
         security: 'For security, never share this code with anyone.',
       },
-      espanhol: {
+      spanish: {
         subject: 'Recuperación de Contraseña - PoupaMais',
         greeting: 'Hola',
-        message: 'Solicitó la recuperación de contraseña. Use el código a continuación para restablecer su contraseña:',
+        message:
+          'Solicitó la recuperación de contraseña. Use el código a continuación para restablecer su contraseña:',
         expires: 'Este código expira en 15 minutos.',
-        ignore: 'Si no solicitó la recuperación de contraseña, ignore este correo electrónico y su contraseña permanecerá sin cambios.',
+        ignore:
+          'Si no solicitó la recuperación de contraseña, ignore este correo electrónico y su contraseña permanecerá sin cambios.',
         thanks: '¡Gracias por usar PoupaMais!',
         security: 'Por seguridad, nunca comparta este código con nadie.',
       },
     };
 
-    const t = translations[idioma] || translations.portugues;
+    const t = translations[language] || translations.portuguese;
 
     const mailOptions = {
       from: this.configService.get<string>('SMTP_FROM'),
@@ -156,7 +173,7 @@ export class EmailService {
             <div class="header">
               <h1 style="color: #4F46E5;">PoupaMais</h1>
             </div>
-            <p>${t.greeting} <strong>${nome}</strong>,</p>
+            <p>${t.greeting} <strong>${name}</strong>,</p>
             <p>${t.message}</p>
             <div class="code-box">
               <div class="code">${code}</div>

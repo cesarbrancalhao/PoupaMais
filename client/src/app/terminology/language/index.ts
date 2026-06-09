@@ -1,22 +1,25 @@
-// Types
 export * from './types';
 
-// Common e páginas
 export * from './common';
 export * from './auth';
 export * from './sidebar';
 export * from './dashboard';
-export * from './metas';
-export * from './analise';
-export * from './configuracoes';
+export * from './goals';
+export * from './analysis';
+export * from './settings';
+export * from './reports';
+export * from './wishlist';
 
-// Modais
 export * from './modals/addDashboard';
 export * from './modals/editDashboard';
-export * from './modals/addMeta';
-export * from './modals/editMeta';
-export * from './modals/addContribuicao';
-export * from './modals/editContribuicao';
-export * from './modals/addCategoria';
-export * from './modals/editCategoria';
+export * from './modals/addGoal';
+export * from './modals/editGoal';
+export * from './modals/addContribution';
+export * from './modals/editContribution';
+export * from './modals/addCategory';
+export * from './modals/editCategory';
+export * from './modals/addWishlistItem';
+export * from './modals/editWishlistItem';
+export * from './modals/addWishlistTypeSaga';
+export * from './modals/editWishlistTypeSaga';
 export * from './modals/password';

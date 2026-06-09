@@ -1,30 +1,33 @@
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe, Logger } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import helmet from 'helmet';
 import { AppModule } from './app.module';
 import { AllExceptionsFilter } from './common/filters/http-exception.filter';
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+import cookieParser = require('cookie-parser');
 
 async function bootstrap() {
   const logger = new Logger('Bootstrap');
   const requiredEnvs = ['JWT_SECRET', 'DB_HOST', 'DB_PASSWORD'];
-  requiredEnvs.forEach(variable => {
+  requiredEnvs.forEach((variable) => {
     if (!process.env[variable]) {
-      throw new Error(`Variável de ambiente ${variable} não definida`);
+      throw new Error(`Environment variable ${variable} is not defined`);
     }
   });
 
   const app = await NestFactory.create(AppModule);
 
-  // CORS
+  app.use(helmet());
+  app.use(cookieParser(process.env.COOKIE_SECRET));
+
   app.enableCors({
     origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
     credentials: true,
   });
 
-  // Prefixo global
   app.setGlobalPrefix('api/v1');
 
-  // Pipe de validação
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
@@ -33,13 +36,11 @@ async function bootstrap() {
     }),
   );
 
-  // Filtro de exceções
   app.useGlobalFilters(new AllExceptionsFilter());
 
-  // Documentação Swagger
   const config = new DocumentBuilder()
     .setTitle('PoupaMais API')
-    .setDescription('API de Gerenciamento de Finanças Pessoais')
+    .setDescription('Personal Finance Management API')
     .setVersion('1.0')
     .addBearerAuth()
     .build();
@@ -47,13 +48,13 @@ async function bootstrap() {
   SwaggerModule.setup('api/docs', app, document);
 
   const port = process.env.PORT || 3000;
-  
+
   try {
     await app.listen(port);
-    logger.log(`Aplicação rodando em: http://localhost:${port}`);
-    logger.log(`Documentação Swagger disponível em: http://localhost:${port}/api/docs`);
+    logger.log(`Application running at: http://localhost:${port}`);
+    logger.log(`Swagger documentation available at: http://localhost:${port}/api/docs`);
   } catch (error) {
-    logger.error('Erro ao iniciar a aplicação:', error);
+    logger.error('Error starting application:', error);
     process.exit(1);
   }
 }

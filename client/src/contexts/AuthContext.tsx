@@ -13,7 +13,7 @@ interface AuthContextType {
   loading: boolean;
   login: (data: LoginRequest) => Promise<void>;
   register: (data: RegisterRequest) => Promise<void>;
-  logout: () => void;
+  logout: () => Promise<void>;
   isAuthenticated: boolean;
 }
 
@@ -51,13 +51,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       } catch (err) {
         if (!isMounted || abortController.signal.aborted) return;
-        
+
         const error = err as ApiError;
-        if (error && (error.status === 401 || error.status === 403)) {
-          authService.logout();
+        if (error && (error.status === 401 || error.status === 403 || error.status === 404)) {
+          await authService.logout();
           setUser(null);
         } else {
-          console.error("Erro ao inicializar auth:", err);
+          console.error("Error initializing auth:", err);
           setUser(baseUser);
         }
       } finally {
@@ -94,8 +94,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const logout = () => {
-    authService.logout();
+  const logout = async () => {
+    await authService.logout();
     setUser(null);
     router.push('/auth');
   };
@@ -118,7 +118,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 export function useAuth() {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error('Erro ao usar o contexto de autenticação');
+    throw new Error('Error using auth context');
   }
   return context;
 }

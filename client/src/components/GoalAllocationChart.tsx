@@ -9,22 +9,19 @@ import {
   Legend,
   ChartOptions
 } from 'chart.js'
-import { useTheme } from '@/contexts/ThemeContext'
 import { formatCurrency } from "@/app/terminology/currency"
-import { Moeda } from "@/types/auth"
-import { Meta } from "@/types"
+import { Currency } from "@/types/auth"
+import { Goal } from "@/types"
 
 ChartJS.register(ArcElement, Tooltip, Legend)
 
 interface GoalAllocationChartProps {
-  metas: Meta[]
-  moeda: Moeda
+  goals: Goal[]
+  currency: Currency
 }
 
-export default function GoalAllocationChart({ metas, moeda }: GoalAllocationChartProps) {
+export default function GoalAllocationChart({ goals, currency }: GoalAllocationChartProps) {
   const [containerKey, setContainerKey] = useState(0)
-  const { theme } = useTheme()
-  const isDark = theme === 'escuro'
 
   useEffect(() => {
     let timeoutId: NodeJS.Timeout
@@ -44,8 +41,8 @@ export default function GoalAllocationChart({ metas, moeda }: GoalAllocationChar
     }
   }, [])
 
-  const tooltipBg = isDark ? '#2b2b2b' : '#ffffff'
-  const tooltipText = isDark ? '#f5f5f5' : '#111111'
+  const tooltipBg = '#ffffff'
+  const tooltipText = '#111111'
 
   const colors = [
     '#5B8FF9',
@@ -66,11 +63,11 @@ export default function GoalAllocationChart({ metas, moeda }: GoalAllocationChar
   ]
 
   const chartData = {
-    labels: metas.map(meta => meta.nome),
+    labels: goals.map(goal => goal.name),
     datasets: [
       {
-        data: metas.map(meta => Number(meta.economia_mensal) || 0),
-        backgroundColor: colors.slice(0, metas.length),
+        data: goals.map(goal => Number(goal.monthly_savings) || 0),
+        backgroundColor: colors.slice(0, goals.length),
         borderWidth: 0,
         cutout: '70%',
       }
@@ -87,13 +84,13 @@ export default function GoalAllocationChart({ metas, moeda }: GoalAllocationChar
         backgroundColor: tooltipBg,
         titleColor: tooltipText,
         bodyColor: tooltipText,
-        borderColor: isDark ? '#444' : '#ddd',
+        borderColor: '#ddd',
         borderWidth: 1,
         padding: 12,
         callbacks: {
           label(context) {
             const value = context.parsed
-            return `${context.label}: ${formatCurrency(value, moeda)}/mês`
+            return `${context.label}: ${formatCurrency(value, currency)}/month`
           }
         }
       }
@@ -112,18 +109,18 @@ export default function GoalAllocationChart({ metas, moeda }: GoalAllocationChar
       </div>
 
       <div className="flex flex-wrap gap-3 justify-center">
-        {metas.map((meta, index) => (
-          <div key={meta.id} className="flex items-center gap-2">
+        {goals.map((goal, index) => (
+          <div key={goal.id} className="flex items-center gap-2">
             <div
               className="w-3 h-3 rounded-full"
               style={{ backgroundColor: colors[index % colors.length] }}
             />
             <span
               className={`text-xs transition-colors ${
-                isDark ? 'text-gray-300' : 'text-gray-600'
+                'text-gray-600'
               }`}
             >
-              {meta.nome}
+              {goal.name}
             </span>
           </div>
         ))}

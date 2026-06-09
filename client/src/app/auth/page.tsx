@@ -58,7 +58,6 @@ export default function AuthPage() {
           <LanguageSelector
             currentLanguage={language}
             onLanguageChange={setLanguage}
-            isDarkMode={false}
           />
         </div>
         <div className="w-full max-w-sm space-y-6">
@@ -74,7 +73,6 @@ export default function AuthPage() {
               </div>
             )}
 
-            {/* RF02 - O sistema deve permitir ao usuário fazer login com o email e senha cadastrados. */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 {t(auth.email)}
@@ -104,7 +102,7 @@ export default function AuthPage() {
                 required
               />
               <div className="text-right mt-1">
-                <Link href="/recuperar" className="text-xs text-indigo-500 hover:underline">
+                <Link href="/recover" className="text-xs text-indigo-500 hover:underline">
                   {t(auth.forgotPassword)}
                 </Link>
               </div>
@@ -120,7 +118,7 @@ export default function AuthPage() {
 
             <p className="text-center text-sm text-gray-600">
               {t(auth.noAccount)}{" "}
-              <Link href="/cadastro" className="text-indigo-500 hover:underline">
+              <Link href="/register" className="text-indigo-500 hover:underline">
                 {t(auth.registerHere)}
               </Link>
             </p>

@@ -11,28 +11,25 @@ import {
   Legend,
   ChartOptions
 } from 'chart.js'
-import { useTheme } from '@/contexts/ThemeContext'
 import { formatCurrency } from "@/app/terminology/currency"
-import { Moeda } from "@/types/auth"
+import { Currency } from "@/types/auth"
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend)
 
 interface MonthlyTrendData {
   month: string
   balance: number
-  receitas: number
-  despesas: number
+  income: number
+  expenses: number
 }
 
 interface MonthlyTrendChartProps {
   data: MonthlyTrendData[]
-  moeda: Moeda
+  currency: Currency
 }
 
-export default function MonthlyTrendChart({ data, moeda }: MonthlyTrendChartProps) {
+export default function MonthlyTrendChart({ data, currency }: MonthlyTrendChartProps) {
   const [containerKey, setContainerKey] = useState(0)
-  const { theme } = useTheme()
-  const isDark = theme === 'escuro'
 
   useEffect(() => {
     let timeoutId: NodeJS.Timeout
@@ -48,27 +45,27 @@ export default function MonthlyTrendChart({ data, moeda }: MonthlyTrendChartProp
     }
   }, [])
 
-  const textColor = isDark ? '#f5f5f5' : '#1f2937'
-  const gridColor = isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)'
-  const tooltipBg = isDark ? '#2b2b2b' : '#ffffff'
-  const tooltipText = isDark ? '#f5f5f5' : '#111111'
+  const textColor = '#1f2937'
+  const gridColor = 'rgba(0,0,0,0.05)'
+  const tooltipBg = '#ffffff'
+  const tooltipText = '#111111'
 
   const chartData = {
     labels: data.map(item => item.month),
     datasets: [
       {
-        label: 'Receitas',
-        data: data.map(item => item.receitas),
-        backgroundColor: isDark ? 'rgba(74, 222, 128, 0.8)' : 'rgba(34, 197, 94, 0.8)',
-        borderColor: isDark ? 'rgba(74, 222, 128, 1)' : 'rgba(34, 197, 94, 1)',
+        label: 'Income',
+        data: data.map(item => item.income),
+        backgroundColor: 'rgba(34, 197, 94, 0.8)',
+        borderColor: 'rgba(34, 197, 94, 1)',
         borderWidth: 1,
         borderRadius: 4
       },
       {
-        label: 'Despesas',
-        data: data.map(item => item.despesas),
-        backgroundColor: isDark ? 'rgba(248, 113, 113, 0.8)' : 'rgba(251, 146, 120, 0.8)',
-        borderColor: isDark ? 'rgba(239, 68, 68, 1)' : 'rgba(251, 146, 120, 1)',
+        label: 'Expenses',
+        data: data.map(item => item.expenses),
+        backgroundColor: 'rgba(251, 146, 120, 0.8)',
+        borderColor: 'rgba(251, 146, 120, 1)',
         borderWidth: 1,
         borderRadius: 4
       }
@@ -94,13 +91,13 @@ export default function MonthlyTrendChart({ data, moeda }: MonthlyTrendChartProp
         backgroundColor: tooltipBg,
         titleColor: tooltipText,
         bodyColor: tooltipText,
-        borderColor: isDark ? '#444' : '#ddd',
+        borderColor: '#ddd',
         borderWidth: 1,
         padding: 12,
         callbacks: {
           label: function (context) {
             const value = context.parsed.y ?? 0
-            const formatted = formatCurrency(1, moeda)
+            const formatted = formatCurrency(1, currency)
             const symbol = formatted.replace(/[\d.,\s]/g, '')
 
             if (Math.abs(value) >= 1000) {
@@ -132,7 +129,7 @@ export default function MonthlyTrendChart({ data, moeda }: MonthlyTrendChartProp
           color: textColor,
           callback: (value) => {
             const num = value as number
-            const formatted = formatCurrency(1, moeda)
+            const formatted = formatCurrency(1, currency)
             const symbol = formatted.replace(/[\d.,\s]/g, '')
 
             if (Math.abs(num) >= 1000) {

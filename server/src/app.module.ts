@@ -5,12 +5,19 @@ import { APP_GUARD } from '@nestjs/core';
 import { DatabaseModule } from './database/database.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
-import { CategoriaDespesaModule } from './categoria-despesa/categoria-despesa.module';
-import { FonteReceitaModule } from './fonte-receita/fonte-receita.module';
-import { DespesasModule } from './despesas/despesas.module';
-import { ReceitasModule } from './receitas/receitas.module';
-import { MetasModule } from './metas/metas.module';
-import { ContribuicaoMetaModule } from './contribuicao-meta/contribuicao-meta.module';
+import { ExpenseCategoryModule } from './expense-category/expense-category.module';
+import { IncomeSourceModule } from './income-source/income-source.module';
+import { ExpensesModule } from './expenses/expenses.module';
+import { IncomesModule } from './incomes/incomes.module';
+import { GoalsModule } from './goals/goals.module';
+import { GoalContributionModule } from './goal-contribution/goal-contribution.module';
+import { StatisticsModule } from './statistics/statistics.module';
+import { ReportsModule } from './reports/reports.module';
+import { WishlistTypeModule } from './wishlist-type/wishlist-type.module';
+import { WishlistSagaModule } from './wishlist-saga/wishlist-saga.module';
+import { WishlistModule } from './wishlist/wishlist.module';
+import { AuditModule } from './common/audit/audit.module';
+import { CsrfGuard } from './auth/guards/csrf.guard';
 
 @Module({
   imports: [
@@ -18,26 +25,36 @@ import { ContribuicaoMetaModule } from './contribuicao-meta/contribuicao-meta.mo
       isGlobal: true,
       envFilePath: '.env',
     }),
-    // RF24 - O sistema deverá limitar requisições para previnir abusos e ataques como DDoS e BruteForce.
-    // RN24 - As requisições serão limitadas à API em 100 requisições por minuto.
-    ThrottlerModule.forRoot([{
-      ttl: 60000,
-      limit: 100,
-    }]),
+    ThrottlerModule.forRoot([
+      {
+        ttl: 60000,
+        limit: 100,
+      },
+    ]),
+    AuditModule,
     DatabaseModule,
     AuthModule,
     UsersModule,
-    CategoriaDespesaModule,
-    FonteReceitaModule,
-    DespesasModule,
-    ReceitasModule,
-    MetasModule,
-    ContribuicaoMetaModule,
+    ExpenseCategoryModule,
+    IncomeSourceModule,
+    ExpensesModule,
+    IncomesModule,
+    GoalsModule,
+    GoalContributionModule,
+    StatisticsModule,
+    ReportsModule,
+    WishlistTypeModule,
+    WishlistSagaModule,
+    WishlistModule,
   ],
   providers: [
     {
       provide: APP_GUARD,
       useClass: ThrottlerGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: CsrfGuard,
     },
   ],
 })

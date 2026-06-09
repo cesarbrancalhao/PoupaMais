@@ -2,13 +2,25 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { Request } from 'express';
+import { TOKEN_COOKIE_NAME } from '../cookies';
 
-// RF26 - O sistema deverá utilizar sessões de autenticação JWT para a navegação e login.
+function cookieExtractor(req: Request): string | null {
+  const cookies = (req as Request & { cookies?: Record<string, string> }).cookies;
+  if (cookies && typeof cookies[TOKEN_COOKIE_NAME] === 'string') {
+    return cookies[TOKEN_COOKIE_NAME];
+  }
+  return null;
+}
+
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(private configService: ConfigService) {
     super({
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      jwtFromRequest: ExtractJwt.fromExtractors([
+        cookieExtractor,
+        ExtractJwt.fromAuthHeaderAsBearerToken(),
+      ]),
       ignoreExpiration: false,
       secretOrKey: configService.get<string>('JWT_SECRET'),
     });

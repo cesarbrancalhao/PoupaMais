@@ -1,154 +1,154 @@
 # Server-side PoupaMais
 
-API Backend para PoupaMais - Sistema completo de gerenciamento de finanças pessoais.
+Backend API for PoupaMais - Complete personal finance management system.
 
 ## Stacks
 
-- **NestJS** - Framework Node.js
-- **PostgreSQL** - Banco de dados relacional
-- **Docker & Docker Compose** - Containerização
-- **Passport & JWT** - Autenticação e autorização
-- **bcrypt** - Hash de senhas
-- **class-validator & class-transformer** - Validação de requests
-- **Swagger** - Documentação interativa da API
-- **Throttler** - Rate limiting para proteção contra abuso
+- **NestJS** - Node.js Framework
+- **PostgreSQL** - Relational database
+- **Docker & Docker Compose** - Containerization
+- **Passport & JWT** - Authentication and authorization
+- **bcrypt** - Password hashing
+- **class-validator & class-transformer** - Request validation
+- **Swagger** - Interactive API documentation
+- **Throttler** - Rate limiting for abuse protection
 
-### Banco de Dados
+### Database
 
-- **usuario** - Contas de usuário
-- **config** - Configurações do usuário (tema, idioma, moeda)
-- **categoria_despesa** - Categorias de despesas personalizadas (com ícones)
-- **fonte_receita** - Fontes de receita personalizadas (com ícones)
-- **despesa** - Registros de despesas (suporta recorrência e vencimentos)
-- **receita** - Registros de receitas (suporta recorrência e vencimentos)
-- **despesa_exclusao** - Exclusões específicas de despesas recorrentes
-- **receita_exclusao** - Exclusões específicas de receitas recorrentes
-- **meta** - Metas/objetivos financeiros (com tracking automático)
-- **contribuicao_meta** - Contribuições para metas
+- **usuario** - User accounts
+- **config** - User settings (theme, language, currency)
+- **categoria_despesa** - Custom expense categories (with icons)
+- **fonte_receita** - Custom income sources (with icons)
+- **despesa** - Expense records (supports recurrence and due dates)
+- **receita** - Income records (supports recurrence and due dates)
+- **despesa_exclusao** - Specific exclusions for recurring expenses
+- **receita_exclusao** - Specific exclusions for recurring income
+- **meta** - Financial goals/objectives (with automatic tracking)
+- **contribuicao_meta** - Goal contributions
 
-### Módulos da API
+### API Modules
 
-- **Auth** - Registro, login, tokens JWT
-- **Users** - Gerenciamento de perfil de usuário
-- **Configs** - Configurações do usuário (tema, idioma, moeda)
-- **Categoria Despesa** - CRUD para categorias de despesas
-- **Fonte Receita** - CRUD para fontes de receita
-- **Despesas** - CRUD completo para despesas + gerenciamento de exclusões
-- **Receitas** - CRUD completo para receitas + gerenciamento de exclusões
-- **Metas** - CRUD para metas/objetivos financeiros
-- **Contribuicao Meta** - CRUD para contribuições às metas
+- **Auth** - Registration, login, JWT tokens
+- **Users** - User profile management
+- **Configs** - User settings (theme, language, currency)
+- **Categoria Despesa** - CRUD for expense categories
+- **Fonte Receita** - CRUD for income sources
+- **Despesas** - Full CRUD for expenses + exclusion management
+- **Receitas** - Full CRUD for income + exclusion management
+- **Metas** - CRUD for financial goals/objectives
+- **Contribuicao Meta** - CRUD for goal contributions
 
-### Recursos de Segurança
+### Security Features
 
-- Hash de senhas com bcrypt (salt rounds: 10)
-- Autenticação JWT com estratégia Passport
-- Rate limiting (100 requisições por minuto por IP)
-- Consultas SQL parametrizadas (proteção contra SQL injection)
-- Validação rigorosa de entrada com class-validator
-- Isolamento total de dados por usuário
-- Configuração CORS restritiva
-- Validação de variáveis de ambiente obrigatórias
-- Filtro global de exceções para tratamento de erros
+- Password hashing with bcrypt (salt rounds: 10)
+- JWT authentication with Passport strategy
+- Rate limiting (100 requests per minute per IP)
+- Parameterized SQL queries (SQL injection protection)
+- Strict input validation with class-validator
+- Complete data isolation per user
+- Restrictive CORS configuration
+- Required environment variable validation
+- Global exception filter for error handling
 
-## Requisitos
+## Requirements
 
 - Node.js 20+
-- Docker e Docker Compose
-- npm ou yarn
+- Docker and Docker Compose
+- npm or yarn
 
-## Início Rápido (3 Passos)
+## Quick Start (3 Steps)
 
 ```bash
-# Instalar Dependências
+# Install Dependencies
 cd server
 npm i 
-# Iniciar Banco de Dados
+# Start Database
 docker compose up postgres -d
-# Iniciar app
+# Start app
 npm run start:dev
 ```
 
-Pronto! Sua API está rodando em `http://localhost:3001`
+Done! Your API is running at `http://localhost:3001`
 
-## Estrutura do Projeto
+## Project Structure
 
 ```
 server/
 ├── src/
-│   ├── auth/                      # Módulo de autenticação
-│   │   ├── dto/                   # DTOs de login e registro
-│   │   ├── guards/                # Guards JWT e Local
-│   │   ├── strategies/            # Estratégias Passport
+│   ├── auth/                      # Authentication module
+│   │   ├── dto/                   # Login and registration DTOs
+│   │   ├── guards/                # JWT and Local guards
+│   │   ├── strategies/            # Passport strategies
 │   │   ├── auth.controller.ts
 │   │   ├── auth.service.ts
 │   │   └── auth.module.ts
-│   ├── database/                  # Pool PostgreSQL
+│   ├── database/                  # PostgreSQL pool
 │   │   ├── database.service.ts
 │   │   └── database.module.ts
-│   ├── users/                     # Gerenciamento de usuários
-│   ├── configs/                   # Configurações (tema, idioma, moeda)
-│   ├── categoria-despesa/         # Categorias com ícones
-│   ├── fonte-receita/             # Fontes de receita com ícones
-│   ├── despesas/                  # Despesas + exclusões
+│   ├── users/                     # User management
+│   ├── configs/                   # Settings (theme, language, currency)
+│   ├── categoria-despesa/         # Categories with icons
+│   ├── fonte-receita/             # Income sources with icons
+│   ├── despesas/                  # Expenses + exclusions
 │   │   ├── dto/
 │   │   ├── despesas.controller.ts
-│   │   ├── despesas.service.ts   # Inclui lógica de exclusões
+│   │   ├── despesas.service.ts   # Includes exclusion logic
 │   │   └── despesas.module.ts
-│   ├── receitas/                  # Receitas + exclusões
+│   ├── receitas/                  # Income + exclusions
 │   │   ├── dto/
 │   │   ├── receitas.controller.ts
-│   │   ├── receitas.service.ts   # Inclui lógica de exclusões
+│   │   ├── receitas.service.ts   # Includes exclusion logic
 │   │   └── receitas.module.ts
-│   ├── metas/                     # Metas financeiras
-│   ├── contribuicao-meta/         # Contribuições para metas
+│   ├── metas/                     # Financial goals
+│   ├── contribuicao-meta/         # Goal contributions
 │   │   ├── dto/
 │   │   ├── contribuicao-meta.controller.ts
 │   │   ├── contribuicao-meta.service.ts
 │   │   └── contribuicao-meta.module.ts
-│   ├── common/                    # Compartilhado
-│   │   ├── dto/                   # DTOs globais (paginação)
-│   │   ├── filters/               # Filtros de exceção
-│   │   └── interfaces/            # Interfaces compartilhadas
-│   ├── app.module.ts              # Módulo raiz
-│   └── main.ts                    # Bootstrap da aplicação
-├── data.sql                       # Schema + triggers + índices
-├── docker compose.yml             # PostgreSQL containerizado
+│   ├── common/                    # Shared
+│   │   ├── dto/                   # Global DTOs (pagination)
+│   │   ├── filters/               # Exception filters
+│   │   └── interfaces/            # Shared interfaces
+│   ├── app.module.ts              # Root module
+│   └── main.ts                    # Application bootstrap
+├── data.sql                       # Schema + triggers + indices
+├── docker compose.yml             # Containerized PostgreSQL
 ├── Dockerfile
 ├── package.json
 └── README.md
 ```
 
-## Ambiente
+## Environment
 
-Crie um arquivo `.env` na raiz do projeto server:
+Create a `.env` file in the server project root:
 
 ```bash
 
 cp .env.example .env
 ```
 
-Adicione as seguintes variáveis de ambiente:
+Add the following environment variables:
 
 ```bash
-# Ambiente
+# Environment
 NODE_ENV=development
 PORT=3001
 
-# Banco de Dados
+# Database
 DB_HOST=localhost
 DB_PORT=5432
 DB_USERNAME=postgres
 DB_PASSWORD=postgres
 DB_DATABASE=poupa_mais
 
-# JWT (OBRIGATÓRIO - mude para uma chave segura em produção)
-JWT_SECRET=sua-chave-secreta-jwt-mude-em-producao
+# JWT (REQUIRED - change to a secure key in production)
+JWT_SECRET=your-jwt-secret-key-change-in-production
 JWT_EXPIRATION=7d
 
 # CORS
 CORS_ORIGIN=http://localhost:3000
 
-# Email (utilize seu serviço SMTP de preferência)
+# Email (use your preferred SMTP service)
 SMTP_HOST=smtp.gmail.com
 SMTP_PORT=587
 SMTP_SECURE=false
@@ -157,130 +157,130 @@ SMTP_PASS=YOUR_APP_PASSWORD
 SMTP_FROM=yourgmail@gmail.com
 ```
 
-**IMPORTANTE**: As variáveis `JWT_SECRET`, `DB_HOST` e `DB_PASSWORD` são obrigatórias. A aplicação não iniciará sem elas.
+**IMPORTANT**: The variables `JWT_SECRET`, `DB_HOST`, and `DB_PASSWORD` are required. The application will not start without them.
 
-## Documentação da API
+## API Documentation
 
-Documentação Swagger disponível em: **`http://localhost:3001/api/docs`**
+Swagger documentation available at: **`http://localhost:3001/api/docs`**
 
-## Endpoints da API
+## API Endpoints
 
-### Autenticação
-| Método | Endpoint | Descrição | Auth |
+### Authentication
+| Method | Endpoint | Description | Auth |
 |--------|----------|-----------|------|
-| POST | /api/v1/auth/register | Registrar novo usuário | Não |
-| POST | /api/v1/auth/login | Login de usuário | Não |
+| POST | /api/v1/auth/register | Register new user | No |
+| POST | /api/v1/auth/login | User login | No |
 
-### Usuários
-| Método | Endpoint | Descrição | Auth |
+### Users
+| Method | Endpoint | Description | Auth |
 |--------|----------|-----------|------|
-| GET | /api/v1/users/profile | Obter perfil do usuário | Sim |
-| PUT | /api/v1/users/profile | Atualizar perfil | Sim |
-| DELETE | /api/v1/users/account | Excluir conta | Sim |
+| GET | /api/v1/users/profile | Get user profile | Yes |
+| PUT | /api/v1/users/profile | Update profile | Yes |
+| DELETE | /api/v1/users/account | Delete account | Yes |
 
-### Configurações
-| Método | Endpoint | Descrição | Auth |
+### Configurations
+| Method | Endpoint | Description | Auth |
 |--------|----------|-----------|------|
-| GET | /api/v1/configs | Obter configurações do usuário | Sim |
-| PUT | /api/v1/configs | Atualizar configurações (tema, idioma, moeda) | Sim |
+| GET | /api/v1/configs | Get user settings | Yes |
+| PUT | /api/v1/configs | Update settings (theme, language, currency) | Yes |
 
-### Categorias de Despesas
-| Método | Endpoint | Descrição | Auth |
+### Expense Categories
+| Method | Endpoint | Description | Auth |
 |--------|----------|-----------|------|
-| POST | /api/v1/categoria-despesa | Criar categoria (nome + ícone) | Sim |
-| GET | /api/v1/categoria-despesa | Listar todas as categorias | Sim |
-| GET | /api/v1/categoria-despesa/:id | Obter categoria por ID | Sim |
-| PUT | /api/v1/categoria-despesa/:id | Atualizar categoria | Sim |
-| DELETE | /api/v1/categoria-despesa/:id | Excluir categoria | Sim |
+| POST | /api/v1/categoria-despesa | Create category (name + icon) | Yes |
+| GET | /api/v1/categoria-despesa | List all categories | Yes |
+| GET | /api/v1/categoria-despesa/:id | Get category by ID | Yes |
+| PUT | /api/v1/categoria-despesa/:id | Update category | Yes |
+| DELETE | /api/v1/categoria-despesa/:id | Delete category | Yes |
 
-### Fontes de Receitas
-| Método | Endpoint | Descrição | Auth |
+### Income Sources
+| Method | Endpoint | Description | Auth |
 |--------|----------|-----------|------|
-| POST | /api/v1/fonte-receita | Criar fonte (nome + ícone) | Sim |
-| GET | /api/v1/fonte-receita | Listar todas as fontes | Sim |
-| GET | /api/v1/fonte-receita/:id | Obter fonte por ID | Sim |
-| PUT | /api/v1/fonte-receita/:id | Atualizar fonte | Sim |
-| DELETE | /api/v1/fonte-receita/:id | Excluir fonte | Sim |
+| POST | /api/v1/fonte-receita | Create source (name + icon) | Yes |
+| GET | /api/v1/fonte-receita | List all sources | Yes |
+| GET | /api/v1/fonte-receita/:id | Get source by ID | Yes |
+| PUT | /api/v1/fonte-receita/:id | Update source | Yes |
+| DELETE | /api/v1/fonte-receita/:id | Delete source | Yes |
 
-### Despesas
-| Método | Endpoint | Descrição | Auth |
+### Expenses
+| Method | Endpoint | Description | Auth |
 |--------|----------|-----------|------|
-| POST | /api/v1/despesas | Criar despesa (suporta recorrência) | Sim |
-| GET | /api/v1/despesas?page=1&limit=10 | Listar despesas (paginado) | Sim |
-| GET | /api/v1/despesas/:id | Obter despesa por ID | Sim |
-| PUT | /api/v1/despesas/:id | Atualizar despesa | Sim |
-| DELETE | /api/v1/despesas/:id | Excluir despesa | Sim |
-| POST | /api/v1/despesas/:id/exclusoes | Criar exclusão para despesa recorrente | Sim |
-| GET | /api/v1/despesas/exclusoes/all | Listar todas as exclusões | Sim |
-| DELETE | /api/v1/despesas/exclusoes/:id | Remover exclusão | Sim |
+| POST | /api/v1/despesas | Create expense (supports recurrence) | Yes |
+| GET | /api/v1/despesas?page=1&limit=10 | List expenses (paginated) | Yes |
+| GET | /api/v1/despesas/:id | Get expense by ID | Yes |
+| PUT | /api/v1/despesas/:id | Update expense | Yes |
+| DELETE | /api/v1/despesas/:id | Delete expense | Yes |
+| POST | /api/v1/despesas/:id/exclusoes | Create exclusion for recurring expense | Yes |
+| GET | /api/v1/despesas/exclusoes/all | List all exclusions | Yes |
+| DELETE | /api/v1/despesas/exclusoes/:id | Remove exclusion | Yes |
 
-### Receitas
-| Método | Endpoint | Descrição | Auth |
+### Income
+| Method | Endpoint | Description | Auth |
 |--------|----------|-----------|------|
-| POST | /api/v1/receitas | Criar receita (suporta recorrência) | Sim |
-| GET | /api/v1/receitas?page=1&limit=10 | Listar receitas (paginado) | Sim |
-| GET | /api/v1/receitas/:id | Obter receita por ID | Sim |
-| PUT | /api/v1/receitas/:id | Atualizar receita | Sim |
-| DELETE | /api/v1/receitas/:id | Excluir receita | Sim |
-| POST | /api/v1/receitas/:id/exclusoes | Criar exclusão para receita recorrente | Sim |
-| GET | /api/v1/receitas/exclusoes/all | Listar todas as exclusões | Sim |
-| DELETE | /api/v1/receitas/exclusoes/:id | Remover exclusão | Sim |
+| POST | /api/v1/receitas | Create income (supports recurrence) | Yes |
+| GET | /api/v1/receitas?page=1&limit=10 | List income (paginated) | Yes |
+| GET | /api/v1/receitas/:id | Get income by ID | Yes |
+| PUT | /api/v1/receitas/:id | Update income | Yes |
+| DELETE | /api/v1/receitas/:id | Delete income | Yes |
+| POST | /api/v1/receitas/:id/exclusoes | Create exclusion for recurring income | Yes |
+| GET | /api/v1/receitas/exclusoes/all | List all exclusions | Yes |
+| DELETE | /api/v1/receitas/exclusoes/:id | Remove exclusion | Yes |
 
-### Metas
-| Método | Endpoint | Descrição | Auth |
+### Goals
+| Method | Endpoint | Description | Auth |
 |--------|----------|-----------|------|
-| POST | /api/v1/metas | Criar meta financeira | Sim |
-| GET | /api/v1/metas?page=1&limit=10 | Listar metas (paginado) | Sim |
-| GET | /api/v1/metas/:id | Obter meta por ID | Sim |
-| PUT | /api/v1/metas/:id | Atualizar meta | Sim |
-| DELETE | /api/v1/metas/:id | Excluir meta | Sim |
+| POST | /api/v1/metas | Create financial goal | Yes |
+| GET | /api/v1/metas?page=1&limit=10 | List goals (paginated) | Yes |
+| GET | /api/v1/metas/:id | Get goal by ID | Yes |
+| PUT | /api/v1/metas/:id | Update goal | Yes |
+| DELETE | /api/v1/metas/:id | Delete goal | Yes |
 
-### Contribuições de Metas
-| Método | Endpoint | Descrição | Auth |
+### Goal Contributions
+| Method | Endpoint | Description | Auth |
 |--------|----------|-----------|------|
-| POST | /api/v1/contribuicao-meta | Criar contribuição para uma meta | Sim |
-| GET | /api/v1/contribuicao-meta?page=1&limit=10 | Listar todas as contribuições | Sim |
-| GET | /api/v1/contribuicao-meta/meta/:metaId | Listar contribuições por meta | Sim |
-| GET | /api/v1/contribuicao-meta/:id | Obter contribuição por ID | Sim |
-| PUT | /api/v1/contribuicao-meta/:id | Atualizar contribuição | Sim |
-| DELETE | /api/v1/contribuicao-meta/:id | Excluir contribuição | Sim |
+| POST | /api/v1/contribuicao-meta | Create contribution for a goal | Yes |
+| GET | /api/v1/contribuicao-meta?page=1&limit=10 | List all contributions | Yes |
+| GET | /api/v1/contribuicao-meta/meta/:metaId | List contributions by goal | Yes |
+| GET | /api/v1/contribuicao-meta/:id | Get contribution by ID | Yes |
+| PUT | /api/v1/contribuicao-meta/:id | Update contribution | Yes |
+| DELETE | /api/v1/contribuicao-meta/:id | Delete contribution | Yes |
 
-### Autenticação
+### Authentication
 
-Todos os endpoints exceto `/auth/register` e `/auth/login` requerem autenticação JWT.
+All endpoints except `/auth/register` and `/auth/login` require JWT authentication.
 
-Inclua o token JWT na header Authorization:
+Include the JWT token in the Authorization header:
 
 ```js
-Authorization: Bearer <seu_token>
+Authorization: Bearer <your_token>
 ```
 
-## Recursos Avançados
+## Advanced Features
 
-### 1. Sistema de Exclusões para Recorrências
+### 1. Recurrence Exclusion System
 
-Permite excluir ocorrências específicas de despesas/receitas recorrentes sem afetar as outras:
+Allows excluding specific occurrences of recurring expenses/income without affecting others:
 
-- Despesa/receita recorrente continua ativa
-- Exclusões são registradas com data específica
-- Sistema ignora ocorrências excluídas em cálculos
+- Recurring expense/income remains active
+- Exclusions are registered with a specific date
+- System ignores excluded occurrences in calculations
 
-**Exemplo de uso**: Seu aluguel é recorrente todo mês, mas em dezembro você não pagou porque estava viajando. Crie uma exclusão para dezembro/2025.
+**Usage example**: Your rent is recurring every month, but in December you didn't pay because you were traveling. Create an exclusion for December/2025.
 
-### 2. Sistema de Metas com Contribuições
+### 2. Goal System with Contributions
 
-Metas financeiras com tracking automático:
+Financial goals with automatic tracking:
 
-- `valor`: Valor total da meta
-- `valor_atual`: Calculado automaticamente pela soma das contribuições
-- `economia_mensal`: Valor planejado para economizar por mês
-- `data_inicio` e `data_alvo`: Período para alcançar a meta
+- `valor`: Total goal amount
+- `valor_atual`: Automatically calculated from the sum of contributions
+- `economia_mensal`: Planned monthly savings amount
+- `data_inicio` and `data_alvo`: Timeframe to reach the goal
 
-**Trigger automático**: Quando você adiciona/remove/atualiza contribuições, o `valor_atual` da meta é recalculado automaticamente.
+**Automatic trigger**: When you add/remove/update contributions, the goal's `valor_atual` is automatically recalculated.
 
-### 3. Paginação
+### 3. Pagination
 
-Todos os endpoints de listagem suportam paginação via query params:
+All list endpoints support pagination via query params:
 
 ```
 ?page=1&limit=10
@@ -288,22 +288,22 @@ Todos os endpoints de listagem suportam paginação via query params:
 
 Defaults: `page=1`, `limit=10`
 
-### 4. Ícones Personalizados
+### 4. Custom Icons
 
-Categorias de despesas e fontes de receita suportam ícones customizados (ex: "ShoppingCart", "Home", "Car", "DollarSign").
+Expense categories and income sources support custom icons (e.g., "ShoppingCart", "Home", "Car", "DollarSign").
 
-### 5. Configurações Multi-idioma e Multi-moeda
+### 5. Multi-language and Multi-currency Settings
 
-Cada usuário pode configurar:
-- **Tema**: Claro (false) ou Escuro (true)
-- **Idioma**: português, inglês, espanhol
-- **Moeda**: real, dólar, euro
+Each user can configure:
+- **Theme**: Light (false) or Dark (true)
+- **Language**: Portuguese, English, Spanish
+- **Currency**: Real, Dollar, Euro
 
 ### 6. Rate Limiting
 
-Proteção contra abuso: máximo de 100 requisições por minuto por IP.
+Abuse protection: maximum of 100 requests per minute per IP.
 
-## Request flow da API
+## API Request Flow
 
 1. Entry point: Controller
 
@@ -315,7 +315,7 @@ export class AuthController {
 }
 ```
 
-2. Validação DTO
+2. DTO Validation
 
 ```js
 export class LoginDto {
@@ -329,7 +329,7 @@ export class LoginDto {
 }
 ```
 
-3. Guards de autenticação (em rotas protegidas)
+3. Authentication guards (on protected routes)
 
 ```js
 @UseGuards(LocalAuthGuard)
@@ -339,21 +339,21 @@ async login(@Body() loginDto: LoginDto, @Request() req) {
 }
 ```
 
-4. Execução de Strategies
+4. Strategy Execution
 
 ```js
 export class LocalStrategy extends PassportStrategy(Strategy) {
   async validate(email: string, password: string): Promise<any> {
     const user = await this.authService.validateUser(email, password);
     if (!user) {
-      throw new UnauthorizedException('Credenciais inválidas');
+      throw new UnauthorizedException('Invalid credentials');
     }
     return user;
   }
 }
 ```
 
-5. BLL (regras de negócio)
+5. BLL (business logic layer)
 
 ```js
 export class AuthService {
@@ -371,19 +371,19 @@ export class AuthService {
 }
 ```
 
-## Testando a API
+## Testing the API
 
-### Usando Swagger UI
-Abra `http://localhost:3001/api/docs` no seu navegador para testar todos os endpoints interativamente.
+### Using Swagger UI
+Open `http://localhost:3001/api/docs` in your browser to interactively test all endpoints.
 
-### Usando cURL
+### Using cURL
 
-**1. Registrar um usuário:**
+**1. Register a user:**
 
 ```bash
 curl -X POST http://localhost:3001/api/v1/auth/register \
   -H "Content-Type: application/json" \
-  -d '{"nome":"João Silva","email":"joao@example.com","password":"password123"}'
+  -d '{"nome":"John Doe","email":"john@example.com","password":"password123"}'
 ```
 
 **2. Login:**
@@ -391,28 +391,28 @@ curl -X POST http://localhost:3001/api/v1/auth/register \
 ```bash
 curl -X POST http://localhost:3001/api/v1/auth/login \
   -H "Content-Type: application/json" \
-  -d '{"email":"joao@example.com","password":"password123"}'
+  -d '{"email":"john@example.com","password":"password123"}'
 ```
 
-Copie o `access_token` da resposta.
+Copy the `access_token` from the response.
 
-**3. Criar uma categoria de despesa (com ícone):**
+**3. Create an expense category (with icon):**
 
 ```bash
 curl -X POST http://localhost:3001/api/v1/categoria-despesa \
   -H "Content-Type: application/json" \
-  -H "Authorization: Bearer SEU_TOKEN_AQUI" \
-  -d '{"nome":"Alimentação","icone":"ShoppingCart"}'
+  -H "Authorization: Bearer YOUR_TOKEN_HERE" \
+  -d '{"nome":"Food","icone":"ShoppingCart"}'
 ```
 
-**4. Criar uma despesa recorrente:**
+**4. Create a recurring expense:**
 
 ```bash
 curl -X POST http://localhost:3001/api/v1/despesas \
   -H "Content-Type: application/json" \
-  -H "Authorization: Bearer SEU_TOKEN_AQUI" \
+  -H "Authorization: Bearer YOUR_TOKEN_HERE" \
   -d '{
-    "nome":"Aluguel",
+    "nome":"Rent",
     "valor":1200.00,
     "recorrente":true,
     "data":"2025-11-05",
@@ -421,31 +421,31 @@ curl -X POST http://localhost:3001/api/v1/despesas \
   }'
 ```
 
-**5. Obter despesas (com paginação):**
+**5. Get expenses (with pagination):**
 
 ```bash
 curl -X GET "http://localhost:3001/api/v1/despesas?page=1&limit=10" \
-  -H "Authorization: Bearer SEU_TOKEN_AQUI"
+  -H "Authorization: Bearer YOUR_TOKEN_HERE"
 ```
 
-**6. Criar uma exclusão para despesa recorrente:**
+**6. Create an exclusion for a recurring expense:**
 
 ```bash
 curl -X POST http://localhost:3001/api/v1/despesas/1/exclusoes \
   -H "Content-Type: application/json" \
-  -H "Authorization: Bearer SEU_TOKEN_AQUI" \
+  -H "Authorization: Bearer YOUR_TOKEN_HERE" \
   -d '{"data_exclusao":"2025-12-05"}'
 ```
 
-**7. Criar uma meta financeira:**
+**7. Create a financial goal:**
 
 ```bash
 curl -X POST http://localhost:3001/api/v1/metas \
   -H "Content-Type: application/json" \
-  -H "Authorization: Bearer SEU_TOKEN_AQUI" \
+  -H "Authorization: Bearer YOUR_TOKEN_HERE" \
   -d '{
-    "nome":"Viagem para Europa",
-    "descricao":"Férias de verão",
+    "nome":"Trip to Europe",
+    "descricao":"Summer vacation",
     "valor":10000.00,
     "economia_mensal":500.00,
     "data_inicio":"2025-01-01",
@@ -453,90 +453,90 @@ curl -X POST http://localhost:3001/api/v1/metas \
   }'
 ```
 
-**8. Adicionar contribuição a uma meta:**
+**8. Add a contribution to a goal:**
 
 ```bash
 curl -X POST http://localhost:3001/api/v1/contribuicao-meta \
   -H "Content-Type: application/json" \
-  -H "Authorization: Bearer SEU_TOKEN_AQUI" \
+  -H "Authorization: Bearer YOUR_TOKEN_HERE" \
   -d '{
     "meta_id":1,
     "valor":500.00,
     "data":"2025-11-20",
-    "observacao":"Contribuição de novembro"
+    "observacao":"November contribution"
   }'
 ```
 
-## Desenvolvimento
+## Development
 
 ```bash
-# Executar em Dev
+# Run in Dev
 npm run start:dev
 
-# Em prod
+# In prod
 npm run build
 npm run start:prod
 
-# Formatação
+# Formatting
 npm run format
 
 # Linting
 npm run lint
 ```
 
-## Docker comms
+## Docker Commands
 
 ```bash
-# Iniciar todos os serviços
+# Start all services
 docker compose up -d
 
-# Iniciar só o banco de dados
+# Start only the database
 docker compose up postgres -d
 
-# Ver logs
+# View logs
 docker compose logs -f
 
-# Parar todos os serviços
+# Stop all services
 docker compose down
 
-# Parar e remover volumes (deleta dados do banco)
+# Stop and remove volumes (deletes database data)
 docker compose down -v
 ```
 
-## Gerenciamento do Banco de Dados
+## Database Management
 
-### Conectar ao PostgreSQL
+### Connect to PostgreSQL
 
 ```bash
 docker exec -it poupa_mais_db psql -U postgres -d poupa_mais
 ```
 
-### Comandos Úteis SQL
+### Useful SQL Commands
 
 ```sql
--- Listar todas as tabelas
+-- List all tables
 \dt
 
--- Ver estrutura de uma tabela
+-- View table structure
 \d+ despesa
 
--- Verificar triggers
+-- Check triggers
 \dS+ contribuicao_meta
 
--- Consultar metas com valor atual
+-- Query goals with current value
 SELECT id, nome, valor, valor_atual, 
        ROUND((valor_atual / valor * 100), 2) as progresso_percentual
 FROM meta 
 WHERE usuario_id = 1;
 
--- Ver contribuições de uma meta
+-- View goal contributions
 SELECT c.id, c.valor, c.data, c.observacao, m.nome as meta_nome
 FROM contribuicao_meta c
 JOIN meta m ON c.meta_id = m.id
 WHERE c.usuario_id = 1
 ORDER BY c.data DESC;
 
--- Verificar exclusões de despesas recorrentes
+-- Check recurring expense exclusions
 SELECT d.nome as despesa, de.data_exclusao
 FROM despesa_exclusao de
 JOIN despesa d ON de.despesa_id = d.id
@@ -546,88 +546,88 @@ ORDER BY de.data_exclusao;
 
 ### Schema Highlights
 
-**Triggers Automáticos:**
-- `trigger_atualizar_meta`: Atualiza automaticamente `valor_atual` da meta quando contribuições são inseridas/atualizadas/deletadas
+**Automatic Triggers:**
+- `trigger_atualizar_meta`: Automatically updates the goal's `valor_atual` when contributions are inserted/updated/deleted
 
 **Constraints:**
-- Valores decimais com 2 casas (DECIMAL(11,2))
-- Checks de valores positivos em despesas, receitas e metas
-- Foreign keys com ON DELETE CASCADE para limpeza automática
+- Decimal values with 2 decimal places (DECIMAL(11,2))
+- Positive value checks on expenses, income, and goals
+- Foreign keys with ON DELETE CASCADE for automatic cleanup
 
-**Índices:**
-- Índices em todas as foreign keys
-- Índices em `usuario_id` para queries rápidas por usuário
-- Índices compostos para exclusões (despesa_id, receita_id)
+**Indices:**
+- Indices on all foreign keys
+- Indices on `usuario_id` for fast per-user queries
+- Composite indices for exclusions (despesa_id, receita_id)
 
-**Enums e Tipos:**
+**Enums and Types:**
 ```sql
--- Idiomas suportados
+-- Supported languages
 idioma_enum: 'portugues', 'ingles', 'espanhol'
 
--- Moedas suportadas
+-- Supported currencies
 moeda_enum: 'real', 'dolar', 'euro'
 ```
 
-## Arquivos Chave para Entender
+## Key Files to Understand
 
-1. **data.sql** - Esquema completo do banco de dados com triggers e índices
-2. **src/database/database.service.ts** - Pool de conexão PostgreSQL e execução de consultas SQL
-3. **src/auth/auth.service.ts** - Registro, login e validação de usuário com bcrypt
-4. **src/despesas/despesas.service.ts** - Operações CRUD de despesas + exclusões recorrentes
-5. **src/receitas/receitas.service.ts** - Operações CRUD de receitas + exclusões recorrentes
-6. **src/metas/metas.service.ts** - Gerenciamento de metas financeiras
-7. **src/contribuicao-meta/contribuicao-meta.service.ts** - Sistema de contribuições com atualização automática de metas
-8. **src/main.ts** - Configuração global da aplicação (CORS, pipes, Swagger, rate limiting)
-9. **src/common/filters/http-exception.filter.ts** - Tratamento global de exceções
+1. **data.sql** - Complete database schema with triggers and indices
+2. **src/database/database.service.ts** - PostgreSQL connection pool and SQL query execution
+3. **src/auth/auth.service.ts** - Registration, login, and user validation with bcrypt
+4. **src/despesas/despesas.service.ts** - Expense CRUD operations + recurring exclusions
+5. **src/receitas/receitas.service.ts** - Income CRUD operations + recurring exclusions
+6. **src/metas/metas.service.ts** - Financial goal management
+7. **src/contribuicao-meta/contribuicao-meta.service.ts** - Contribution system with automatic goal updates
+8. **src/main.ts** - Global application configuration (CORS, pipes, Swagger, rate limiting)
+9. **src/common/filters/http-exception.filter.ts** - Global exception handling
 
-## Solução de Problemas
+## Troubleshooting
 
-**Porta já em uso:**
+**Port already in use:**
 
 ```bash
-# Alterar a PORT no arquivo .env
+# Change the PORT in the .env file
 PORT=3001
 ```
 
-**Erro de conexão com banco de dados:**
+**Database connection error:**
 
 ```bash
-# Verifique se o Docker está rodando
+# Check if Docker is running
 docker compose up postgres -d
 
-# Verifique os logs do PostgreSQL
+# Check PostgreSQL logs
 docker compose logs postgres
 
-# Teste a conexão manualmente
+# Test connection manually
 docker exec -it poupa_mais_db psql -U postgres -d poupa_mais -c "\l"
 ```
 
-**Aplicação não inicia - variáveis de ambiente faltando:**
+**Application won't start - missing environment variables:**
 
 ```bash
-# Erro: "Variável de ambiente JWT_SECRET não definida"
-# Solução: Crie o arquivo .env com todas as variáveis obrigatórias
-# JWT_SECRET, DB_HOST, DB_PASSWORD são obrigatórias
+# Error: "Environment variable JWT_SECRET is not defined"
+# Solution: Create the .env file with all required variables
+# JWT_SECRET, DB_HOST, DB_PASSWORD are required
 ```
 
-**Resetar banco de dados completamente:**
+**Completely reset the database:**
 
 ```bash
-# Para e remove volumes (ATENÇÃO: deleta todos os dados!)
+# Stop and remove volumes (WARNING: deletes all data!)
 docker compose down -v
 
-# Reinicia o banco de dados limpo
+# Restart a clean database
 docker compose up postgres -d
 
-# Aguarde 5-10 segundos para o banco inicializar
+# Wait 5-10 seconds for the database to initialize
 sleep 10
 
-# O schema será aplicado automaticamente via data.sql
+# The schema will be applied automatically via data.sql
 ```
 
-**Rate limit atingido (429 Too Many Requests):**
+**Rate limit hit (429 Too Many Requests):**
 
 ```
-# Aguarde 60 segundos ou ajuste o limite em src/app.module.ts
-# Configuração atual: 100 requisições por minuto
+# Wait 60 seconds or adjust the limit in src/app.module.ts
+# Current setting: 100 requests per minute
 ```

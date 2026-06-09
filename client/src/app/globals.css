@@ -5,13 +5,7 @@ body {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-html.escuro {
-  --bg-main: #1E1E1E;
-  --bg-card: #2B2B2B;
-  --text-main: #f5f5f5;
-}
-
-html.claro {
+:root {
   --bg-main: #F9FAFB;
   --bg-card: #ffffff;
   --text-main: #111111;

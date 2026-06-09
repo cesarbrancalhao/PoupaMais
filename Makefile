@@ -1,95 +1,86 @@
-.PHONY: help init init-pod dev prod install clean clean-pod db db-pod db-purge db-purge-pod
+.PHONY: help init dev prod install clean db db-purge dump
 
-# Default
+# Change to "docker" if you use Docker instead of Podman
+RUNTIME   := podman
+DOCKER    := $(RUNTIME)
+COMPOSE   := $(RUNTIME) compose
+
 help:
-	@echo "Comandos disponíveis:"
-	@echo "  make init            - Instala todas as dependências e inicia todos os serviços"
-	@echo "  make init-pod        - Instala todas as dependências e inicia todos os serviços com podman"
-	@echo "  make dev             - Executa client e server em modo dev"
-	@echo "  make prod            - Executa client e server em modo prod"
-	@echo "  make install         - Instala dependências de client e server"
-	@echo "  make clean           - Limpa a build do client e server"
-	@echo "  make clean-pod       - Limpa a build do client e server com podman"
-	@echo "  make db              - Inicia o banco de dados"
-	@echo "  make db-pod          - Inicia o banco de dados com podman"
-	@echo "  make db-purge        - Limpa o banco de dados"
-	@echo "  make db-purge-pod    - Limpa o banco de dados com podman"
+	@echo "Available commands (using $(RUNTIME)):"
+	@echo "  make init            - Install all dependencies and start all services"
+	@echo "  make dev             - Run client & server in dev mode"
+	@echo "  make prod            - Run client & server in prod mode"
+	@echo "  make install         - Install client & server dependencies"
+	@echo "  make clean           - Clean client & server builds"
+	@echo "  make db              - Start the database"
+	@echo "  make db-purge        - Purge the database (volumes included)"
+	@echo "  make dump <email>    - Dump all tables for a user by email"
+	@echo ""
+	@echo "To use Podman: make RUNTIME=podman <command>"
+	@echo "Or change the RUNTIME variable at the top of this file"
 
 init:
-	@echo "Instalando dependências de client e server..."
+	@echo "Installing client & server dependencies..."
 	@make install
 	@make db
 	@make dev
 
-init-pod:
-	@echo "Instalando dependências de client e server..."
-	@make install
-	@make db-pod
+install:
+	@echo "Installing client dependencies..."
+	@cd client && npm install
+	@echo "Installing server dependencies..."
+	@cd server && npm install
+	@echo "Installation complete!"
+
+run:
+	@make db
 	@make dev
 
-install:
-	@echo "Instalando dependências do client..."
-	@cd client && npm install
-	@echo "Instalando dependências do server..."
-	@cd server && npm install
-	@echo "Instalação completa!"
-
 db:
-	@echo "Iniciando banco de dados..."
-	@cd server && docker compose up -d postgres
-	@until docker exec poupa_mais_db pg_isready -U postgres >/dev/null 2>&1; do \
-		echo "Aguardando o banco de dados iniciar..."; \
+	@echo "Starting database with $(RUNTIME)..."
+	@cd server && $(COMPOSE) up -d postgres
+	@until $(DOCKER) exec poupa_mais_db pg_isready -U postgres >/dev/null 2>&1; do \
+		echo "Waiting for database to start..."; \
 		sleep 2; \
 	done; \
-	echo "Banco de dados iniciado com sucesso!"
-
-db-pod:
-	@echo "Iniciando banco de dados com podman..."
-	@cd server && podman compose up -d postgres
-	@until podman exec poupa_mais_db pg_isready -U postgres >/dev/null 2>&1; do \
-		echo "Aguardando o banco de dados iniciar..."; \
-		sleep 2; \
-	done; \
-	echo "Banco de dados iniciado com sucesso!"
+	echo "Database started successfully!"
 
 dev:
-	@echo "Iniciando client, server e banco..."
-	@echo "Pressione Ctrl+C para parar todos os serviços"
+	@echo "Starting client, server, and database..."
+	@echo "Press Ctrl+C to stop all services"
 	@trap 'kill 0' EXIT INT TERM; \
 	(cd client && npm run dev) & \
 	(cd server && npm run start:dev) & \
 	wait
 
 prod:
-	@echo "Iniciando client e server em modo prod..."
-	@echo "Pressione Ctrl+C para parar ambos os serviços"
+	@echo "Starting client & server in prod mode..."
+	@echo "Press Ctrl+C to stop both services"
 	@trap 'kill 0' EXIT INT TERM; \
 	(cd client && npm run build) & \
 	(cd server && npm run build) & \
 	wait
 
 clean:
-	@echo "Limpando a build..."
+	@echo "Cleaning builds..."
 	@rm -rf client/.next
 	@rm -rf server/dist
 	@rm -rf server/coverage
-	@cd server && docker compose down
-	@echo "Limpeza concluída!"
-
-clean-pod:
-	@echo "Limpando a build..."
-	@rm -rf client/.next
-	@rm -rf server/dist
-	@rm -rf server/coverage
-	@cd server && podman compose down
-	@echo "Limpeza concluída!"
+	@cd server && $(COMPOSE) down
+	@echo "Cleanup complete!"
 
 db-purge:
-	@echo "Limpando banco de dados..."
-	@cd server && docker compose down -v
-	@echo "Banco de dados limpo com sucesso!"
+	@echo "Purging database..."
+	@cd server && $(COMPOSE) down -v
+	@echo "Database purged successfully!"
 
-db-purge-pod:
-	@echo "Limpando banco de dados..."
-	@cd server && podman compose down -v
-	@echo "Banco de dados limpo com sucesso!"
+dump:
+	@if [ -z "$(filter-out $@,$(MAKECMDGOALS))" ]; then \
+		echo "Usage: make dump <email>"; \
+		echo "Example: make dump useremail554@gmail.com"; \
+		exit 1; \
+	fi
+	@scripts/dump-user.sh $(filter-out $@,$(MAKECMDGOALS))
+
+%:
+	@:

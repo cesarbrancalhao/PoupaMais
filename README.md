@@ -1,81 +1,79 @@
-# PI_PoupaMais
+# PoupaMais
 
-**Projeto acadêmico do IFPR.**
+PoupaMais is a complete personal finance management system, built to help users track expenses, income, set financial goals, and visualize their financial health through interactive dashboards.
 
-PoupaMais é um sistema completo para gestão de finanças pessoais, desenvolvido para ajudar usuários a registrar despesas, receitas, definir metas financeiras e visualizar sua saúde financeira por meio de dashboards interativos.
+## Detailed Documentation
 
-## Documentação Detalhada
+For in-depth information on specific parts of the application, check the dedicated documentation:
 
-Para informações aprofundadas sobre partes específicas da aplicação, consulte a documentação dedicada:
-
-- **[Documentação do Frontend (Cliente)](client/README.md)**: Detalhes sobre Next.js 15, componentes de UI, gráficos e estilização.
-- **[Documentação do Backend (Servidor)](server/README.md)**: Detalhes sobre API NestJS, schema do banco, autenticação e endpoints.
+- **[Frontend Documentation (Client)](client/README.md)**: Details on Next.js 15, UI components, charts, and styling.
+- **[Backend Documentation (Server)](server/README.md)**: Details on NestJS API, database schema, authentication, and endpoints.
 
 ---
 
-## Tecnologias Utilizadas
+## Technologies Used
 
-### Frontend (Cliente)
+### Frontend (Client)
 - **Frameworks:** Next.js 15, React 19
-- **Estilização:** Tailwind CSS 4, Framer Motion
-- **Visualização:** Chart.js, React-Chartjs-2
-- **Ferramentas:** TypeScript, Jest, Lucide React
+- **Styling:** Tailwind CSS 4, Framer Motion
+- **Visualization:** Chart.js, React-Chartjs-2
+- **Tooling:** TypeScript, Jest, Lucide React
 
-### Backend (Servidor)
+### Backend (Server)
 - **Frameworks:** NestJS (Node.js)
-- **Banco de Dados:** PostgreSQL
-- **Infraestrutura:** Docker & Docker Compose
-- **Segurança:** Passport, JWT, Bcrypt, Throttler
-- **Validação:** class-validator, class-transformer
+- **Database:** PostgreSQL
+- **Infrastructure:** Docker & Docker Compose
+- **Security:** Passport, JWT, Bcrypt, Throttler
+- **Validation:** class-validator, class-transformer
 
 ---
 
-## Estrutura do Projeto
+## Project Structure
 
 ```
-PI_PoupaMais/
-├── client/                 # Aplicação Frontend Next.js
-│   ├── src/app/            # Páginas do App Router
-│   ├── src/components/     # Componentes de UI e Gráficos
+PoupaMais/
+├── client/                 # Next.js Frontend Application
+│   ├── src/app/            # App Router Pages
+│   ├── src/components/     # UI and Chart Components
 │   └── ...
-├── server/                 # API Backend NestJS
-│   ├── src/                # Módulos da API (Auth, Usuários, Transações)
-│   ├── data.sql            # Schema do Banco & Triggers
+├── server/                 # NestJS Backend API
+│   ├── src/                # API Modules (Auth, Users, Transactions)
+│   ├── data.sql            # Database Schema & Triggers
 │   └── ...
-├── Makefile                # Scripts de automação
-└── README.md               # Este arquivo
+├── Makefile                # Automation scripts
+└── README.md               # This file
 ```
 
 ---
 
-## Início Rápido & Comandos Makefile
+## Quick Start & Makefile Commands
 
-Este projeto inclui um **Makefile** para facilitar o desenvolvimento, instalação e gerenciamento do banco de dados. Você pode usar **Docker** ou **Podman** (Utilize <comando>-pod para comandos Podman).
+This project includes a **Makefile** for streamlined development, installation, and database management. You can use **Docker** or **Podman** (use `<command>-pod` for Podman commands).
 
-### Fluxo de Desenvolvimento
+### Development Flow
 
-| Comando        | Descrição                                                                                  |
+| Command        | Description                                                                                  |
 | :------------- | :----------------------------------------------------------------------------------------- |
-| `make init`    | Instala dependências de client/server, sobe o banco e executa em modo dev.                 |
-| `make dev`     | Inicia o Client e o Server em modo desenvolvimento (requer banco ativo).                   |
-| `make prod`    | Faz build e executa Client e Server em produção.                                           |
+| `make init`    | Install client/server dependencies, spin up the database, and run in dev mode.              |
+| `make dev`     | Start Client and Server in development mode (requires running database).                    |
+| `make prod`    | Build and run Client and Server in production.                                              |
 
-### Instalação & Manutenção
+### Installation & Maintenance
 
-| Comando           | Descrição                                                    |
+| Command           | Description                                                    |
 | :---------------- | :----------------------------------------------------------  |
-| `make install`    | Instala as dependências npm de `client` e `server`.          |
-| `make clean`      | Remove arquivos de build e para containers Docker.           |
+| `make install`    | Install npm dependencies for `client` and `server`.            |
+| `make clean`      | Remove build artifacts and stop Docker containers.             |
 
-### Gerenciamento do Banco de Dados
+### Database Management
 
-| Comando              | Descrição                                          |
+| Command              | Description                                          |
 | :------------------- | :--------------------------------------------------|
-| `make db`            | Sobe o container PostgreSQL.                       |
-| `make db-purge`      | Remove container e volume do banco de dados.       |
+| `make db`            | Start the PostgreSQL container.                     |
+| `make db-purge`      | Remove the database container and volume.           |
 
-## Requisitos
+## Requirements
 
 - **Node.js**: v20+
-- **Runtime de Containers**: Docker ou Podman
-- **Gerenciador de Pacotes**: npm ou yarn
+- **Container Runtime**: Docker or Podman
+- **Package Manager**: npm or yarn

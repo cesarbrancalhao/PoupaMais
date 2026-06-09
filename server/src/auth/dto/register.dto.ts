@@ -1,29 +1,47 @@
-import { IsEmail, IsIn, IsNotEmpty, IsOptional, IsString, MinLength } from 'class-validator';
+import {
+  IsEmail,
+  IsIn,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  Matches,
+  MinLength,
+} from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import {
+  PASSWORD_COMPLEXITY_MESSAGE,
+  PASSWORD_COMPLEXITY_REGEX,
+  PASSWORD_MIN_LENGTH,
+} from '../../common/validators/password.validator';
+import { SanitizeText } from '../../common/sanitization/sanitize';
 
 export class RegisterDto {
-  @ApiProperty({ example: 'Usuario da Silva' })
+  @ApiProperty({ example: 'John Doe' })
+  @SanitizeText()
   @IsString()
   @IsNotEmpty()
-  nome: string;
+  name: string;
 
-  @ApiProperty({ example: 'usuario@example.com' })
+  @ApiProperty({ example: 'user@example.com' })
   @IsEmail()
   @IsNotEmpty()
   email: string;
 
-  @ApiProperty({ example: 'senha123', minLength: 8 })
+  @ApiProperty({ example: 'Passw0rd!', minLength: PASSWORD_MIN_LENGTH })
   @IsString()
-  @MinLength(8, { message: 'A senha deve ter no mínimo 8 caracteres' })
+  @MinLength(PASSWORD_MIN_LENGTH, {
+    message: `Password must be at least ${PASSWORD_MIN_LENGTH} characters`,
+  })
+  @Matches(PASSWORD_COMPLEXITY_REGEX, { message: PASSWORD_COMPLEXITY_MESSAGE })
   password: string;
 
   @ApiProperty({
-    example: 'ingles',
+    example: 'english',
     required: false,
-    enum: ['portugues', 'ingles', 'espanhol'],
-    description: 'Idioma selecionado para os dados iniciais do usuário',
+    enum: ['portuguese', 'english', 'spanish'],
+    description: 'Language selected for initial user data',
   })
   @IsOptional()
-  @IsIn(['portugues', 'ingles', 'espanhol'])
-  idioma?: 'portugues' | 'ingles' | 'espanhol';
+  @IsIn(['portuguese', 'english', 'spanish'])
+  language?: 'portuguese' | 'english' | 'spanish';
 }

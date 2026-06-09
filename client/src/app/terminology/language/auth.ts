@@ -1,5 +1,4 @@
 export const auth = {
-  // Página de login
   loginTitle: {
     pt: 'Entrar',
     en: 'Login',
@@ -41,7 +40,6 @@ export const auth = {
     es: 'Regístrese aquí',
   },
 
-  // Página de registro
   registerTitle: {
     pt: 'Cadastro',
     en: 'Register',
@@ -103,7 +101,6 @@ export const auth = {
     es: 'Inicie sesión aquí',
   },
 
-  // Página de recuperação
   recoveryTitle: {
     pt: 'Recuperar Senha',
     en: 'Recover Password',
@@ -125,7 +122,6 @@ export const auth = {
     es: 'Volver al inicio de sesión',
   },
 
-  // Página de confirmação
   confirmationTitle: {
     pt: 'Email Enviado',
     en: 'Email Sent',
@@ -137,7 +133,6 @@ export const auth = {
     es: 'Revise su bandeja de entrada para recuperar su contraseña',
   },
 
-  // Placeholders do formulário
   name: {
     pt: 'Nome',
     en: 'Name',
@@ -159,7 +154,6 @@ export const auth = {
     es: 'Ingrese su nombre',
   },
 
-  // Mensagens de validação
   invalidCredentials: {
     pt: 'Email ou senha inválidos',
     en: 'Invalid email or password',

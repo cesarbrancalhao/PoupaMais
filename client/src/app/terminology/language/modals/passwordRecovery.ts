@@ -1,26 +1,22 @@
 export const passwordRecoveryModal = {
-  // Título do modal de OTP
   verificationTitle: {
     pt: 'Verificar Email',
     en: 'Verify Email',
     es: 'Verificar Correo Electrónico',
   },
 
-  // Descrição do modal de OTP
   verificationDescription: {
     pt: 'Digite o código de 6 dígitos que enviamos para',
     en: 'Enter the 6-digit code we sent to',
     es: 'Ingrese el código de 6 dígitos que enviamos a',
   },
 
-  // Placeholder do código
   codePlaceholder: {
     pt: 'Digite o código',
     en: 'Enter code',
     es: 'Ingrese el código',
   },
 
-  // Botões do modal de OTP
   verify: {
     pt: 'Verificar',
     en: 'Verify',
@@ -37,21 +33,18 @@ export const passwordRecoveryModal = {
     es: 'Reenviar código',
   },
 
-  // Título do modal de nova senha
   newPasswordTitle: {
     pt: 'Redefinir Senha',
     en: 'Reset Password',
     es: 'Restablecer Contraseña',
   },
 
-  // Descrição do modal de nova senha
   newPasswordDescription: {
     pt: 'Digite sua nova senha abaixo',
     en: 'Enter your new password below',
     es: 'Ingrese su nueva contraseña a continuación',
   },
 
-  // Campos do formulário de nova senha
   newPassword: {
     pt: 'Nova Senha',
     en: 'New Password',
@@ -73,7 +66,6 @@ export const passwordRecoveryModal = {
     es: 'Ingrese nuevamente su nueva contraseña',
   },
 
-  // Botões do modal de nova senha
   resetPassword: {
     pt: 'Redefinir Senha',
     en: 'Reset Password',
@@ -85,7 +77,6 @@ export const passwordRecoveryModal = {
     es: 'Restableciendo...',
   },
 
-  // Mensagens de erro
   invalidCode: {
     pt: 'Código inválido',
     en: 'Invalid code',
@@ -122,7 +113,6 @@ export const passwordRecoveryModal = {
     es: 'Las contraseñas no coinciden',
   },
 
-  // Mensagens de sucesso
   codeSent: {
     pt: 'Novo código enviado!',
     en: 'New code sent!',
@@ -134,7 +124,6 @@ export const passwordRecoveryModal = {
     es: '¡Contraseña restablecida exitosamente!',
   },
 
-  // Instruções
   checkSpam: {
     pt: 'Não recebeu o código? Verifique sua pasta de spam.',
     en: "Didn't receive the code? Check your spam folder.",

@@ -4,55 +4,53 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { Language, LanguageContextType } from './language/types';
 import { useAuth } from '@/contexts/AuthContext';
 import { usersService } from '@/services/users.service';
-import { Idioma } from '@/types/auth';
+import { Language as AuthLanguage } from '@/types/auth';
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
-const languageToIdioma: Record<Language, Idioma> = {
-  pt: 'portugues',
-  en: 'ingles',
-  es: 'espanhol',
+const languageToAuthLanguage: Record<Language, AuthLanguage> = {
+  pt: 'portuguese',
+  en: 'english',
+  es: 'spanish',
 };
 
-const idiomaToLanguage: Record<Idioma, Language> = {
-  portugues: 'pt',
-  ingles: 'en',
-  espanhol: 'es',
+const authLanguageToLanguage: Record<AuthLanguage, Language> = {
+  portuguese: 'pt',
+  english: 'en',
+  spanish: 'es',
 };
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
   const { user, setUser } = useAuth();
   const [language, setLanguageState] = useState<Language>(() => {
-    if (user?.idioma) {
-      return idiomaToLanguage[user.idioma] || 'pt';
+    if (user?.language) {
+      return authLanguageToLanguage[user.language] || 'pt';
     }
     return 'pt';
   });
 
   useEffect(() => {
-    if (user?.idioma) {
-      setLanguageState(idiomaToLanguage[user.idioma] || 'pt');
+    if (user?.language) {
+      setLanguageState(authLanguageToLanguage[user.language] || 'pt');
     }
-  }, [user?.idioma]);
+  }, [user?.language]);
 
   const setLanguage = async (newLanguage: Language) => {
     if (!user) return;
 
     try {
-      const idiomaValue = languageToIdioma[newLanguage];
+      const authLanguageValue = languageToAuthLanguage[newLanguage];
 
-      // RN13 - A alteração do idioma mudará as frases e palavras na interface das telas.
       const updatedUser = await usersService.updateSettings(
-        user.tema || false,
-        idiomaValue,
-        user.moeda || 'real'
+        authLanguageValue,
+        user.currency || 'real'
       );
 
       setLanguageState(newLanguage);
 
       setUser(updatedUser);
     } catch (error) {
-      console.error('Erro ao atualizar o idioma:', error);
+      console.error('Error updating language:', error);
     }
   };
 
@@ -70,7 +68,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
 export function useLanguage() {
   const context = useContext(LanguageContext);
   if (context === undefined) {
-    throw new Error('Erro ao usar o contexto de idioma');
+    throw new Error('Error using language context');
   }
   return context;
 }
