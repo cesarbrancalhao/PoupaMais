@@ -93,6 +93,8 @@ describe('CreateXxxDto', () => {
 });
 ```
 
+**Security — every user-provided string field must be sanitized.** When writing DTO validation tests, verify `@SanitizeText()` is applied to every user-provided string field: include a test that passes HTML/script input (e.g., `name: '<script>alert(1)</script>Item'`) through `plainToInstance` and asserts the tags are stripped. A DTO string field without `@SanitizeText()` is a stored XSS vector.
+
 **Run and verify**: `cd server && npm test -- --testPathPattern="<feature>.dto"`
 
 ### 2.3 Implement DTOs to pass validation tests
@@ -569,6 +571,7 @@ cd client && npm run lint
 | Deleting a referenced type orphans items | Service test must assert FK is set to NULL, not items deleted |
 | Modal/page doesn't handle loading/error/empty states | Component test must cover all three states |
 | New module not registered in app.module.ts | After implementation, `cd server && npm test` will catch import errors |
+| Stored XSS via unsanitized DTO fields | Every user-provided string field needs `@SanitizeText()`; DTO test must assert HTML/script input is stripped |
 
 ---
 
@@ -576,7 +579,8 @@ cd client && npm run lint
 
 - [ ] `server/data.sql` updated with new tables/columns (if needed)
 - [ ] DTOs defined with class-validator decorators, English field names
-- [ ] DTO validation tests pass (English accepted, Portuguese rejected)
+- [ ] All user-provided string fields use the `@SanitizeText()` decorator
+- [ ] DTO validation tests pass (English accepted, Portuguese rejected, HTML/script stripped)
 - [ ] Server service spec written and passing (create, findAll, findOne, update, remove)
 - [ ] Server service spec tests transactions (BEGIN/COMMIT/ROLLBACK)
 - [ ] Server service spec tests user scoping

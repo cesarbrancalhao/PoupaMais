@@ -74,7 +74,7 @@ client/
 │   │   └── ProtectedRoute.tsx # Protected route guard
 │   ├── contexts/              # React Contexts (Auth, Theme)
 │   ├── services/              # Backend API Integration
-│   │   ├── api.ts             # Axios instance
+│   │   ├── api.ts             # Fetch wrapper (credentials + CSRF header)
 │   │   ├── auth.service.ts    # Authentication services
 │   │   └── ...service.ts      # Domain services (Expenses, Goals, etc.)
 │   └── types/                 # TypeScript Type Definitions
@@ -107,7 +107,9 @@ npm run test:watch
 ## Backend Connection
 
 The frontend communicates with the API through the `src/services` folder.
-The `src/services/api.ts` file configures the Axios interceptor to automatically include the JWT token (stored in cookies) in all authenticated requests.
+The `src/services/api.ts` file configures a `fetch` wrapper that sends requests with `credentials: 'include'`, so the JWT (stored by the server in an `httpOnly` cookie) is attached automatically by the browser — it is never readable from JavaScript.
+
+For CSRF protection, the server sets a readable `csrf_token` cookie alongside the auth cookie (double-submit pattern). The API wrapper reads this cookie and sends its value in the `x-csrf-token` header on every request; the server validates it on all mutating endpoints.
 
 ## Key Components
 

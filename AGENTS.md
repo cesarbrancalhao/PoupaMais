@@ -100,6 +100,9 @@ These are real bugs that have happened in this project. Test for them explicitly
 4. **Transaction safety** — All mutating operations (create, update, delete) MUST use transactions (BEGIN/COMMIT/ROLLBACK). Test that ROLLBACK fires on failure.
 5. **User scoping** — All queries must filter by `user_id`. Test that User A cannot access/update/delete User B's data.
 6. **Foreign key constraints** — On deletion of referenced entities (types, categories), test that related items have their FK set to NULL (not orphaned).
+7. **DTOs Missing Sanitization (stored XSS)** — If you add or modify a DTO with user-provided string fields, you MUST apply `@SanitizeText()` (from `server/src/common/sanitization/sanitize.ts`) to every free-text field. A single missing decorator allows stored XSS (this happened in `reports/dto/import.dto.ts`). Test that HTML/script input is stripped.
+8. **CSRF skipped without good reason** — The `CsrfGuard` runs globally; only public, unauthenticated endpoints (register, login, password reset) should use `@SkipCsrf()`. Never add `@SkipCsrf()` to an authenticated, mutating endpoint.
+9. **Missing audit logging** — Sensitive operations (login, registration, verification, password change/reset, account deletion) must record an event via `AuditLogService`. When adding such an operation, test that `auditLog.record` is called with the right event and outcome.
 
 ## Before Considering a Task Done
 
