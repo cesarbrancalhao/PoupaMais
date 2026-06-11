@@ -41,14 +41,21 @@ Backend API for PoupaMais - Complete personal finance management system.
 ### Security Features
 
 - Password hashing with bcrypt (salt rounds: 10)
-- JWT authentication with Passport strategy
+- JWT authentication with Passport strategy (token stored in an `httpOnly`, `sameSite: strict` cookie)
+- Password complexity requirements (minimum 8 characters with uppercase, lowercase, digit, and special character — shared rules with the client)
+- CSRF protection via global `CsrfGuard` using the cookie-based double-submit pattern with constant-time token comparison (`@SkipCsrf()` on public endpoints)
+- Security headers via Helmet applied globally (`X-Content-Type-Options`, `X-Frame-Options`, `Content-Security-Policy`, `HSTS`)
+- Server-side input sanitization with the `@SanitizeText()` decorator (`sanitize-html` library) on user-provided DTO string fields (stored XSS protection)
+- Audit logging via `AuditLogService` — structured events for login (success/failure), logout, registration, verification codes, password changes/resets, and account deletion
 - Rate limiting (100 requests per minute per IP)
+- Email rate limiting per recipient (max 3 emails per address per hour for verification and password-reset emails)
 - Parameterized SQL queries (SQL injection protection)
 - Strict input validation with class-validator
 - Complete data isolation per user
 - Restrictive CORS configuration
 - Required environment variable validation
 - Global exception filter for error handling
+- Configurable TLS verification for SMTP (`SMTP_TLS_REJECT_UNAUTHORIZED`, defaults to strict) and database connections (`DB_SSL`, `DB_SSL_REJECT_UNAUTHORIZED`, `DB_SSL_CA`)
 
 ## Requirements
 
@@ -577,8 +584,13 @@ moeda_enum: 'real', 'dolar', 'euro'
 5. **src/receitas/receitas.service.ts** - Income CRUD operations + recurring exclusions
 6. **src/metas/metas.service.ts** - Financial goal management
 7. **src/contribuicao-meta/contribuicao-meta.service.ts** - Contribution system with automatic goal updates
-8. **src/main.ts** - Global application configuration (CORS, pipes, Swagger, rate limiting)
+8. **src/main.ts** - Global application configuration (CORS, pipes, Swagger, rate limiting, Helmet)
 9. **src/common/filters/http-exception.filter.ts** - Global exception handling
+10. **src/auth/cookies.ts** - Auth/CSRF cookie options (`httpOnly`, `secure`, `sameSite`) and CSRF token generation
+11. **src/auth/guards/csrf.guard.ts** - Global CSRF guard (double-submit cookie pattern, constant-time comparison)
+12. **src/common/sanitization/sanitize.ts** - `@SanitizeText()` decorator stripping HTML from user-provided string fields
+13. **src/common/audit/audit-log.service.ts** - Structured audit logging for sensitive operations
+14. **src/common/rate-limit/email-rate-limiter.service.ts** - Per-recipient email rate limiting (3 per hour)
 
 ## Troubleshooting
 

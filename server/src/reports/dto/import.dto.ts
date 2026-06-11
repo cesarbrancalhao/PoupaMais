@@ -1,31 +1,52 @@
 import {
   IsArray,
+  IsIn,
   IsNotEmpty,
   ValidateNested,
   IsString,
   IsNumber,
   IsBoolean,
   IsOptional,
+  Matches,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
+import { SanitizeText } from '../../common/sanitization/sanitize';
+
+export const IMPORT_ROW_TYPES = [
+  'expense_category',
+  'income_source',
+  'expense',
+  'income',
+  'goal',
+  'goal_contribution',
+  'expense_exclusion',
+  'income_exclusion',
+  'wishlist_type',
+  'wishlist_saga',
+  'wishlist',
+] as const;
 
 export class ImportRowDto {
   @ApiProperty({
     description:
-      'Record type: expense_category, income_source, expense, income, goal, goal_contribution, expense_exclusion, income_exclusion',
+      'Record type: expense_category, income_source, expense, income, goal, goal_contribution, expense_exclusion, income_exclusion, wishlist_type, wishlist_saga, wishlist',
+    enum: IMPORT_ROW_TYPES,
   })
   @IsString()
   @IsNotEmpty()
+  @IsIn(IMPORT_ROW_TYPES)
   type: string;
 
   @ApiProperty()
   @IsOptional()
+  @SanitizeText()
   @IsString()
   name?: string;
 
   @ApiProperty()
   @IsOptional()
+  @SanitizeText()
   @IsString()
   icon?: string;
 
@@ -51,16 +72,19 @@ export class ImportRowDto {
 
   @ApiProperty()
   @IsOptional()
+  @SanitizeText()
   @IsString()
   category_name?: string;
 
   @ApiProperty()
   @IsOptional()
+  @SanitizeText()
   @IsString()
   source_name?: string;
 
   @ApiProperty()
   @IsOptional()
+  @SanitizeText()
   @IsString()
   description?: string;
 
@@ -86,21 +110,25 @@ export class ImportRowDto {
 
   @ApiProperty()
   @IsOptional()
+  @SanitizeText()
   @IsString()
   goal_name?: string;
 
   @ApiProperty()
   @IsOptional()
+  @SanitizeText()
   @IsString()
   observation?: string;
 
   @ApiProperty()
   @IsOptional()
+  @SanitizeText()
   @IsString()
   entity_name?: string;
 
   @ApiProperty()
   @IsOptional()
+  @SanitizeText()
   @IsString()
   entity_type?: string;
 
@@ -114,23 +142,27 @@ export class ImportRowDto {
   @IsBoolean()
   checked?: boolean;
 
-  @ApiProperty()
+  @ApiProperty({ enum: ['low', 'medium', 'high'] })
   @IsOptional()
   @IsString()
+  @IsIn(['low', 'medium', 'high'])
   priority?: string;
 
-  @ApiProperty()
+  @ApiProperty({ example: '25Q1' })
   @IsOptional()
   @IsString()
+  @Matches(/^\d{2}Q[1-4]$/)
   quarter?: string;
 
   @ApiProperty()
   @IsOptional()
+  @SanitizeText()
   @IsString()
   type_name?: string;
 
   @ApiProperty()
   @IsOptional()
+  @SanitizeText()
   @IsString()
   saga_name?: string;
 }

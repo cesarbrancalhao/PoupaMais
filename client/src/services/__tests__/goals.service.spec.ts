@@ -15,62 +15,64 @@ describe('GoalsService', () => {
     jest.clearAllMocks();
   });
 
-  describe('getGoals', () => {
+  describe('getAll', () => {
     it('should fetch goals list', async () => {
       const mockGoals = {
         data: [{ id: 1, name: 'Goal 1', value: 1000 }],
-        pagination: { page: 1, limit: 20, total: 1, totalPages: 1 },
+        total: 1,
+        page: 1,
+        limit: 20,
       };
       (apiService.get as jest.Mock).mockResolvedValue(mockGoals);
 
-      const result = await goalsService.getGoals(1, 20);
+      const result = await goalsService.getAll(1, 20);
 
       expect(result).toEqual(mockGoals);
       expect(apiService.get).toHaveBeenCalledWith('/goals?page=1&limit=20');
     });
   });
 
-  describe('getGoal', () => {
+  describe('getById', () => {
     it('should fetch a single goal', async () => {
       const mockGoal = { id: 1, name: 'Trip', value: 5000 };
       (apiService.get as jest.Mock).mockResolvedValue(mockGoal);
 
-      const result = await goalsService.getGoal(1);
+      const result = await goalsService.getById(1);
 
       expect(result).toEqual(mockGoal);
       expect(apiService.get).toHaveBeenCalledWith('/goals/1');
     });
   });
 
-  describe('createGoal', () => {
+  describe('create', () => {
     it('should create a new goal', async () => {
       const createDto = { name: 'New Goal', value: 3000, description: 'Desc' };
       (apiService.post as jest.Mock).mockResolvedValue(null);
 
-      await goalsService.createGoal(createDto);
+      await goalsService.create(createDto);
 
       expect(apiService.post).toHaveBeenCalledWith('/goals', createDto);
     });
   });
 
-  describe('updateGoal', () => {
+  describe('update', () => {
     it('should update a goal', async () => {
       const updateDto = { name: 'Updated Goal' };
       const mockUpdated = { id: 1, name: 'Updated Goal', value: 5000 };
       (apiService.put as jest.Mock).mockResolvedValue(mockUpdated);
 
-      const result = await goalsService.updateGoal(1, updateDto);
+      const result = await goalsService.update(1, updateDto);
 
       expect(result).toEqual(mockUpdated);
       expect(apiService.put).toHaveBeenCalledWith('/goals/1', updateDto);
     });
   });
 
-  describe('deleteGoal', () => {
+  describe('delete', () => {
     it('should delete a goal', async () => {
       (apiService.delete as jest.Mock).mockResolvedValue(null);
 
-      await goalsService.deleteGoal(1);
+      await goalsService.delete(1);
 
       expect(apiService.delete).toHaveBeenCalledWith('/goals/1');
     });

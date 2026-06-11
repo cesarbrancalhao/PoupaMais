@@ -23,8 +23,8 @@ For in-depth information on specific parts of the application, check the dedicat
 - **Frameworks:** NestJS (Node.js)
 - **Database:** PostgreSQL
 - **Infrastructure:** Docker & Docker Compose
-- **Security:** Passport, JWT, Bcrypt, Throttler
-- **Validation:** class-validator, class-transformer
+- **Security:** Passport, JWT, Bcrypt, Throttler, Helmet, CSRF (double-submit cookie)
+- **Validation:** class-validator, class-transformer, sanitize-html
 
 ---
 
