@@ -9,10 +9,10 @@ export class WishlistService {
   constructor(private databaseService: DatabaseService) {}
 
   private getDefaultQuarter(): string {
-    const now = new Date()
-    const yy = now.getFullYear().toString().slice(-2)
-    const q = Math.floor(now.getMonth() / 3) + 1
-    return `${yy}Q${q}`
+    const now = new Date();
+    const yy = now.getFullYear().toString().slice(-2);
+    const q = Math.floor(now.getMonth() / 3) + 1;
+    return `${yy}Q${q}`;
   }
 
   async create(userId: number, data: CreateWishlistDto) {
