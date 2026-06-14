@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
-import { Goal, LineChart, Settings, SquareStack, LogOut, Menu, FileText, Heart } from 'lucide-react'
+import { Goal, LineChart, Settings, SquareStack, LogOut, Menu, FileText, Heart, ChevronDown } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
 import { useLanguage } from '@/app/terminology/LanguageContext'
 import { sidebar } from '@/app/terminology/language/sidebar'
@@ -14,6 +14,8 @@ export default function Sidebar() {
   const pathname = usePathname()
   const [isOpen, setIsOpen] = useState(false)
   const [showLogoutModal, setShowLogoutModal] = useState(false)
+  const [financeOpen, setFinanceOpen] = useState(false)
+  const [lifeOpen, setLifeOpen] = useState(false)
   const { user, logout } = useAuth()
   const { t } = useLanguage()
 
@@ -28,13 +30,27 @@ export default function Sidebar() {
     ? user.name.split(' ').map(word => word[0]).join('').toUpperCase()
     : 'JS'
 
-  const links = [
-    { name: t(sidebar.dashboard), href: '/dashboard', icon: <SquareStack className="w-5 h-5" /> },
-    { name: t(sidebar.goals), href: '/goals', icon: <Goal className="w-5 h-5" /> },
-    { name: t(sidebar.analysis), href: '/analysis', icon: <LineChart className="w-5 h-5" /> },
-    { name: t(sidebar.wishlist), href: '/wishlist', icon: <Heart className="w-5 h-5" /> },
-    { name: t(reports.sidebar), href: '/reports', icon: <FileText className="w-5 h-5" /> },
-    { name: t(sidebar.settings), href: '/settings', icon: <Settings className="w-5 h-5" /> }
+  const sections = [
+    {
+      name: t(sidebar.finance),
+      open: financeOpen,
+      setOpen: () => setFinanceOpen(!financeOpen),
+      items: [
+        { name: t(sidebar.dashboard), href: '/dashboard', icon: <SquareStack className="w-5 h-5" /> },
+        { name: t(sidebar.goals), href: '/goals', icon: <Goal className="w-5 h-5" /> },
+        { name: t(sidebar.analysis), href: '/analysis', icon: <LineChart className="w-5 h-5" /> },
+        { name: t(sidebar.wishlist), href: '/wishlist', icon: <Heart className="w-5 h-5" /> },
+        { name: t(reports.sidebar), href: '/reports', icon: <FileText className="w-5 h-5" /> },
+      ],
+    },
+    {
+      name: t(sidebar.life),
+      open: lifeOpen,
+      setOpen: () => setLifeOpen(!lifeOpen),
+      items: [
+        { name: t(sidebar.soon), href: null, icon: null },
+      ],
+    },
   ]
 
   return (
@@ -75,26 +91,68 @@ export default function Sidebar() {
           </div>
 
           <nav className="mt-4">
-            {links.map(link => {
-              const active = pathname === link.href
-
-              return (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className={`flex items-center gap-3 px-6 py-3 text-sm transition-colors 
-                    ${active
-                      ? "text-gray-800 bg-gradient-to-r from-blue-100 to-white"
-                      : "text-gray-600 hover:bg-gray-50"
-                    }
-                  `}
-                  onClick={() => setIsOpen(false)}
+            {sections.map((section) => (
+              <div key={section.name}>
+                <button
+                  onClick={section.setOpen}
+                  className="w-full flex items-center gap-2 px-6 py-2 text-xs font-semibold uppercase tracking-wider text-gray-400 hover:text-gray-600 transition-colors"
                 >
-                  {link.icon}
-                  {link.name}
-                </Link>
-              )
-            })}
+                  <ChevronDown
+                    className={`w-3 h-3 transition-transform ${section.open ? 'rotate-0' : '-rotate-90'}`}
+                  />
+                  {section.name}
+                </button>
+                {section.open && (
+                  <div>
+                    {section.items.map((item) => {
+                      if (item.href === null) {
+                        return (
+                          <span
+                            key={item.name}
+                            className="flex items-center gap-3 px-6 py-3 text-sm text-gray-400"
+                          >
+                            {item.name}
+                          </span>
+                        )
+                      }
+
+                      const active = pathname === item.href
+                      return (
+                        <Link
+                          key={item.href}
+                          href={item.href}
+                          className={`flex items-center gap-3 px-6 py-3 text-sm transition-colors 
+                            ${active
+                              ? "text-gray-800 bg-gradient-to-r from-blue-100 to-white"
+                              : "text-gray-600 hover:bg-gray-50"
+                            }
+                          `}
+                          onClick={() => setIsOpen(false)}
+                        >
+                          {item.icon}
+                          {item.name}
+                        </Link>
+                      )
+                    })}
+                  </div>
+                )}
+              </div>
+            ))}
+            <div className="mt-2 pt-2 border-t border-gray-100">
+              <Link
+                href="/settings"
+                className={`flex items-center gap-3 px-6 py-3 text-sm transition-colors 
+                  ${pathname === '/settings'
+                    ? "text-gray-800 bg-gradient-to-r from-blue-100 to-white"
+                    : "text-gray-600 hover:bg-gray-50"
+                  }
+                `}
+                onClick={() => setIsOpen(false)}
+              >
+                <Settings className="w-5 h-5" />
+                {t(sidebar.settings)}
+              </Link>
+            </div>
           </nav>
         </div>
       </aside>

@@ -25,6 +25,22 @@ export const sidebar = {
     es: 'Configuraciones',
   },
 
+  finance: {
+    pt: 'Finanças',
+    en: 'Finance',
+    es: 'Finanzas',
+  },
+  life: {
+    pt: 'Vida',
+    en: 'Life',
+    es: 'Vida',
+  },
+  soon: {
+    pt: 'Em breve',
+    en: 'Coming soon',
+    es: 'Próximamente',
+  },
+
   logout: {
     pt: 'Sair',
     en: 'Logout',
